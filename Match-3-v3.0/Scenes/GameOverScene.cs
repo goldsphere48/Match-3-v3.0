@@ -21,11 +21,13 @@ namespace Match_3_v3._0.Scenes
     {
         private ButtonFactory _buttonFactory;
         private BackgroundFactory _backgroundFactory;
+        private TextFactory _textFactory;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
             _backgroundFactory = new BackgroundFactory(world);
             _buttonFactory = new ButtonFactory(world, _game.GraphicsDevice);
+            _textFactory = new TextFactory(world);
             InitializeSystems(world, out systems);
             SetupWorld(world);
         }
@@ -36,7 +38,9 @@ namespace Match_3_v3._0.Scenes
             systems = new SequentialSystem<float>(
                 new SpriteRenderSystem(_batch, world),
                 new ButtonSystem(world, _game.Window),
-                new TransformSystem(world, _runner)
+                new TransformSystem(world, _runner),
+                new TextRenderSystem(_batch, world),
+                new TextSystem(world)
             );
         }
 
@@ -44,6 +48,7 @@ namespace Match_3_v3._0.Scenes
         {
             _backgroundFactory.Create("background");
             CreateGameOver(world);
+            CreateScoreText(world);
             CreateOkButton();
         }
 
@@ -60,7 +65,7 @@ namespace Match_3_v3._0.Scenes
             var position = SceneUtil.GetCenterFor(entity, _game.GraphicsDevice);
             entity.Set(new Transform
             {
-                Position = Vector2.Subtract(position, new Vector2(0, 100))
+                Position = Vector2.Subtract(position, new Vector2(0, 200))
             });
         }
 
@@ -68,7 +73,15 @@ namespace Match_3_v3._0.Scenes
         {
             var button = _buttonFactory.CreateAtCenter("okButton", GoToMenu);
             var transform = button.Get<Transform>();
-            transform.Position = Vector2.Add(transform.Position, new Vector2(0, 100));
+            transform.Position = Vector2.Add(transform.Position, new Vector2(0, 180));
         }
+
+        private void CreateScoreText(World world) 
+        {
+            var entity = _textFactory.Create("font", $"Score: {PlayerPrefs.Get<int>("Score")}", Vector2.Zero);
+            var position = SceneUtil.GetCenterFor(entity, _game.GraphicsDevice);
+            entity.Set(new Transform { Position = position });
+        }
+
     }
 }

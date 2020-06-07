@@ -73,7 +73,7 @@ namespace Match_3_v3._0.Scenes
                 Title = "Time",
                 World = world,
                 Position = new Vector2(510, 30),
-                InitialValue = 10
+                InitialValue = 3
             });
         }
 

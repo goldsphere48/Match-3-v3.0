@@ -31,15 +31,11 @@ namespace Match_3_v3._0.Systems
 
         private void HandleRenderer<T>(Entity entity, Vector2 position) where T : RendererComponent
         {
-            try
+            if (entity.Has<T>())
             {
-                ref T renderer = ref entity.Get<T>();
+                T renderer = entity.Get<T>();
                 renderer.Destination.X = (int)position.X;
                 renderer.Destination.Y = (int)position.Y;
-            }
-            catch
-            {
-                // Go to next component
             }
         }
 

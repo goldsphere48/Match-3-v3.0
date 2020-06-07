@@ -1,6 +1,7 @@
 ﻿using DefaultEcs;
 using DefaultEcs.Resource;
 using Match_3_v3._0.Components;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,10 @@ namespace Match_3_v3._0.ResourceManagers
 
         protected override void OnResourceLoaded(in Entity entity, string info, SpriteFont resource)
         {
+            var text = entity.Get<Text>();
+            var size = resource.MeasureString(text.Value);
             entity.Get<TextRenderer>().SpriteFont = resource;
+            entity.Get<TextRenderer>().Destination = new Rectangle(0, 0, (int)size.X, (int)size.Y);
         }
     }
 }
