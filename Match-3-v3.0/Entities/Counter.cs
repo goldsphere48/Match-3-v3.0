@@ -36,7 +36,15 @@ namespace Match_3_v3._0.Entities
 
         public Counter(CounterArgs args)
         {
-            _entity = new TextFactory(args.World).Create("font", $"{args.Title}: {args.InitialValue}", args.Position);
+            _entity = new TextFactory(args.World).Create(
+                new TextArgs
+                {
+                    FontName = "font",
+                    Text = $"{args.Title}: {args.InitialValue}",
+                    Position = args.Position,
+                    Color = new Color(161, 63, 16)
+                }
+            );
             _title = args.Title;
             _value = args.InitialValue;
         }

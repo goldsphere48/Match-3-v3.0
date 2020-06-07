@@ -11,6 +11,14 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.EntityFactories
 {
+    struct TextArgs
+    {
+        public string FontName { get; set; }
+        public string Text { get; set; }
+        public Vector2 Position { get; set; }
+        public Color? Color { get; set; }
+    }
+
     class TextFactory
     {
         private World _world;
@@ -20,13 +28,13 @@ namespace Match_3_v3._0.EntityFactories
             _world = world;
         }
 
-        public Entity Create(string fontName, string text, Vector2 position)
+        public Entity Create(TextArgs args)
         {
             var entity = _world.CreateEntity();
-            entity.Set(new Text(text));
-            entity.Set(new TextRenderer());
-            entity.Set(new ManagedResource<string, SpriteFont>(fontName));
-            entity.Set(new Transform { Position = position });
+            entity.Set(new Text(args.Text));
+            entity.Set(new TextRenderer { Color = args.Color.HasValue ? args.Color.Value : Color.White });
+            entity.Set(new ManagedResource<string, SpriteFont>(args.FontName));
+            entity.Set(new Transform { Position = args.Position });
             return entity;
         }
     }

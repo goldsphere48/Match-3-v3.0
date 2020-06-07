@@ -78,7 +78,14 @@ namespace Match_3_v3._0.Scenes
 
         private void CreateScoreText(World world) 
         {
-            var entity = _textFactory.Create("font", $"Score: {PlayerPrefs.Get<int>("Score")}", Vector2.Zero);
+            var entity = _textFactory.Create(
+                new TextArgs 
+                {
+                    FontName = "font",
+                    Text = $"Score: {PlayerPrefs.Get<int>("Score")}",
+                    Color = new Color(161, 63, 16)
+                }
+            );
             var position = SceneUtil.GetCenterFor(entity, _game.GraphicsDevice);
             entity.Set(new Transform { Position = position });
         }
