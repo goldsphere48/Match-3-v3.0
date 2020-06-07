@@ -46,10 +46,11 @@
   <ItemGroup>
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\RendererComponent.cs" />
-    <Compile Include="Components\Count.cs" />
+    <Compile Include="Components\CountPresenter.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
     <Compile Include="Components\Text.cs" />
     <Compile Include="Components\TextRenderer.cs" />
+    <Compile Include="Components\Timer.cs" />
     <Compile Include="Components\Transform.cs" />
     <Compile Include="Entities\Counter.cs" />
     <Compile Include="EntityFactories\BackgroundFactory.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="PlayerPrefs.cs" />
     <Compile Include="ResourceManagers\SpriteFontResourceManager.cs" />
     <Compile Include="Scenes\BaseScene.cs" />
+    <Compile Include="Scenes\GameOverScene.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Systems\ButtonSystem.cs" />
     <Compile Include="Systems\CounterSystem.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Scenes\MainMenuScene.cs" />
     <Compile Include="Systems\SpriteRenderSystem.cs" />
     <Compile Include="Systems\TextSystem.cs" />
+    <Compile Include="Systems\TimerSystem.cs" />
     <Compile Include="Systems\TransformSystem.cs" />
     <Compile Include="ResourceManagers\PipelineResourceLoader.cs" />
     <Compile Include="ResourceManagers\TextureResourceManager.cs" />

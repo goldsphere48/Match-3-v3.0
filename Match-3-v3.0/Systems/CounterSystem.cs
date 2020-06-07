@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-    [WhenAdded(typeof(Count))]
-    [WhenChanged(typeof(Count))]
-    [With(typeof(Count))]
+    [WhenAdded(typeof(CountPresenter))]
+    [WhenChanged(typeof(CountPresenter))]
+    [With(typeof(CountPresenter))]
     [With(typeof(Text))]
     class CounterSystem : AEntitySystem<float>
     {
@@ -24,8 +24,8 @@ namespace Match_3_v3._0.Systems
         protected override void Update(float state, in Entity entity) 
         {
             var text = entity.Get<Text>();
-            var score = entity.Get<Count>();
-            text.Value = text.Value + score.Value;
+            var counter = entity.Get<CountPresenter>();
+            text.Value = counter.ToString();
             entity.Set(text);
         }
     }

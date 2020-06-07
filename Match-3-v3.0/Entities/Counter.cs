@@ -18,36 +18,26 @@ namespace Match_3_v3._0.Entities
         public int InitialValue { get; set; }
     }
 
-    class CounterEventArgs : EventArgs
-    {
-        public int Value { get; }
-        public CounterEventArgs(int value)
-        {
-            Value = value;
-        }
-    }
-
     class Counter
     {
-        public event EventHandler<CounterEventArgs> CounterChanged;
         private Entity _entity;
         private int _value;
+        private string _title;
 
-        private int Value
+        public int Value
         {
             get => _value;
             set
             {
                 _value = value;
-                CounterChanged?.Invoke(this, new CounterEventArgs(_value));
-                _entity.Set(new Count(_value));
+                _entity.Set(new CountPresenter(_title, _value));
             }
         }
 
         public Counter(CounterArgs args)
         {
-            _entity = new TextFactory(args.World).Create("font", $"{args.Title}: ", args.Position);
-            _entity.Set(new Count(args.InitialValue));
+            _entity = new TextFactory(args.World).Create("font", $"{args.Title}: {args.InitialValue}", args.Position);
+            _title = args.Title;
             _value = args.InitialValue;
         }
     }

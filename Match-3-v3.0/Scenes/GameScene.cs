@@ -14,6 +14,7 @@ using DefaultEcs.Resource;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Match_3_v3._0.EntityFactories;
+using Match_3_v3._0.Entities;
 
 namespace Match_3_v3._0.Scenes
 {
@@ -22,8 +23,8 @@ namespace Match_3_v3._0.Scenes
         private BackgroundFactory _backgroundFactory;
         private GridFactory _gridFactory;
         private TextFactory _textFactory;
-        private Entity _score;
-        private Entity _timer;
+        private Counter _score;
+        private Counter _timer;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
@@ -31,7 +32,7 @@ namespace Match_3_v3._0.Scenes
             _textFactory = new TextFactory(world);
             _gridFactory = new GridFactory(world, _game.GraphicsDevice, 8, 8);
             InitializeSystems(world, out systems);
-            SetupWorld();
+            SetupWorld(world);
         }
 
         private void InitializeSystems(World world, out ISystem<float> systems)
@@ -41,28 +42,56 @@ namespace Match_3_v3._0.Scenes
                 new SpriteRenderSystem(_batch, world),
                 new TransformSystem(world, _runner),
                 new TextRenderSystem(_batch, world),
-                new CounterSystem(world)
+                new CounterSystem(world),
+                new TimerSystem(world)
             );
         }
 
-        private void SetupWorld()
+        private void SetupWorld(World world)
         {
             _backgroundFactory.Create("background", Color.White);
             _gridFactory.Create();
-            CreateScoreBoard();
-            CreateTimerBoard();
+            CreateScoreBoard(world);
+            CreateTimer(world);
         }
 
-        private void CreateScoreBoard()
+        private void CreateScoreBoard(World world)
         {
-            _score = _textFactory.Create("font", "Score: ", new Vector2(30, 30));
-            _score.Set(new Count(0));
+            _score = new Counter(new CounterArgs
+            {
+                Title = "Score",
+                World = world,
+                Position = new Vector2(30, 30),
+                InitialValue = 0
+            });
         }
 
-        private void CreateTimerBoard()
+        private void CreateTimerBoard(World world)
         {
-            _timer = _textFactory.Create("font", "Time: ", new Vector2(510, 30));
-            _timer.Set(new Count(60));
+            _timer = new Counter(new CounterArgs
+            {
+                Title = "Time",
+                World = world,
+                Position = new Vector2(510, 30),
+                InitialValue = 10
+            });
+        }
+
+        private void CreateTimer(World world)
+        {
+            CreateTimerBoard(world);
+            var entity = world.CreateEntity();
+            entity.Set(new Timer { Interval = 1, TimerTick = OnTimerTick});
+        }
+
+        private void OnTimerTick()
+        {
+            _timer.Value -= 1;
+            if (_timer.Value <= 0)
+            {
+                PlayerPrefs.Set("Score", _score.Value);
+                SceneManager.Instance.SetActiveScene<GameOverScene>();
+            }
         }
     }
 }
