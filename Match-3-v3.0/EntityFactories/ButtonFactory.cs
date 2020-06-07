@@ -34,12 +34,13 @@ namespace Match_3_v3._0.EntityFactories
             return entity;
         }
 
-        public void CreateAtCenter(string spriteName, Action OnClick)
+        public Entity CreateAtCenter(string spriteName, Action OnClick)
         {
             var entity = Create(spriteName, new Vector2(0, 0), OnClick);
             var transform = entity.Get<Transform>();
             transform.Position = SceneUtil.GetCenterFor(entity, _device);
             entity.Set(transform);
+            return entity;
         }
     }
 }

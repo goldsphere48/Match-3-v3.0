@@ -37,7 +37,7 @@ namespace Match_3_v3._0.Systems
                 renderer.Destination.X = (int)position.X;
                 renderer.Destination.Y = (int)position.Y;
             }
-            catch (Exception)
+            catch
             {
                 // Go to next component
             }
