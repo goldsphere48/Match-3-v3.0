@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Components
 {
-    struct Text
+    struct Count
     {
-        public string Value{ get; set; }
-
-        public Text(string text)
+        public int Value;
+        public Count (int value)
         {
-            Value = text;
+            Value = value;
         }
     }
 }

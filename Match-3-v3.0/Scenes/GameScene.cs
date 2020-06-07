@@ -22,6 +22,8 @@ namespace Match_3_v3._0.Scenes
         private BackgroundFactory _backgroundFactory;
         private GridFactory _gridFactory;
         private TextFactory _textFactory;
+        private Entity _score;
+        private Entity _timer;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
@@ -38,7 +40,8 @@ namespace Match_3_v3._0.Scenes
             systems = new SequentialSystem<float>(
                 new SpriteRenderSystem(_batch, world),
                 new TransformSystem(world, _runner),
-                new TextRenderSystem(_batch, world)
+                new TextRenderSystem(_batch, world),
+                new CounterSystem(world)
             );
         }
 
@@ -46,7 +49,20 @@ namespace Match_3_v3._0.Scenes
         {
             _backgroundFactory.Create("background", Color.White);
             _gridFactory.Create();
-            _textFactory.Create("font", "Score: ", new Vector2(30, 30));
+            CreateScoreBoard();
+            CreateTimerBoard();
+        }
+
+        private void CreateScoreBoard()
+        {
+            _score = _textFactory.Create("font", "Score: ", new Vector2(30, 30));
+            _score.Set(new Count(0));
+        }
+
+        private void CreateTimerBoard()
+        {
+            _timer = _textFactory.Create("font", "Time: ", new Vector2(510, 30));
+            _timer.Set(new Count(60));
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Match_3_v3._0.Systems
             var renderer = entity.Get<TextRenderer>();
             var text = entity.Get<Text>();
             var position = new Vector2(renderer.Destination.X, renderer.Destination.Y);
-            _batch.DrawString(renderer.SpriteFont, text.GetText(), position, renderer.Color);
+            _batch.DrawString(renderer.SpriteFont, text.Value, position, renderer.Color);
         }
 
         protected override void PostUpdate(float state)

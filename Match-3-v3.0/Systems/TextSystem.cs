@@ -23,7 +23,7 @@ namespace Match_3_v3._0.Systems
             ref var text = ref entity.Get<Text>();
             ref var renderer = ref entity.Get<TextRenderer>();
             var oldDestionation = renderer.Destination;
-            var textMessure = renderer.SpriteFont.MeasureString(text.GetText());
+            var textMessure = renderer.SpriteFont.MeasureString(text.Value);
             renderer.Destination = new Rectangle(oldDestionation.X, oldDestionation.Y, (int)textMessure.X, (int)textMessure.Y);
         }
 

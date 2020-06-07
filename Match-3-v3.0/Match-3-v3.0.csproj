@@ -46,10 +46,12 @@
   <ItemGroup>
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\RendererComponent.cs" />
+    <Compile Include="Components\Count.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
     <Compile Include="Components\Text.cs" />
     <Compile Include="Components\TextRenderer.cs" />
     <Compile Include="Components\Transform.cs" />
+    <Compile Include="Entities\Counter.cs" />
     <Compile Include="EntityFactories\BackgroundFactory.cs" />
     <Compile Include="EntityFactories\ButtonFactory.cs" />
     <Compile Include="EntityFactories\GridFactory.cs" />
@@ -59,6 +61,7 @@
     <Compile Include="Scenes\BaseScene.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Systems\ButtonSystem.cs" />
+    <Compile Include="Systems\CounterSystem.cs" />
     <Compile Include="Systems\TextRenderSystem.cs" />
     <Compile Include="ResourceManagers\IResourceLoader.cs" />
     <Compile Include="Match3Game.cs" />
