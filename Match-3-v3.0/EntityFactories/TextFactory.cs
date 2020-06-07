@@ -24,7 +24,7 @@ namespace Match_3_v3._0.EntityFactories
         {
             var entity = _world.CreateEntity();
             entity.Set(new TextRenderer());
-            entity.Set(new ManagedResource<string, SpriteFont>("font"));
+            entity.Set(new ManagedResource<string, SpriteFont>(fontName));
             entity.Set(new Text(text));
             entity.Set(new Transform { Position = position });
         }

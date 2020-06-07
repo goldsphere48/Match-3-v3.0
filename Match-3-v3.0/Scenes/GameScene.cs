@@ -21,12 +21,12 @@ namespace Match_3_v3._0.Scenes
     {
         private BackgroundFactory _backgroundFactory;
         private GridFactory _gridFactory;
-
-        private Texture2D _gridTexture;
+        private TextFactory _textFactory;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
             _backgroundFactory = new BackgroundFactory(world);
+            _textFactory = new TextFactory(world);
             _gridFactory = new GridFactory(world, _game.GraphicsDevice, 8, 8);
             InitializeSystems(world, out systems);
             SetupWorld();
@@ -46,6 +46,7 @@ namespace Match_3_v3._0.Scenes
         {
             _backgroundFactory.Create("background", Color.White);
             _gridFactory.Create();
+            _textFactory.Create("font", "Score: ", new Vector2(30, 30));
         }
     }
 }
