@@ -13,7 +13,7 @@ namespace Match_3_v3._0.Systems
     class TextSystem : AEntitySystem<float>
     {
         public TextSystem(World world)
-            : base(world.GetEntities().WhenAdded<Text>().WhenChanged<Text>().With<TextRenderer>().With<TextRenderer>().AsSet())
+            : base(world.GetEntities().WhenAdded<Text>().WhenChanged<Text>().With<Text>().With<TextRenderer>().AsSet())
         {
 
         }

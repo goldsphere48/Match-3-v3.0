@@ -54,7 +54,7 @@
     <Compile Include="EntityFactories\ButtonFactory.cs" />
     <Compile Include="EntityFactories\GridFactory.cs" />
     <Compile Include="EntityFactories\TextFactory.cs" />
-    <Compile Include="ResourceManagers\SpriteFontResourceLoader.cs" />
+    <Compile Include="ResourceManagers\SpriteFontResourceManager.cs" />
     <Compile Include="Scenes\BaseScene.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Systems\ButtonSystem.cs" />

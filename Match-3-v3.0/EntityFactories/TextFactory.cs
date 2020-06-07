@@ -1,5 +1,8 @@
 ﻿using DefaultEcs;
+using DefaultEcs.Resource;
+using Match_3_v3._0.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +22,11 @@ namespace Match_3_v3._0.EntityFactories
 
         public void Create(string fontName, string text, Vector2 position)
         {
-
-        }
-
-        public void Create(string fontName, string text)
-        {
-
+            var entity = _world.CreateEntity();
+            entity.Set(new TextRenderer());
+            entity.Set(new ManagedResource<string, SpriteFont>("font"));
+            entity.Set(new Text(text));
+            entity.Set(new Transform { Position = position });
         }
     }
 }

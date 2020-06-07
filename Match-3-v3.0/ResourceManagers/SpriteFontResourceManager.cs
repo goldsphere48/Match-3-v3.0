@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.ResourceManagers
 {
-    class SpriteFontResourceLoader : AResourceManager<string, SpriteFont>
+    class SpriteFontResourceManager : AResourceManager<string, SpriteFont>
     {
         private readonly GraphicsDevice _device;
         private readonly IResourceLoader<string, SpriteFont> _loader;
 
-        public SpriteFontResourceLoader(GraphicsDevice device, IResourceLoader<string, SpriteFont> loader)
+        public SpriteFontResourceManager(GraphicsDevice device, IResourceLoader<string, SpriteFont> loader)
         {
             _device = device;
             _loader = loader;
