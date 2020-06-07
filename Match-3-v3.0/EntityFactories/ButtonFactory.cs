@@ -1,6 +1,7 @@
 ﻿using DefaultEcs;
 using DefaultEcs.Resource;
 using Match_3_v3._0.Components;
+using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -15,13 +16,12 @@ namespace Match_3_v3._0.EntityFactories
     class ButtonFactory
     {
         private World _world;
-        private Vector2 _windowCenter;
+        private GraphicsDevice _device;
 
         public ButtonFactory(World world, GraphicsDevice device)
         {
             _world = world;
-            _windowCenter = new Vector2(device.PresentationParameters.BackBufferWidth / 2,
-               device.PresentationParameters.BackBufferHeight / 2);
+            _device = device;
         }
 
         public Entity Create(string spriteName, Vector2 position, Action OnClick)
@@ -37,10 +37,8 @@ namespace Match_3_v3._0.EntityFactories
         public void CreateAtCenter(string spriteName, Action OnClick)
         {
             var entity = Create(spriteName, new Vector2(0, 0), OnClick);
-            var spriteSize = entity.Get<SpriteRenderer>().Destination.Size.ToVector2();
-            var position = Vector2.Subtract(_windowCenter, Vector2.Divide(spriteSize, 2));
             var transform = entity.Get<Transform>();
-            transform.Position = position;
+            transform.Position = SceneUtil.GetCenterFor(entity, _device);
             entity.Set(transform);
         }
     }

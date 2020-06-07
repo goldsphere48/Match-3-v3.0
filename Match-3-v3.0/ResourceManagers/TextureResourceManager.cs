@@ -9,14 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Match_3_v3._0.TextureManager
+namespace Match_3_v3._0.ResourceManagers
 {
     class TextureResourceManager : AResourceManager<string, Texture2D>
     {
         private readonly GraphicsDevice _device;
-        private readonly ITextureLoader<string> _loader;
+        private readonly IResourceLoader<string, Texture2D> _loader;
 
-        public TextureResourceManager(GraphicsDevice device, ITextureLoader<string> loader)
+        public TextureResourceManager(GraphicsDevice device, IResourceLoader<string, Texture2D> loader)
         {
             _device = device;
             _loader = loader;

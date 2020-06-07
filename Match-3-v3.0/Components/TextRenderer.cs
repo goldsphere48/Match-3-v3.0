@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Match_3_v3._0.TextureManager
+namespace Match_3_v3._0.Components
 {
-    interface ITextureLoader<TInfo>
+    class TextRenderer : RendererComponent
     {
-        Texture2D Load(GraphicsDevice device, TInfo info);
+        public SpriteFont SpriteFont = null;
     }
 }

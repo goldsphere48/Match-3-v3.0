@@ -1,7 +1,9 @@
 ﻿using DefaultEcs;
 using DefaultEcs.System;
-using Match_3_v3._0.TextureManager;
+using Match_3_v3._0.ResourceManagers;
 using Match_3_v3._0.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SceneSystem;
 using System;
 using System.Collections.Generic;
@@ -19,7 +21,7 @@ namespace Match_3_v3._0.Scenes
 
         public override void Setup()
         {
-            _textureManager = new TextureResourceManager(null, new PipelineTextureLoader(_game.Content));
+            _textureManager = new TextureResourceManager(null, new PipelineResourceLoader<Texture2D>(_game.Content));
             _world = new World();
             _textureManager.Manage(_world);
             Setup(_world, out _systems);

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DefaultEcs;
 using DefaultEcs.System;
-using Match_3_v3._0.TextureManager;
+using Match_3_v3._0.ResourceManagers;
 using Match_3_v3._0.Systems;
 using DefaultEcs.Threading;
 using Match_3_v3._0.Components;

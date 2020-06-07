@@ -6,20 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Match_3_v3._0.TextureManager
+namespace Match_3_v3._0.ResourceManagers
 {
-    class PipelineTextureLoader : ITextureLoader<string>
+    class PipelineResourceLoader<TResource> : IResourceLoader<string, TResource>
     {
         private ContentManager _content;
 
-        public PipelineTextureLoader(ContentManager content)
+        public PipelineResourceLoader(ContentManager content)
         {
             _content = content;    
         }
 
-        public Texture2D Load(GraphicsDevice device, string info)
+        public TResource Load(GraphicsDevice device, string info)
         {
-            return _content.Load<Texture2D>(info);
+            return _content.Load<TResource>(info);
         }
     }
 }

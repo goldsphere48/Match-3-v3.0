@@ -3,7 +3,7 @@ using DefaultEcs.Resource;
 using DefaultEcs.System;
 using DefaultEcs.Threading;
 using Match_3_v3._0.Components;
-using Match_3_v3._0.TextureManager;
+using Match_3_v3._0.ResourceManagers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -17,7 +17,7 @@ namespace Match_3_v3._0.Systems
     class TransformSystem : AEntitySystem<float>
     {
         public TransformSystem(World world, IParallelRunner runner)
-            : base(world.GetEntities().WhenAdded<Transform>().WhenChanged<Transform>().With<SpriteRenderer>().AsSet(), runner)
+            : base(world.GetEntities().WhenAdded<Transform>().WhenChanged<Transform>().WithEither<SpriteRenderer>().Or<TextRenderer>().AsSet(), runner)
         {
 
         }
@@ -25,10 +25,23 @@ namespace Match_3_v3._0.Systems
         protected override void Update(float state, in Entity entity)
         {
             Vector2 position = entity.Get<Transform>().Position;
-            ref SpriteRenderer renderer = ref entity.Get<SpriteRenderer>();
-
-            renderer.Destination.X = (int)position.X;
-            renderer.Destination.Y = (int)position.Y;
+            HandleRenderer<SpriteRenderer>(entity, position);
+            HandleRenderer<TextRenderer>(entity, position);
         }
+
+        private void HandleRenderer<T>(Entity entity, Vector2 position) where T : RendererComponent
+        {
+            try
+            {
+                ref T renderer = ref entity.Get<T>();
+                renderer.Destination.X = (int)position.X;
+                renderer.Destination.Y = (int)position.Y;
+            }
+            catch (Exception)
+            {
+                // Go to next component
+            }
+        }
+
     }
 }

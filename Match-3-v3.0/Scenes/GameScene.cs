@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DefaultEcs;
 using DefaultEcs.System;
-using Match_3_v3._0.TextureManager;
+using Match_3_v3._0.ResourceManagers;
 using Match_3_v3._0.Systems;
 using DefaultEcs.Threading;
 using Match_3_v3._0.Components;
@@ -20,12 +20,14 @@ namespace Match_3_v3._0.Scenes
     class GameScene : BaseScene
     {
         private BackgroundFactory _backgroundFactory;
-        private ButtonFactory _buttonFactory;
+        private GridFactory _gridFactory;
+
+        private Texture2D _gridTexture;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
             _backgroundFactory = new BackgroundFactory(world);
-            _buttonFactory = new ButtonFactory(world, _game.GraphicsDevice);
+            _gridFactory = new GridFactory(world, _game.GraphicsDevice, 8, 8);
             InitializeSystems(world, out systems);
             SetupWorld();
         }
@@ -35,14 +37,14 @@ namespace Match_3_v3._0.Scenes
             var _runner = new DefaultParallelRunner(Environment.ProcessorCount);
             systems = new SequentialSystem<float>(
                 new SpriteRenderSystem(_batch, world),
-                new TransformSystem(world, _runner),
-                new ButtonSystem(world, _game.Window)
+                new TransformSystem(world, _runner)
             );
         }
 
         private void SetupWorld()
         {
             _backgroundFactory.Create("background", Color.White);
+            _gridFactory.Create();
         }
     }
 }
