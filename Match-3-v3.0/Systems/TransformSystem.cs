@@ -17,7 +17,7 @@ namespace Match_3_v3._0.Systems
     class TransformSystem : AEntitySystem<float>
     {
         public TransformSystem(World world, IParallelRunner runner)
-            : base(world.GetEntities().WhenAdded<Transform>().WhenChanged<Transform>().WithEither<SpriteRenderer>().Or<TextRenderer>().AsSet(), runner)
+            : base(world.GetEntities().WhenAdded<Transform>().WhenChanged<Transform>().WithEither<SpriteRenderer>().Or<TextRenderer>().Or<FrameAnimation>().AsSet(), runner)
         {
 
         }
@@ -27,6 +27,7 @@ namespace Match_3_v3._0.Systems
             Vector2 position = entity.Get<Transform>().Position;
             HandleRenderer<SpriteRenderer>(entity, position);
             HandleRenderer<TextRenderer>(entity, position);
+            HandleRenderer<FrameAnimation>(entity, position);
         }
 
         private void HandleRenderer<T>(Entity entity, Vector2 position) where T : RendererComponent

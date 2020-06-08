@@ -22,15 +22,15 @@ namespace Match_3_v3._0.Scenes
     {
         private BackgroundFactory _backgroundFactory;
         private GridFactory _gridFactory;
-        private TextFactory _textFactory;
-        private Counter _score;
-        private Counter _timer;
+        private Counter _scoreCounter;
+        private Counter _timerCounter;
+        private int _cellSize = 81;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
+            PlayerPrefs.Set("CellSize", _cellSize);
             _backgroundFactory = new BackgroundFactory(world);
-            _textFactory = new TextFactory(world);
-            _gridFactory = new GridFactory(world, _game.GraphicsDevice, 8, 8);
+            _gridFactory = new GridFactory(world, _game.GraphicsDevice, 8, 8, _cellSize);
             InitializeSystems(world, out systems);
             SetupWorld(world);
         }
@@ -39,11 +39,15 @@ namespace Match_3_v3._0.Scenes
         {
             var _runner = new DefaultParallelRunner(Environment.ProcessorCount);
             systems = new SequentialSystem<float>(
-                new SpriteRenderSystem(_batch, world),
                 new TransformSystem(world, _runner),
-                new TextRenderSystem(_batch, world),
                 new CounterSystem(world),
-                new TimerSystem(world)
+                new TimerSystem(world),
+                new GenerationSystem(world),
+                new FallSystem(world),
+                new FrameAnimationUpdateSystem(world),
+                new SpriteRenderSystem(_batch, world),
+                new FrameAnimationDrawSystem(_batch, world),
+                new TextRenderSystem(_batch, world)
             );
         }
 
@@ -57,7 +61,7 @@ namespace Match_3_v3._0.Scenes
 
         private void CreateScoreBoard(World world)
         {
-            _score = new Counter(new CounterArgs
+            _scoreCounter = new Counter(new CounterArgs
             {
                 Title = "Score",
                 World = world,
@@ -68,12 +72,12 @@ namespace Match_3_v3._0.Scenes
 
         private void CreateTimerBoard(World world)
         {
-            _timer = new Counter(new CounterArgs
+            _timerCounter = new Counter(new CounterArgs
             {
                 Title = "Time",
                 World = world,
                 Position = new Vector2(510, 30),
-                InitialValue = 3
+                InitialValue = 60
             });
         }
 
@@ -86,10 +90,10 @@ namespace Match_3_v3._0.Scenes
 
         private void OnTimerTick()
         {
-            _timer.Value -= 1;
-            if (_timer.Value <= 0)
+            _timerCounter.Value -= 1;
+            if (_timerCounter.Value <= 0)
             {
-                PlayerPrefs.Set("Score", _score.Value);
+                PlayerPrefs.Set("Score", _scoreCounter.Value);
                 SceneManager.Instance.SetActiveScene<GameOverScene>();
             }
         }

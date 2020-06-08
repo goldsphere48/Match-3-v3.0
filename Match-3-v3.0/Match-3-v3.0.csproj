@@ -44,7 +44,10 @@
     <StartupObject>Match_3_v3._0.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\FrameAnimation.cs" />
     <Compile Include="Components\Button.cs" />
+    <Compile Include="Components\Cell.cs" />
+    <Compile Include="Components\Generator.cs" />
     <Compile Include="Components\RendererComponent.cs" />
     <Compile Include="Components\CountPresenter.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
@@ -55,6 +58,7 @@
     <Compile Include="Entities\Counter.cs" />
     <Compile Include="EntityFactories\BackgroundFactory.cs" />
     <Compile Include="EntityFactories\ButtonFactory.cs" />
+    <Compile Include="EntityFactories\CellFactory.cs" />
     <Compile Include="EntityFactories\GridFactory.cs" />
     <Compile Include="EntityFactories\TextFactory.cs" />
     <Compile Include="PlayerPrefs.cs" />
@@ -62,8 +66,12 @@
     <Compile Include="Scenes\BaseScene.cs" />
     <Compile Include="Scenes\GameOverScene.cs" />
     <Compile Include="Scenes\GameScene.cs" />
+    <Compile Include="Systems\FrameAnimationDrawSystem.cs" />
     <Compile Include="Systems\ButtonSystem.cs" />
     <Compile Include="Systems\CounterSystem.cs" />
+    <Compile Include="Systems\FallSystem.cs" />
+    <Compile Include="Systems\FrameAnimationUpdateSystem.cs" />
+    <Compile Include="Systems\GenerationSystem.cs" />
     <Compile Include="Systems\TextRenderSystem.cs" />
     <Compile Include="ResourceManagers\IResourceLoader.cs" />
     <Compile Include="Match3Game.cs" />
@@ -76,6 +84,8 @@
     <Compile Include="Systems\TransformSystem.cs" />
     <Compile Include="ResourceManagers\PipelineResourceLoader.cs" />
     <Compile Include="ResourceManagers\TextureResourceManager.cs" />
+    <Compile Include="Utils\CellColorGenerator.cs" />
+    <Compile Include="Utils\CellPool.cs" />
     <Compile Include="Utils\SceneUtil.cs" />
     <Compile Include="Utils\MouseButton.cs" />
   </ItemGroup>

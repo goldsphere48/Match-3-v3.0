@@ -26,8 +26,14 @@ namespace Match_3_v3._0.ResourceManagers
 
         protected override void OnResourceLoaded(in Entity entity, string info, Texture2D resource)
         {
-            entity.Get<SpriteRenderer>().Sprite = resource;
-            entity.Get<SpriteRenderer>().Destination = new Rectangle(0, 0, resource.Width, resource.Height);
+            if (entity.Has<SpriteRenderer>())
+            {
+                entity.Get<SpriteRenderer>().Sprite = resource;
+                entity.Get<SpriteRenderer>().Destination = new Rectangle(0, 0, resource.Width, resource.Height);
+            } else if (entity.Has<FrameAnimation>())
+            {
+                entity.Get<FrameAnimation>().Texture = resource;;
+            }
         }
     }
 }

@@ -19,15 +19,16 @@ namespace Match_3_v3._0.EntityFactories
         private Texture2D _background;
         private readonly int _width;
         private readonly int _height;
-        private readonly int _cellSize = 81;
+        private readonly int _cellSize;
 
-        public GridFactory(World world, GraphicsDevice device, int width, int height)
+        public GridFactory(World world, GraphicsDevice device, int width, int height, int cellSize)
         {
             _world = world;
             _device = device;
             _width = width;
             _height = height;
             _background = CreateTexture();
+            _cellSize = cellSize;
         }
 
         public Entity Create()
@@ -42,13 +43,28 @@ namespace Match_3_v3._0.EntityFactories
             );
             var position = Vector2.Add(SceneUtil.GetCenterFor(entity, _device), new Vector2(0, 30));
             entity.Set(new Transform { Position = position});
+            entity.Set(new Generator { NewCellPositionsInGrid = GetFullGridMatrix(), VerticalOffset = -1000});
             return entity;
+        }
+
+        private Vector2[][] GetFullGridMatrix()
+        {
+            var positions = new Vector2[_width][];
+            for (int i = 0; i < _width; ++i)
+            {
+                positions[i] = new Vector2[_height];
+                for (int j = 0; j < _height; ++j)
+                {
+                    positions[i][j] = new Vector2(i, j);
+                }
+            }
+            return positions;
         }
 
         private Texture2D CreateTexture()
         {
-            Texture2D texture = new Texture2D(_device, _width, _height);
-            Color[] data = new Color[_width * _height];
+            var texture = new Texture2D(_device, _width, _height);
+            var data = new Color[_width * _height];
             for (int pixel = 0; pixel < data.Count(); pixel++)
             {
                 data[pixel] = Color.Black * 0.7f;
