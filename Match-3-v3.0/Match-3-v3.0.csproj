@@ -47,7 +47,8 @@
     <Compile Include="Components\FrameAnimation.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\Cell.cs" />
-    <Compile Include="Components\Generator.cs" />
+    <Compile Include="Components\GenerationZone.cs" />
+    <Compile Include="Components\Grid.cs" />
     <Compile Include="Components\RendererComponent.cs" />
     <Compile Include="Components\CountPresenter.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />

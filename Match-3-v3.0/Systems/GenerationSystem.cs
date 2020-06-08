@@ -3,17 +3,12 @@ using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-    [WhenAdded(typeof(Generator))]
-    [WhenChanged(typeof(Generator))]
-    [With(typeof(Generator))]
+    [WhenAdded(typeof(GenerationZone))]
+    [WhenChanged(typeof(GenerationZone))]
+    [With(typeof(GenerationZone))]
     [With(typeof(Transform))]
     class GenerationSystem : AEntitySystem<float>
     {
@@ -27,15 +22,67 @@ namespace Match_3_v3._0.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            ref var generator = ref entity.Get<Generator>();
-            var parentTransform = entity.Get<Transform>();
-            foreach (var column in generator.NewCellPositionsInGrid)
+            ref var generationInfo = ref entity.Get<GenerationZone>();
+            ref var grid = ref entity.Get<Grid>();
+            Cell[][] newCells;
+            do
             {
-                foreach (var cellPosition in column)
+                newCells = GenerateNewCells(generationInfo);
+                ApplyNewCells(grid, newCells);
+            } 
+            while (IsMatchExist(grid) == false);
+
+            var parentTransform = entity.Get<Transform>();
+            foreach (var column in newCells)
+            {
+                foreach (var cellComponent in column)
                 {
-                    Entity cell = _cellPool.RequestCell(cellPosition, generator.VerticalOffset, parentTransform);
+                    Entity cell = _cellPool.RequestCell(cellComponent, generationInfo.VerticalOffset, parentTransform);
                     entity.SetAsParentOf(cell);
                 }
+            }
+        }
+
+        private Cell[][] GenerateNewCells(GenerationZone generationInfo)
+        {
+            var newCells = new Cell[generationInfo.NewCellPositionsInGrid.Length][];
+            for (int i = 0; i < newCells.Length; ++i)
+            {
+                newCells[i] = new Cell[generationInfo.NewCellPositionsInGrid[i].Length];
+                for(int j = 0; j <  newCells[i].Length; ++j)
+                {
+                    newCells[i][j] = new Cell
+                    {
+                        PositionInGrid = generationInfo.NewCellPositionsInGrid[i][j],
+                        Color = CellColorGenerator.Get()
+                    };
+                }
+            }
+            return newCells;
+        }
+
+        private void ApplyNewCells(Grid grid, Cell[][] newCells)
+        {
+            foreach (var column in newCells)
+            {
+                foreach (var cell in column)
+                {
+                    grid.Cells[(int)cell.PositionInGrid.X, (int)cell.PositionInGrid.Y] = cell; 
+                }
+            }
+        }
+
+        private int attempts = 0;
+
+        private bool IsMatchExist(Grid grid)
+        {
+            attempts++;
+            if (attempts == 4)
+            {
+                return true;
+            } else
+            {
+                return false;
             }
         }
     }

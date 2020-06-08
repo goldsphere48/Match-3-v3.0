@@ -23,18 +23,18 @@ namespace Match_3_v3._0.EntityFactories
             _cellSize = cellSize;
         }
 
-        public Entity Create(Vector2 positionInGrid, CellColor color, Transform parent)
+        public Entity Create(Cell cellInfo, Transform parent)
         {
             var entity = _world.CreateEntity();
             entity.Set(new Transform { Parent = parent });
-            entity.Set(new Cell { PositionInGrid = positionInGrid, Color = color });
+            entity.Set(cellInfo);
             entity.Set(new FrameAnimation
             {
                 FrameCount = 5,
                 AnimationSpeed = 0.1f,
                 IsLooping = true
             });
-            entity.Set(new ManagedResource<string, Texture2D>(color.ToString()));
+            entity.Set(new ManagedResource<string, Texture2D>(cellInfo.Color.ToString()));
             return entity;
         }
 

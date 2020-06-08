@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Components
 {
-    struct Generator
+    struct GenerationZone
     {
         public Vector2[][] NewCellPositionsInGrid { get; set; }
         public float VerticalOffset { get; set; }

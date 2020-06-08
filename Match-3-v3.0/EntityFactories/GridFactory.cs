@@ -42,8 +42,9 @@ namespace Match_3_v3._0.EntityFactories
                 }
             );
             var position = Vector2.Add(SceneUtil.GetCenterFor(entity, _device), new Vector2(0, 30));
-            entity.Set(new Transform { Position = position});
-            entity.Set(new Generator { NewCellPositionsInGrid = GetFullGridMatrix(), VerticalOffset = -1000});
+            entity.Set(new Transform { Position = position });
+            entity.Set(new Grid { Cells = new Cell[_width, _height] });
+            entity.Set(new GenerationZone { NewCellPositionsInGrid = GetFullGridMatrix(), VerticalOffset = 0 });
             return entity;
         }
 

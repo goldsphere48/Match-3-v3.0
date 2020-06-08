@@ -21,22 +21,21 @@ namespace Match_3_v3._0.Utils
             _cells = new List<Entity?>();
         }
 
-        public Entity RequestCell(Vector2 positionInGrid, float verticalOffset, Transform parent)
+        public Entity RequestCell(Cell cellInfo, float verticalOffset, Transform parent)
         {
-            var newColor = CellColorGenerator.Get();
-            Entity? cell = _cells.Find(e => !e.Value.IsEnabled() && e.Value.Get<Cell>().Color == newColor);
+            Entity? cell = _cells.Find(e => !e.Value.IsEnabled() && e.Value.Get<Cell>().Color == cellInfo.Color);
             if (cell.HasValue == false)
             {
-                cell = _cellFactory.Create(positionInGrid, newColor, parent);
+                cell = _cellFactory.Create(cellInfo, parent);
                 _cells.Add(cell.Value);
             }
             else
             {
                 var component = cell?.Get<Cell>();
-                component.PositionInGrid = positionInGrid;
+                component.PositionInGrid = cellInfo.PositionInGrid;
                 cell.Value.Set(component);
             }
-            PlaceCell(cell, positionInGrid, PlayerPrefs.Get<int>("CellSize"), verticalOffset);
+            PlaceCell(cell, cellInfo.PositionInGrid, PlayerPrefs.Get<int>("CellSize"), verticalOffset);
             return cell.Value;
         }
 
