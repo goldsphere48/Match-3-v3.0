@@ -14,9 +14,22 @@ namespace Match_3_v3._0.Components
         public int FrameCount { get; set; }
         public float AnimationSpeed { get; set; }
         public bool IsLooping { get; set; }
-        public bool Play { get; set; }
+        public bool Play 
+        { 
+            get => _play; 
+            set
+            {
+                _play = value;
+                if (_play == false)
+                {
+                    CurrentFrame = 0;
+                    CurrentState = 0;
+                }
+            } 
+        }
         public int FrameHeight => Texture.Height;
         private Texture2D _textute;
+        private bool _play = false;
         public Texture2D Texture 
         { 
             get => _textute;

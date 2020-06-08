@@ -44,6 +44,8 @@ namespace Match_3_v3._0.Scenes
                 new TimerSystem(world),
                 new GenerationSystem(world),
                 new FallSystem(world),
+                new SelectSystem(world, _game.Window),
+                new SwapSystem(world),
                 new FrameAnimationUpdateSystem(world),
                 new SpriteRenderSystem(_batch, world),
                 new FrameAnimationDrawSystem(_batch, world),

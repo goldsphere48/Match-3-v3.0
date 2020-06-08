@@ -73,6 +73,9 @@
     <Compile Include="Systems\FallSystem.cs" />
     <Compile Include="Systems\FrameAnimationUpdateSystem.cs" />
     <Compile Include="Systems\GenerationSystem.cs" />
+    <Compile Include="Systems\InputSystem.cs" />
+    <Compile Include="Systems\SelectSystem.cs" />
+    <Compile Include="Systems\SwapSystem.cs" />
     <Compile Include="Systems\TextRenderSystem.cs" />
     <Compile Include="ResourceManagers\IResourceLoader.cs" />
     <Compile Include="Match3Game.cs" />
@@ -87,6 +90,7 @@
     <Compile Include="ResourceManagers\TextureResourceManager.cs" />
     <Compile Include="Utils\CellColorGenerator.cs" />
     <Compile Include="Utils\CellPool.cs" />
+    <Compile Include="Utils\GridUtil.cs" />
     <Compile Include="Utils\SceneUtil.cs" />
     <Compile Include="Utils\MouseButton.cs" />
   </ItemGroup>
