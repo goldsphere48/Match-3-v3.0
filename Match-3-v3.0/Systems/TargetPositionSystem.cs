@@ -13,6 +13,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(Cell))]
     [With(typeof(Transform))]
     [With(typeof(TargetPosition))]
+    [With(typeof(FrameAnimation))]
     class TargetPositionSystem : AEntitySystem<float>
     {
         private int _speed = 200;

@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
+    [WhenAdded(typeof(Swap))]
+    [With(typeof(Swap))]
+    [With(typeof(Grid))]
     class SwapSystem : AEntitySystem<float>
     {
-        private Entity _selectedEntity;
-
         public SwapSystem(World world)
             : base(world)
         {
@@ -21,22 +22,13 @@ namespace Match_3_v3._0.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            if (_selectedEntity == null)
-            {
-                _selectedEntity = entity;
-            } else if (_selectedEntity == entity)
-            {
-
-            }
-            else
-            {
-                TrySwap(entity, _selectedEntity);
-            }
+           
         }
 
-        private void TrySwap(Entity first, Entity second)
+        private void CheckMatch(Grid grid, Swap swap)
         {
-
+            var firstCell = swap.First.Get<Cell>();
+            var secondCell = swap.Second.Get<Cell>();
         }
     }
 }

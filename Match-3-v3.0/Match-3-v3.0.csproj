@@ -52,6 +52,7 @@
     <Compile Include="Components\RendererComponent.cs" />
     <Compile Include="Components\CountPresenter.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
+    <Compile Include="Components\Swap.cs" />
     <Compile Include="Components\TargetPosition.cs" />
     <Compile Include="Components\Text.cs" />
     <Compile Include="Components\TextRenderer.cs" />
@@ -68,10 +69,10 @@
     <Compile Include="Scenes\BaseScene.cs" />
     <Compile Include="Scenes\GameOverScene.cs" />
     <Compile Include="Scenes\GameScene.cs" />
+    <Compile Include="Systems\FindMatchesSystem.cs" />
     <Compile Include="Systems\FrameAnimationDrawSystem.cs" />
     <Compile Include="Systems\ButtonSystem.cs" />
     <Compile Include="Systems\CounterSystem.cs" />
-    <Compile Include="Systems\FallSystem.cs" />
     <Compile Include="Systems\FrameAnimationUpdateSystem.cs" />
     <Compile Include="Systems\GenerationSystem.cs" />
     <Compile Include="Systems\InputSystem.cs" />

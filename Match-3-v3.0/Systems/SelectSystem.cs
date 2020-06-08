@@ -15,11 +15,12 @@ namespace Match_3_v3._0.Systems
     class SelectSystem : InputSystem
     {
         private Entity? _selected = null;
+        private World _world;
 
         public SelectSystem(World world, GameWindow window)
             : base(world.GetEntities().With(typeof(FrameAnimation)).With(typeof(Cell)).AsSet(), window)
         {
-
+            _world = world;
         }
 
         protected override void Update(float state, in Entity entity)
@@ -47,6 +48,8 @@ namespace Match_3_v3._0.Systems
                         {
                             _selected.Value.Set(new TargetPosition { Position = currentCell.PositionInGrid });
                             entity.Set(new TargetPosition { Position = _selected.Value.Get<Cell>().PositionInGrid });
+                            var grid = _world.First(e => e.Has<Grid>());
+                            grid.Set(new Swap(_selected.Value, entity));
                         } 
                         else
                         {
