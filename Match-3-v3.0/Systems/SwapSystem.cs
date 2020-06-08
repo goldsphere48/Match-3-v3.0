@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-
     class SwapSystem : AEntitySystem<float>
     {
         private Entity _selectedEntity;

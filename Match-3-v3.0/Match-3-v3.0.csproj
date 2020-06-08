@@ -52,6 +52,7 @@
     <Compile Include="Components\RendererComponent.cs" />
     <Compile Include="Components\CountPresenter.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
+    <Compile Include="Components\TargetPosition.cs" />
     <Compile Include="Components\Text.cs" />
     <Compile Include="Components\TextRenderer.cs" />
     <Compile Include="Components\Timer.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Systems\InputSystem.cs" />
     <Compile Include="Systems\SelectSystem.cs" />
     <Compile Include="Systems\SwapSystem.cs" />
+    <Compile Include="Systems\TargetPositionSystem.cs" />
     <Compile Include="Systems\TextRenderSystem.cs" />
     <Compile Include="ResourceManagers\IResourceLoader.cs" />
     <Compile Include="Match3Game.cs" />

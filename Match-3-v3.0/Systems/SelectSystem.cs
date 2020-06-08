@@ -45,8 +45,10 @@ namespace Match_3_v3._0.Systems
                         var selectedCell = _selected.Value.Get<Cell>();
                         if (GridUtil.IsNeighbours(selectedCell, currentCell))
                         {
-
-                        } else
+                            _selected.Value.Set(new TargetPosition { Position = currentCell.PositionInGrid });
+                            entity.Set(new TargetPosition { Position = _selected.Value.Get<Cell>().PositionInGrid });
+                        } 
+                        else
                         {
                             _selected.Value.Get<FrameAnimation>().Play = false;
                             currentAnimation.Play = false;
