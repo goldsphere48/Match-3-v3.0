@@ -3,21 +3,22 @@ using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Utils;
+using System.Linq;
 
 namespace Match_3_v3._0.Systems
 {
     [WhenAdded(typeof(GenerationZone))]
-    [WhenChanged(typeof(GenerationZone))]
     [With(typeof(GenerationZone))]
+    [With(typeof(Grid))]
     [With(typeof(Transform))]
     class GenerationSystem : AEntitySystem<float>
     {
         private CellPool _cellPool;
 
-        public GenerationSystem(World world)
+        public GenerationSystem(World world, CellPool cellPool)
             : base(world)
         {
-            _cellPool = new CellPool(new CellFactory(world, PlayerPrefs.Get<int>("CellSize")));
+            _cellPool = cellPool;
         }
 
         protected override void Update(float state, in Entity entity)
@@ -30,7 +31,7 @@ namespace Match_3_v3._0.Systems
                 newCells = GenerateNewCells(generationInfo);
                 ApplyNewCells(grid, newCells);
             } 
-            while (IsMatchExist(grid) == false);
+            while (MatchesExist(grid) || PossibleMatchesDoesntExist(grid));
 
             var parentTransform = entity.Get<Transform>();
             foreach (var column in newCells)
@@ -41,6 +42,7 @@ namespace Match_3_v3._0.Systems
                     entity.SetAsParentOf(cell);
                 }
             }
+            entity.Remove<GenerationZone>();
         }
 
         private Cell[][] GenerateNewCells(GenerationZone generationInfo)
@@ -58,7 +60,15 @@ namespace Match_3_v3._0.Systems
                     };
                 }
             }
+            //DebugSetup(newCells);
             return newCells;
+        }
+
+        private void DebugSetup(Cell[][] cells)
+        {
+            cells[0][0].Color = CellColor.Blue;
+            cells[0][1].Color = CellColor.Blue;
+            cells[0][2].Color = CellColor.Blue;
         }
 
         private void ApplyNewCells(Grid grid, Cell[][] newCells)
@@ -72,18 +82,14 @@ namespace Match_3_v3._0.Systems
             }
         }
 
-        private int attempts = 0;
-
-        private bool IsMatchExist(Grid grid)
+        private bool MatchesExist(Grid grid)
         {
-            attempts++;
-            if (attempts == 4)
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
+            return FindMatchesSystem.FindMatches(grid).Count() > 0;
+        }
+
+        private bool PossibleMatchesDoesntExist(Grid grid)
+        {
+            return false;
         }
     }
 }

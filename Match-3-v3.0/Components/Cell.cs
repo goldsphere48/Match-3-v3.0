@@ -18,7 +18,7 @@ namespace Match_3_v3._0.Components
 
     class Cell
     {
-        public Vector2 PositionInGrid { get; set; }
+        public Point PositionInGrid { get; set; }
         public CellColor Color { get; set; }
     }
 }

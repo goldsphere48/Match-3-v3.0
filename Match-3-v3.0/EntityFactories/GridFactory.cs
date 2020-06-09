@@ -43,20 +43,20 @@ namespace Match_3_v3._0.EntityFactories
             );
             var position = Vector2.Add(SceneUtil.GetCenterFor(entity, _device), new Vector2(0, 30));
             entity.Set(new Transform { Position = position });
-            entity.Set(new Grid { Cells = new Cell[_width, _height] });
+            entity.Set(new Grid(_width, _height));
             entity.Set(new GenerationZone { NewCellPositionsInGrid = GetFullGridMatrix(), VerticalOffset = 0 });
             return entity;
         }
 
-        private Vector2[][] GetFullGridMatrix()
+        private Point[][] GetFullGridMatrix()
         {
-            var positions = new Vector2[_width][];
+            var positions = new Point[_width][];
             for (int i = 0; i < _width; ++i)
             {
-                positions[i] = new Vector2[_height];
+                positions[i] = new Point[_height];
                 for (int j = 0; j < _height; ++j)
                 {
-                    positions[i][j] = new Vector2(i, j);
+                    positions[i][j] = new Point(i, j);
                 }
             }
             return positions;

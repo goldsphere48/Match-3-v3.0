@@ -39,13 +39,18 @@ namespace Match_3_v3._0.Utils
             return cell.Value;
         }
 
-        private void PlaceCell(Entity? cell, Vector2 positionInGrid, int cellSize, float verticalOffset)
+        internal void Return(Entity entity)
+        {
+            
+        }
+
+        private void PlaceCell(Entity? cell, Point positionInGrid, int cellSize, float verticalOffset)
         {
             var transform = cell.Value.Get<Transform>();
             transform.LocalPosition =
                 Vector2.Add(
                     Vector2.Multiply(
-                        positionInGrid,
+                        positionInGrid.ToVector2(),
                         cellSize
                     ),
                     new Vector2(0, verticalOffset)

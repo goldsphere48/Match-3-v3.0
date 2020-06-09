@@ -9,7 +9,7 @@ namespace Match_3_v3._0.Components
 {
     struct GenerationZone
     {
-        public Vector2[][] NewCellPositionsInGrid { get; set; }
+        public Point[][] NewCellPositionsInGrid { get; set; }
         public float VerticalOffset { get; set; }
     }
 }

@@ -44,6 +44,7 @@
     <StartupObject>Match_3_v3._0.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\Dying.cs" />
     <Compile Include="Components\FrameAnimation.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\Cell.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Components\Grid.cs" />
     <Compile Include="Components\RendererComponent.cs" />
     <Compile Include="Components\CountPresenter.cs" />
+    <Compile Include="Components\Selected.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
     <Compile Include="Components\Swap.cs" />
     <Compile Include="Components\TargetPosition.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Components\TextRenderer.cs" />
     <Compile Include="Components\Timer.cs" />
     <Compile Include="Components\Transform.cs" />
+    <Compile Include="Data\Combination.cs" />
     <Compile Include="Entities\Counter.cs" />
     <Compile Include="EntityFactories\BackgroundFactory.cs" />
     <Compile Include="EntityFactories\ButtonFactory.cs" />
@@ -69,6 +72,7 @@
     <Compile Include="Scenes\BaseScene.cs" />
     <Compile Include="Scenes\GameOverScene.cs" />
     <Compile Include="Scenes\GameScene.cs" />
+    <Compile Include="Systems\DyingSystem.cs" />
     <Compile Include="Systems\FindMatchesSystem.cs" />
     <Compile Include="Systems\FrameAnimationDrawSystem.cs" />
     <Compile Include="Systems\ButtonSystem.cs" />
@@ -94,6 +98,7 @@
     <Compile Include="Utils\CellColorGenerator.cs" />
     <Compile Include="Utils\CellPool.cs" />
     <Compile Include="Utils\GridUtil.cs" />
+    <Compile Include="Utils\Neighbours.cs" />
     <Compile Include="Utils\SceneUtil.cs" />
     <Compile Include="Utils\MouseButton.cs" />
   </ItemGroup>

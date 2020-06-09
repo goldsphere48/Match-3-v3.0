@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Entities;
+using Match_3_v3._0.Utils;
 
 namespace Match_3_v3._0.Scenes
 {
@@ -25,12 +26,14 @@ namespace Match_3_v3._0.Scenes
         private Counter _scoreCounter;
         private Counter _timerCounter;
         private int _cellSize = 81;
+        private CellPool _cellPool;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
             PlayerPrefs.Set("CellSize", _cellSize);
             _backgroundFactory = new BackgroundFactory(world);
             _gridFactory = new GridFactory(world, _game.GraphicsDevice, 8, 8, _cellSize);
+            _cellPool = new CellPool(new CellFactory(world, PlayerPrefs.Get<int>("CellSize")));
             InitializeSystems(world, out systems);
             SetupWorld(world);
         }
@@ -42,7 +45,8 @@ namespace Match_3_v3._0.Scenes
                 new TransformSystem(world, _runner),
                 new CounterSystem(world),
                 new TimerSystem(world),
-                new GenerationSystem(world),
+                new GenerationSystem(world, _cellPool),
+                new DyingSystem(world, _cellPool),
                 //new FallSystem(world),
                 new TargetPositionSystem(world),
                 new SelectSystem(world, _game.Window),

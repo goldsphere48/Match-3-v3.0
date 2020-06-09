@@ -8,6 +8,14 @@ namespace Match_3_v3._0.Components
 {
     struct Grid
     {
+        public int Width { get; set; }
+        public int Height { get; set; }
         public Cell[,] Cells { get; set; }
+        public Grid(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            Cells = new Cell[width, height];
+        }
     }
 }
