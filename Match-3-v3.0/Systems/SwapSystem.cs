@@ -22,13 +22,50 @@ namespace Match_3_v3._0.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-           
+            var swap = entity.Get<Swap>();
+            CheckMatch(entity, swap);
+            entity.Remove<Swap>();
         }
 
-        private void CheckMatch(Grid grid, Swap swap)
+        private void CheckMatch(Entity entity, Swap swap)
         {
-            var firstCell = swap.First.Get<Cell>();
-            var secondCell = swap.Second.Get<Cell>();
+            var grid = entity.Get<Grid>();
+            swap.Deconstruct(out var first, out var second);
+            var firstCell = first.Get<Cell>();
+            var secondCell = second.Get<Cell>();
+            grid = ApplySwapToGridAndGet(grid, firstCell, secondCell);
+            SwapCells(first, second);
+            var matches = FindMatchesSystem.FindMatches(grid).Count();
+            if (matches == 0)
+            {
+                SwapBack(first, second);
+            } else
+            {
+                entity.Set(grid);
+                entity.Remove<Swap>();
+            }
+        }
+
+        private Grid ApplySwapToGridAndGet(Grid grid, Cell first, Cell second)
+        {
+            first.PositionInGrid.Deconstruct(out var x1, out var y1);
+            second.PositionInGrid.Deconstruct(out var x2, out var y2);
+            var tmp = grid.Cells[x1, y1].Color;
+            grid.Cells[x1, y1].Color = grid.Cells[x2, y2].Color;
+            grid.Cells[x2, y2].Color = tmp;
+            return grid;
+        }
+
+        private void SwapCells(Entity first, Entity second)
+        {
+            first.Set(new TargetPosition { Position = second.Get<Transform>().Position });
+            second.Set(new TargetPosition { Position = first.Get<Transform>().Position });
+        }
+
+        private void SwapBack(Entity first, Entity second)
+        {
+            first.Set(new OriginalPosition { Value = first.Get<Transform>().Position });
+            second.Set(new OriginalPosition { Value = second.Get<Transform>().Position });
         }
     }
 }

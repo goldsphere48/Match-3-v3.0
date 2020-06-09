@@ -190,7 +190,7 @@ namespace Match_3_v3._0.Systems
             {
                 if (xAmount[i].Count >= 3)
                 {
-                    yAmount[i].Orientation = Orientation.Vertical;
+                    xAmount[i].Orientation = Orientation.Vertical;
                     yield return xAmount[i];
                 }
             }

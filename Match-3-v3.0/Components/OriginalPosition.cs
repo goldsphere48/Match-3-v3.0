@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Components
 {
-    struct TargetPosition
+    struct OriginalPosition
     {
-        public Vector2 Position { get; set; }
+        public Vector2 Value;
     }
 }

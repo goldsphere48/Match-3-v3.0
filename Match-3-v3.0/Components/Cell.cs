@@ -20,5 +20,9 @@ namespace Match_3_v3._0.Components
     {
         public Point PositionInGrid { get; set; }
         public CellColor Color { get; set; }
+        public override string ToString()
+        {
+            return Color.ToString();
+        }
     }
 }

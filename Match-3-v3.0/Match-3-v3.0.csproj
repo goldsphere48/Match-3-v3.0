@@ -50,6 +50,7 @@
     <Compile Include="Components\Cell.cs" />
     <Compile Include="Components\GenerationZone.cs" />
     <Compile Include="Components\Grid.cs" />
+    <Compile Include="Components\OriginalPosition.cs" />
     <Compile Include="Components\RendererComponent.cs" />
     <Compile Include="Components\CountPresenter.cs" />
     <Compile Include="Components\Selected.cs" />
@@ -67,11 +68,13 @@
     <Compile Include="EntityFactories\CellFactory.cs" />
     <Compile Include="EntityFactories\GridFactory.cs" />
     <Compile Include="EntityFactories\TextFactory.cs" />
+    <Compile Include="Messages\SwapFinishedMessage.cs" />
     <Compile Include="PlayerPrefs.cs" />
     <Compile Include="ResourceManagers\SpriteFontResourceManager.cs" />
     <Compile Include="Scenes\BaseScene.cs" />
     <Compile Include="Scenes\GameOverScene.cs" />
     <Compile Include="Scenes\GameScene.cs" />
+    <Compile Include="Systems\CancelSwapSystem.cs" />
     <Compile Include="Systems\DyingSystem.cs" />
     <Compile Include="Systems\FindMatchesSystem.cs" />
     <Compile Include="Systems\FrameAnimationDrawSystem.cs" />

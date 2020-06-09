@@ -16,5 +16,11 @@ namespace Match_3_v3._0.Components
             First = first;
             Second = second;
         }
+
+        public void Deconstruct(out Entity first, out Entity second)
+        {
+            first = First;
+            second = Second;
+        }
     }
 }
