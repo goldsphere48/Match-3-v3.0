@@ -47,7 +47,6 @@ namespace Match_3_v3._0.Scenes
                 new TimerSystem(world),
                 new GenerationSystem(world, _cellPool),
                 new DyingSystem(world, _cellPool),
-                //new FallSystem(world),
                 new TargetPositionSystem(world),
                 new SelectSystem(world, _game.Window),
                 new SwapSystem(world),

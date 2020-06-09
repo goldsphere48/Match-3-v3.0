@@ -67,30 +67,33 @@ namespace Match_3_v3._0.Systems
 
         private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
         {
-            if (combination.Count >= 5)
-            {
-                ProceedBomb(combination, cells);
-            } else if (combination.Count == 4)
-            {
-                ProceedLine(combination, cells);
-            } else
+            if (combination.Count == 3)
             {
                 ProceedSimple(combination, cells);
+            } else
+            {
+                var modifiable = GetModifiable(combination, cells);
+                modifiable.Set<DontDestroy>();
+                Destroy(combination, cells);
+                modifiable.Remove<DontDestroy>();
+                if (combination.Count == 4)
+                {
+                    ProceedLine(modifiable);
+                } else
+                {
+                    ProceedBomb(modifiable);
+                }
             }
         }
 
-        private void ProceedBomb(Combination combination, Dictionary<Point, Entity> cells)
-        {
-            var modifiable = GetModifiable(combination, cells);
-            modifiable.Set<DontDestroy>();
-            Destroy(combination, cells);
+        private void ProceedBomb(Entity cell)
+        { 
+            
         }
 
-        private void ProceedLine(Combination combination, Dictionary<Point, Entity> cells)
+        private void ProceedLine(Entity cell)
         {
-            var modifiable = GetModifiable(combination, cells);
-            modifiable.Set<DontDestroy>();
-            Destroy(combination, cells);
+            
         }
 
         private Entity GetModifiable(Combination combination, Dictionary<Point, Entity> cells)
@@ -116,10 +119,7 @@ namespace Match_3_v3._0.Systems
             {
                 if (cells.TryGetValue(position, out Entity entity))
                 {
-                    if (entity.Has<DontDestroy>())
-                    {
-                        entity.Remove<DontDestroy>();
-                    } else 
+                    if (!entity.Has<DontDestroy>())
                     {
                         entity.Set<Dying>();
                     }
