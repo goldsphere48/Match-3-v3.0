@@ -46,8 +46,8 @@ namespace Match_3_v3._0.Systems
                         var selectedCell = _selected.Value.Get<Cell>();
                         if (GridUtil.IsNeighbours(selectedCell, currentCell))
                         {
-                            _selected.Value.Set(new TargetPosition { Position = currentCell.PositionInGrid });
-                            entity.Set(new TargetPosition { Position = _selected.Value.Get<Cell>().PositionInGrid });
+                            _selected.Value.Set(new TargetPosition { Position = entity.Get<Transform>().Position });
+                            entity.Set(new TargetPosition { Position = _selected.Value.Get<Transform>().Position });
                             var grid = _world.First(e => e.Has<Grid>());
                             grid.Set(new Swap(_selected.Value, entity));
                         } 
