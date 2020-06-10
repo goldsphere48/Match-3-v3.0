@@ -17,6 +17,20 @@ namespace Match_3_v3._0.Utils
             return length == 1;
         }
 
+        public static Point[][] GetFullGridMatrix(int width, int height)
+        {
+            var positions = new Point[width][];
+            for (int i = 0; i < width; ++i)
+            {
+                positions[i] = new Point[height];
+                for (int j = 0; j < height; ++j)
+                {
+                    positions[i][j] = new Point(i, j);
+                }
+            }
+            return positions;
+        }
+
         public static Neighbours GetNeighbours(Point positionInGrid, int width, int height)
         {
             int x = positionInGrid.X;

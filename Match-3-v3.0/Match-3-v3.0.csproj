@@ -44,6 +44,8 @@
     <StartupObject>Match_3_v3._0.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\CombinationsArray.cs" />
+    <Compile Include="Components\DontDestroy.cs" />
     <Compile Include="Components\Dying.cs" />
     <Compile Include="Components\FrameAnimation.cs" />
     <Compile Include="Components\Button.cs" />
@@ -79,7 +81,9 @@
     <Compile Include="Scenes\GameOverScene.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Systems\CancelSwapSystem.cs" />
+    <Compile Include="Systems\CombinationSystem.cs" />
     <Compile Include="Systems\DyingSystem.cs" />
+    <Compile Include="Systems\FallSystem.cs" />
     <Compile Include="Systems\FindMatchesSystem.cs" />
     <Compile Include="Systems\FrameAnimationDrawSystem.cs" />
     <Compile Include="Systems\ButtonSystem.cs" />
@@ -103,8 +107,10 @@
     <Compile Include="Systems\TransformSystem.cs" />
     <Compile Include="ResourceManagers\PipelineResourceLoader.cs" />
     <Compile Include="ResourceManagers\TextureResourceManager.cs" />
+    <Compile Include="Systems\WaitFallingSystem.cs" />
     <Compile Include="Utils\CellColorGenerator.cs" />
     <Compile Include="Utils\CellPool.cs" />
+    <Compile Include="Utils\EntityExtension.cs" />
     <Compile Include="Utils\GridUtil.cs" />
     <Compile Include="Utils\Neighbours.cs" />
     <Compile Include="Utils\SceneUtil.cs" />

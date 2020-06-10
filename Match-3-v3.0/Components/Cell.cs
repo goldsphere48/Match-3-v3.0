@@ -16,13 +16,13 @@ namespace Match_3_v3._0.Components
         Purple
     }
 
-    class Cell
+    struct Cell
     {
-        public Point PositionInGrid { get; set; }
-        public CellColor Color { get; set; }
+        public Point PositionInGrid;
+        public CellColor Color;
         public override string ToString()
         {
-            return Color.ToString();
+            return $"{Color.ToString()} | {PositionInGrid}";
         }
     }
 }

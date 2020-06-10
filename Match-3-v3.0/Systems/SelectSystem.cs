@@ -19,13 +19,14 @@ namespace Match_3_v3._0.Systems
         private Entity? _firstSelected = null;
         private Entity? _secondSelected = null;
         private World _world;
-        private GameState _gameState = GameState.WaitForUserInput;
+        private GameState _gameState;
 
-        public SelectSystem(World world, GameWindow window)
+        public SelectSystem(World world, GameWindow window, GameState initState)
             : base(world.GetEntities().With(typeof(FrameAnimation)).With(typeof(Cell)).AsSet(), window)
         {
             _world = world;
             _world.Subscribe(this);
+            _gameState = initState;
         }
 
         [Subscribe]

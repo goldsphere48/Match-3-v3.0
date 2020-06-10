@@ -44,22 +44,8 @@ namespace Match_3_v3._0.EntityFactories
             var position = Vector2.Add(SceneUtil.GetCenterFor(entity, _device), new Vector2(0, 30));
             entity.Set(new Transform { Position = position });
             entity.Set(new Grid(_width, _height));
-            entity.Set(new GenerationZone { NewCellPositionsInGrid = GetFullGridMatrix(), VerticalOffset = 0 });
+            entity.Set(new GenerationZone { NewCellPositionsInGrid = GridUtil.GetFullGridMatrix(_width, _height), VerticalOffset = 0 });
             return entity;
-        }
-
-        private Point[][] GetFullGridMatrix()
-        {
-            var positions = new Point[_width][];
-            for (int i = 0; i < _width; ++i)
-            {
-                positions[i] = new Point[_height];
-                for (int j = 0; j < _height; ++j)
-                {
-                    positions[i][j] = new Point(i, j);
-                }
-            }
-            return positions;
         }
 
         private Texture2D CreateTexture()

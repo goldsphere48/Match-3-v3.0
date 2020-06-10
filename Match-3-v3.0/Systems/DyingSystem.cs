@@ -1,6 +1,8 @@
 ﻿using DefaultEcs;
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
+using Match_3_v3._0.Data;
+using Match_3_v3._0.Messages;
 using Match_3_v3._0.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,24 +18,36 @@ namespace Match_3_v3._0.Systems
     {
         private CellPool _cellPool;
         private World _world;
+        private GameState _gameState = GameState.Generating;
 
-        public DyingSystem(World world, CellPool cellPool)
+        public DyingSystem(World world, CellPool cellPool, GameState initState)
             : base(world)
         {
             _cellPool = cellPool;
             _world = world;
+            _world.Subscribe(this);
+            _gameState = initState;
+        }
+
+        [Subscribe]
+        private void On(in NewStateMessage newState)
+        {
+            _gameState = newState.Value;
         }
 
         protected override void Update(float state, ReadOnlySpan<Entity> entities)
         {
-            var grid = _world.First(e => e.Has<Grid>()).Get<Grid>();
-            foreach (var entity in entities)
+            if (_gameState == GameState.CellDestroying)
             {
-                var cell = entity.Get<Cell>().PositionInGrid;
-                Console.WriteLine(cell);
-                entity.Remove<Dying>();
-                entity.Disable();
-                entity.Dispose();
+                var grid = _world.First(e => e.Has<Grid>()).Get<Grid>();
+                foreach (var entity in entities)
+                {
+                    var cell = entity.Get<Cell>().PositionInGrid;
+                    entity.Remove<Dying>();
+                    entity.Disable();
+                   // entity.Dispose();
+                }
+                _world.Publish(new NewStateMessage { Value = GameState.Falling });
             }
         }
     }

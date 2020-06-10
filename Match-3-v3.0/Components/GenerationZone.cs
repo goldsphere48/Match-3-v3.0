@@ -11,5 +11,6 @@ namespace Match_3_v3._0.Components
     {
         public Point[][] NewCellPositionsInGrid { get; set; }
         public float VerticalOffset { get; set; }
+        public bool IsSecondaryGeneration { get; set; }
     }
 }

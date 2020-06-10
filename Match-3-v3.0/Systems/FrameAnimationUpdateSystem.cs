@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-    class FrameAnimationUpdateSystem : AComponentSystem<float, FrameAnimation>
+    [With(typeof(FrameAnimation))]
+    class FrameAnimationUpdateSystem : AEntitySystem<float>
     {
         public FrameAnimationUpdateSystem(World world)
             : base(world)
@@ -19,8 +20,9 @@ namespace Match_3_v3._0.Systems
 
         }
 
-        protected override void Update(float state, ref FrameAnimation component)
+        protected override void Update(float state, in Entity entity)
         {
+            var component = entity.Get<FrameAnimation>();
             if (component.Play)
             {
                 component.CurrentState += state;

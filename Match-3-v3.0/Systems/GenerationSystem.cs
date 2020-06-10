@@ -1,7 +1,9 @@
 ﻿using DefaultEcs;
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
+using Match_3_v3._0.Data;
 using Match_3_v3._0.EntityFactories;
+using Match_3_v3._0.Messages;
 using Match_3_v3._0.Utils;
 using System.Linq;
 
@@ -14,45 +16,73 @@ namespace Match_3_v3._0.Systems
     class GenerationSystem : AEntitySystem<float>
     {
         private CellPool _cellPool;
+        private GameState _gameState;
+        private World _world;
 
-        public GenerationSystem(World world, CellPool cellPool)
+        public GenerationSystem(World world, CellPool cellPool, GameState initState)
             : base(world)
         {
+            _gameState = initState;
             _cellPool = cellPool;
+            _world = world;
+            _world.Subscribe(this);
+        }
+
+        [Subscribe]
+        private void On(in NewStateMessage newStateMessage)
+        {
+            _gameState = newStateMessage.Value;
         }
 
         protected override void Update(float state, in Entity entity)
         {
-            ref var generationInfo = ref entity.Get<GenerationZone>();
-            ref var grid = ref entity.Get<Grid>();
-            Cell[][] newCells;
-            do
+            if (_gameState == GameState.Generating)
             {
-                newCells = GenerateNewCells(generationInfo);
-                ApplyNewCells(grid, newCells);
-            } 
-            while (MatchesExist(grid) || PossibleMatchesDoesntExist(grid));
+                ref var generationInfo = ref entity.Get<GenerationZone>();
+                ref var grid = ref entity.Get<Grid>();
+                Cell[][] newCells = Generate(grid, generationInfo);
 
-            var parentTransform = entity.Get<Transform>();
-            foreach (var column in newCells)
-            {
-                foreach (var cellComponent in column)
+                while (RegenerationNeeded(grid))
                 {
-                    Entity cell = _cellPool.RequestCell(cellComponent, generationInfo.VerticalOffset, parentTransform);
-                    entity.SetAsParentOf(cell);
+                    newCells = Generate(grid, new GenerationZone { NewCellPositionsInGrid = GridUtil.GetFullGridMatrix(grid.Width, grid.Height) });
                 }
+
+                var parentTransform = entity.Get<Transform>();
+                foreach (var column in newCells)
+                {
+                    foreach (var cellComponent in column)
+                    {
+                        Entity cell = _cellPool.RequestCell(cellComponent, generationInfo.VerticalOffset, parentTransform);
+                        entity.SetAsParentOf(cell);
+                    }
+                }
+                entity.Remove<GenerationZone>();
+                _world.Publish(new NewStateMessage { Value = GameState.WaitForFalling });
             }
-            entity.Remove<GenerationZone>();
+        }
+
+        private Cell[][] Generate(Grid grid, GenerationZone generationZone)
+        {
+            var newCells = GenerateNewCells(generationZone);
+            ApplyNewCells(grid, newCells);
+            return newCells;
+        }
+
+        private bool RegenerationNeeded(Grid grid)
+        {
+            return MatchesDoesntExist(grid) || PossibleMatchesDoesntExist(grid);
         }
 
         private Cell[][] GenerateNewCells(GenerationZone generationInfo)
         {
             var newCells = new Cell[generationInfo.NewCellPositionsInGrid.Length][];
+            var height = 0;
             for (int i = 0; i < newCells.Length; ++i)
             {
                 newCells[i] = new Cell[generationInfo.NewCellPositionsInGrid[i].Length];
                 for(int j = 0; j <  newCells[i].Length; ++j)
                 {
+                    height = newCells[i].Length;
                     newCells[i][j] = new Cell
                     {
                         PositionInGrid = generationInfo.NewCellPositionsInGrid[i][j],
@@ -60,16 +90,26 @@ namespace Match_3_v3._0.Systems
                     };
                 }
             }
-            DebugSetup(newCells);
+            if (!generationInfo.IsSecondaryGeneration)
+            {
+                DebugSetup(newCells);
+            }
             return newCells;
         }
 
         private void DebugSetup(Cell[][] cells)
         {
-            cells[0][0].Color = CellColor.Blue;
-            cells[0][1].Color = CellColor.Blue;
+            cells[0][0].Color = CellColor.Gold;
+            cells[0][1].Color = CellColor.Purple;
             cells[0][2].Color = CellColor.Green;
-            cells[0][3].Color = CellColor.Blue;
+
+            cells[1][0].Color = CellColor.Purple;
+            cells[1][1].Color = CellColor.Brown;
+            cells[1][2].Color = CellColor.Green;
+
+            cells[2][0].Color = CellColor.Gold;
+            cells[2][1].Color = CellColor.Green;
+            cells[2][2].Color = CellColor.Blue;
         }
 
         private void ApplyNewCells(Grid grid, Cell[][] newCells)
@@ -78,19 +118,19 @@ namespace Match_3_v3._0.Systems
             {
                 foreach (var cell in column)
                 {
-                    grid.Cells[(int)cell.PositionInGrid.X, (int)cell.PositionInGrid.Y] = cell; 
+                    grid.Cells[cell.PositionInGrid.X, cell.PositionInGrid.Y] = cell; 
                 }
             }
         }
 
-        private bool MatchesExist(Grid grid)
+        private bool MatchesDoesntExist(Grid grid)
         {
-            return FindMatchesSystem.FindMatches(grid).Count() > 0;
+            return FindMatchesSystem.FindMatches(grid).Count() == 0;
         }
 
         private bool PossibleMatchesDoesntExist(Grid grid)
         {
-            return false;
+            return FindMatchesSystem.FindPossibleMatches(grid).Count == 0;
         }
     }
 }

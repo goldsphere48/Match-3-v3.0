@@ -39,10 +39,16 @@ namespace Match_3_v3._0.Systems
             var matches = FindMatchesSystem.FindMatches(grid).Count();
             if (matches == 0)
             {
+                grid = GridBeforeSwap(grid, secondCell, firstCell);
                 first.Set(new SwapSuccess { Value = SwapResult.Fail });
                 SetOriginPositions(first, second);
             } else
             {
+                var tmp = firstCell.PositionInGrid;
+                firstCell.PositionInGrid = secondCell.PositionInGrid;
+                secondCell.PositionInGrid = tmp;
+                first.Set(firstCell);
+                second.Set(secondCell);
                 first.Set(new SwapSuccess { Value = SwapResult.Success});
                 entity.Set(grid);
                 entity.Remove<Swap>();

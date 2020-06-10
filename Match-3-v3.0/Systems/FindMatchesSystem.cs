@@ -30,24 +30,18 @@ namespace Match_3_v3._0.Systems
         }
     }
 
-    struct DontDestroy
-    {
-
-    }
-
     [With(typeof(Grid))]
     class FindMatchesSystem : AEntitySystem<float>
     {
-        private EntitySet _cells;
-        private GameState _gameState = GameState.WaitForUserInput;
+        private GameState _gameState;
         private World _world;
 
-        public FindMatchesSystem(World world)
+        public FindMatchesSystem(World world, GameState initState)
             : base(world)
-        {
-            _cells = world.GetEntities().With<Cell>().AsSet();
+        { 
             _world = world;
             _world.Subscribe(this);
+            _gameState = initState;
         }
 
         [Subscribe]
@@ -62,90 +56,21 @@ namespace Match_3_v3._0.Systems
             {
                 var grid = entity.Get<Grid>();
                 var combinations = FindMatches(grid);
-                foreach (var combination in combinations)
+                if (combinations.Count() > 0)
                 {
-                    ProceedCombination(combination, GetCells(grid.Width, grid.Height));
-                }
-                _world.Publish(new NewStateMessage { Value = GameState.WaitForUserInput });
-            }
-        }
-
-        private Dictionary<Point, Entity> GetCells(int width, int height)
-        {
-            var result = new Dictionary<Point, Entity>(width * height);
-            foreach (var cell in _cells.GetEntities())
-            {
-                result.Add(cell.Get<Cell>().PositionInGrid, cell);
-            }
-            return result;
-        }
-
-        private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
-        {
-            ///if (combination.Count == 3)
-            //{
-                ProceedSimple(combination, cells);
-            /*} else
-            {
-                var modifiable = GetModifiable(combination, cells);
-                modifiable.Set<DontDestroy>();
-                Destroy(combination, cells);
-                modifiable.Remove<DontDestroy>();
-                if (combination.Count == 4)
-                {
-                    ProceedLine(modifiable);
+                    CheckCombinations(combinations);
                 } else
                 {
-                    ProceedBomb(modifiable);
-                }
-            }*/
-        }
-
-        private void ProceedBomb(Entity cell)
-        { 
-            
-        }
-
-        private void ProceedLine(Entity cell)
-        {
-            
-        }
-
-        private Entity GetModifiable(Combination combination, Dictionary<Point, Entity> cells)
-        {
-            Entity? modifiable = null;
-            foreach (var position in combination)
-            {
-                if (cells.TryGetValue(position, out Entity entity))
-                {
-                    modifiable = modifiable ?? entity;
-                    if (entity.Has<Selected>())
-                    {
-                        modifiable = entity;
-                    }
-                }
-            }
-            return modifiable.Value;
-        }
-
-        private void Destroy(Combination combination, Dictionary<Point, Entity> cells)
-        {
-            foreach (var position in combination)
-            {
-                if (cells.TryGetValue(position, out Entity entity))
-                {
-                    if (!entity.Has<DontDestroy>())
-                    {
-                        entity.Set<Dying>();
-                        Console.WriteLine(entity.Get<Transform>().LocalPosition);
-                    }
+                    _world.Publish(new NewStateMessage { Value = GameState.WaitForUserInput });
                 }
             }
         }
 
-        private void ProceedSimple(Combination combination, Dictionary<Point, Entity> cells)
+        private void CheckCombinations(IEnumerable<Combination> combinations)
         {
-            Destroy(combination, cells);
+            _world.CreateEntity().Set(new CombinationsArray { Value = combinations });
+            _world.Publish(new NewStateMessage { Value = GameState.CombinationChecking });
+
         }
 
         public static IEnumerable<Combination> FindMatches(Grid grid)
@@ -220,6 +145,11 @@ namespace Match_3_v3._0.Systems
             {
                 Visit(ref args, currentCell);
             }
+        }
+
+        internal static IEnumerable<Combination> FindPossibleMatches(Grid grid)
+        {
+            return Enumerable.Empty<Combination>();
         }
 
         private static void Visit(ref GridVisitorArgs args, Cell currentCell)

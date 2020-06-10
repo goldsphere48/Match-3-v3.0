@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework;
 using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Entities;
 using Match_3_v3._0.Utils;
+using Match_3_v3._0.Data;
 
 namespace Match_3_v3._0.Scenes
 {
@@ -25,14 +26,19 @@ namespace Match_3_v3._0.Scenes
         private GridFactory _gridFactory;
         private Counter _scoreCounter;
         private Counter _timerCounter;
-        private int _cellSize = 81;
         private CellPool _cellPool;
+        private GameState _gameState = GameState.Generating;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
-            PlayerPrefs.Set("CellSize", _cellSize);
             _backgroundFactory = new BackgroundFactory(world);
-            _gridFactory = new GridFactory(world, _game.GraphicsDevice, 8, 8, _cellSize);
+            _gridFactory = new GridFactory(
+                world, 
+                _game.GraphicsDevice,
+                PlayerPrefs.Get<int>("Width"),
+                PlayerPrefs.Get<int>("Height"),
+                PlayerPrefs.Get<int>("CellSize")
+            );
             _cellPool = new CellPool(new CellFactory(world, PlayerPrefs.Get<int>("CellSize")));
             InitializeSystems(world, out systems);
             SetupWorld(world);
@@ -42,21 +48,24 @@ namespace Match_3_v3._0.Scenes
         {
             var _runner = new DefaultParallelRunner(Environment.ProcessorCount);
             systems = new SequentialSystem<float>(
-                new TransformSystem(world, _runner),
                 new CounterSystem(world),
                 new TimerSystem(world),
-                new GenerationSystem(world, _cellPool),
+                new GenerationSystem(world, _cellPool, _gameState),
                 new TargetPositionSystem(world),
-                new SelectSystem(world, _game.Window),
+                new SelectSystem(world, _game.Window, _gameState),
                 new SwapSystem(world),
                 new CancelSwapSystem(world),
                 new SwapFinishedSystem(world),
-                new FindMatchesSystem(world),
+                new FindMatchesSystem(world, _gameState),
+                new CombinationSystem(world, _gameState),
+                new FallSystem(world, _gameState),
+                new WaitFallingSystem(world, _gameState),
+                new TransformSystem(world, _runner),
                 new FrameAnimationUpdateSystem(world),
                 new SpriteRenderSystem(_batch, world),
                 new FrameAnimationDrawSystem(_batch, world),
                 new TextRenderSystem(_batch, world),
-                new DyingSystem(world, _cellPool)
+                new DyingSystem(world, _cellPool, _gameState)
             );
         }
 

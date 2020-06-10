@@ -23,20 +23,21 @@ namespace Match_3_v3._0.Utils
 
         public Entity RequestCell(Cell cellInfo, float verticalOffset, Transform parent)
         {
-            Entity? cell = _cells.Find(e => !e.Value.IsAlive && e.Value.Get<Cell>().Color == cellInfo.Color);
-            if (cell.HasValue == false)
+            Entity? cellEntity = _cells.Find(e => !e.Value.IsEnabled() && e.Value.Get<Cell>().Color == cellInfo.Color);
+            if (cellEntity.HasValue == false)
             {
-                cell = _cellFactory.Create(cellInfo, parent);
-                _cells.Add(cell.Value);
+                cellEntity = _cellFactory.Create(cellInfo, parent);
+                _cells.Add(cellEntity.Value);
             }
             else
             {
-                var component = cell?.Get<Cell>();
+                cellEntity.Value.Enable();
+                var component = cellEntity.Value.Get<Cell>();
                 component.PositionInGrid = cellInfo.PositionInGrid;
-                cell.Value.Set(component);
+                cellEntity.Value.Set(component);
             }
-            PlaceCell(cell, cellInfo.PositionInGrid, PlayerPrefs.Get<int>("CellSize"), verticalOffset);
-            return cell.Value;
+            PlaceCell(cellEntity, cellInfo.PositionInGrid, PlayerPrefs.Get<int>("CellSize"), verticalOffset);
+            return cellEntity.Value;
         }
 
         internal void Disable(Entity entity)
@@ -51,14 +52,16 @@ namespace Match_3_v3._0.Utils
         private void PlaceCell(Entity? cell, Point positionInGrid, int cellSize, float verticalOffset)
         {
             var transform = cell.Value.Get<Transform>();
+            var localPosition = positionInGrid.ToVector2() * cellSize;
             transform.LocalPosition =
                 Vector2.Add(
-                    Vector2.Multiply(
-                        positionInGrid.ToVector2(),
-                        cellSize
-                    ),
+                    localPosition,
                     new Vector2(0, verticalOffset)
                 );
+            if (verticalOffset != 0)
+            {
+                cell.Value.Set(new TargetPosition { Position = localPosition, UseLocalPosition = true });
+            }
             cell.Value.Set(transform);
         }
     }

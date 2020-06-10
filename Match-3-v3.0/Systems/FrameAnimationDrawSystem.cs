@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-    class FrameAnimationDrawSystem : AComponentSystem<float, FrameAnimation>
+    [With(typeof(FrameAnimation))]
+    class FrameAnimationDrawSystem : AEntitySystem<float>
     {
         private SpriteBatch _batch;
 
@@ -26,8 +27,9 @@ namespace Match_3_v3._0.Systems
             _batch.Begin();
         }
 
-        protected override void Update(float state, ref FrameAnimation component)
+        protected override void Update(float state, in Entity entity)
         {
+            var component = entity.Get<FrameAnimation>();
             _batch.Draw(
                 component.Texture, 
                 component.Destination,

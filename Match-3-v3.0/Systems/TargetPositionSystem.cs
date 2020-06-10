@@ -14,7 +14,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(TargetPosition))]
     class TargetPositionSystem : AEntitySystem<float>
     {
-        private int _speed = 200;
+        private int _speed = 20;
 
         public TargetPositionSystem(World world)
             : base(world)
@@ -22,22 +22,49 @@ namespace Match_3_v3._0.Systems
 
         }
 
-        protected override void Update(float state, in Entity entity)
+        protected override void Update(float state, ReadOnlySpan<Entity> entities)
         {
-            var step = _speed * state;
-            var transform = entity.Get<Transform>();
-            var targetPosition = entity.Get<TargetPosition>();
-            var direction = Vector2.Normalize(Vector2.Subtract(targetPosition.Position, transform.Position));
-            if (IsOnThePlace(transform.Position, targetPosition.Position, step) == false)
+            foreach (var entity in entities)
             {
-                transform.Position += Vector2.Multiply(direction, step);
+                var targetPosition = entity.Get<TargetPosition>();
+                var transform = entity.Get<Transform>();
+                if (targetPosition.UseLocalPosition)
+                {
+                    transform.LocalPosition = GetNewPosition(entity, transform.LocalPosition, targetPosition.Position, state);
+                }
+                else
+                {
+                    transform.Position = GetNewPosition(entity, transform.Position, targetPosition.Position, state);
+                }
                 entity.Set(transform);
-            } else
+            }
+        }
+
+        private Vector2 GetNewPosition(Entity entity, Vector2 currentPosition, Vector2 targetPosition, float state)
+        {
+            Vector2 newPosition = currentPosition;
+            var offset = _speed * state;
+            var step = GetStep(GetDirection(targetPosition, currentPosition), offset);
+            if (IsOnThePlace(newPosition, targetPosition, offset) == false)
             {
-                transform.Position = targetPosition.Position;
-                entity.Set(transform);
+                newPosition += step;
+            }
+            else
+            {
+                newPosition = targetPosition;
                 entity.Remove<TargetPosition>();
             }
+            return newPosition;
+        }
+
+        private Vector2 GetStep(Vector2 direction, float offset)
+        {
+            return direction * offset;
+        }
+
+        private Vector2 GetDirection(Vector2 target, Vector2 transform)
+        {
+            return Vector2.Normalize(Vector2.Subtract(target, transform));
         }
 
         private bool IsOnThePlace(Vector2 position, Vector2 target, float step)

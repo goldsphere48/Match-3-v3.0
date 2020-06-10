@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Match_3_v3._0.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Components
 {
-    struct TargetPosition
+    struct CombinationsArray
     {
-        public Vector2 Position { get; set; }
-        public bool UseLocalPosition { get; set; }
+        public IEnumerable<Combination> Value;
     }
 }
