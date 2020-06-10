@@ -68,6 +68,7 @@ namespace Match_3_v3._0.Systems
         {
             cells[0][0].Color = CellColor.Blue;
             cells[0][1].Color = CellColor.Blue;
+            cells[0][2].Color = CellColor.Green;
             cells[0][3].Color = CellColor.Blue;
         }
 

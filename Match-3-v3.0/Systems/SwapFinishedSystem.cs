@@ -27,15 +27,17 @@ namespace Match_3_v3._0.Systems
         protected override void Update(float state, in Entity entity)
         {
             var success = entity.Get<SwapSuccess>();
+            GameState newState;
             if (success.Value == SwapResult.Success)
             {
-                Console.WriteLine("Success");
+                newState = GameState.Matching;
             } else
             {
-                Console.WriteLine("Fail");
+                newState = GameState.WaitForUserInput;
             }
             entity.Remove<SwapSuccess>();
             _world.Publish(new SwapFinishedMessage());
+            _world.Publish(new NewStateMessage { Value = newState });
         }
     }
 }

@@ -34,13 +34,13 @@ namespace Match_3_v3._0.Systems
             swap.Deconstruct(out var first, out var second);
             var firstCell = first.Get<Cell>();
             var secondCell = second.Get<Cell>();
-            grid = ApplySwapToGridAndGet(grid, firstCell, secondCell);
-            SwapCells(first, second);
+            grid = GridBeforeSwap(grid, firstCell, secondCell);
+            SetNewPostions(first, second);
             var matches = FindMatchesSystem.FindMatches(grid).Count();
             if (matches == 0)
             {
                 first.Set(new SwapSuccess { Value = SwapResult.Fail });
-                SwapBack(first, second);
+                SetOriginPositions(first, second);
             } else
             {
                 first.Set(new SwapSuccess { Value = SwapResult.Success});
@@ -49,23 +49,28 @@ namespace Match_3_v3._0.Systems
             }
         }
 
-        private Grid ApplySwapToGridAndGet(Grid grid, Cell first, Cell second)
+        private Grid GridBeforeSwap(Grid grid, Cell first, Cell second)
         {
             first.PositionInGrid.Deconstruct(out var x1, out var y1);
             second.PositionInGrid.Deconstruct(out var x2, out var y2);
-            var tmp = grid.Cells[x1, y1].Color;
-            grid.Cells[x1, y1].Color = grid.Cells[x2, y2].Color;
-            grid.Cells[x2, y2].Color = tmp;
+            SwapCells(ref grid.Cells[x1, y1], ref grid.Cells[x2, y2]);
             return grid;
         }
 
-        private void SwapCells(Entity first, Entity second)
+        private void SwapCells(ref Cell first, ref Cell second)
+        {
+            var tmp = first.Color;
+            first.Color = second.Color;
+            second.Color = tmp;
+        }
+
+        private void SetNewPostions(Entity first, Entity second)
         {
             first.Set(new TargetPosition { Position = second.Get<Transform>().Position });
             second.Set(new TargetPosition { Position = first.Get<Transform>().Position });
         }
 
-        private void SwapBack(Entity first, Entity second)
+        private void SetOriginPositions(Entity first, Entity second)
         {
             first.Set(new OriginalPosition { Value = first.Get<Transform>().Position });
             second.Set(new OriginalPosition { Value = second.Get<Transform>().Position });

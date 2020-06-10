@@ -2,6 +2,7 @@
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
+using Match_3_v3._0.Messages;
 using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
 using System;
@@ -38,20 +39,34 @@ namespace Match_3_v3._0.Systems
     class FindMatchesSystem : AEntitySystem<float>
     {
         private EntitySet _cells;
+        private GameState _gameState = GameState.WaitForUserInput;
+        private World _world;
 
         public FindMatchesSystem(World world)
             : base(world)
         {
             _cells = world.GetEntities().With<Cell>().AsSet();
+            _world = world;
+            _world.Subscribe(this);
+        }
+
+        [Subscribe]
+        private void On(in NewStateMessage newState)
+        {
+            _gameState = newState.Value;
         }
 
         protected override void Update(float state, in Entity entity)
         {
-            var grid = entity.Get<Grid>();
-            var combinations = FindMatches(grid);
-            foreach (var combination in combinations)
+            if (_gameState == GameState.Matching)
             {
-                ProceedCombination(combination, GetCells(grid.Width, grid.Height));
+                var grid = entity.Get<Grid>();
+                var combinations = FindMatches(grid);
+                foreach (var combination in combinations)
+                {
+                    ProceedCombination(combination, GetCells(grid.Width, grid.Height));
+                }
+                _world.Publish(new NewStateMessage { Value = GameState.WaitForUserInput });
             }
         }
 
@@ -67,10 +82,10 @@ namespace Match_3_v3._0.Systems
 
         private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
         {
-            if (combination.Count == 3)
-            {
+            ///if (combination.Count == 3)
+            //{
                 ProceedSimple(combination, cells);
-            } else
+            /*} else
             {
                 var modifiable = GetModifiable(combination, cells);
                 modifiable.Set<DontDestroy>();
@@ -83,7 +98,7 @@ namespace Match_3_v3._0.Systems
                 {
                     ProceedBomb(modifiable);
                 }
-            }
+            }*/
         }
 
         private void ProceedBomb(Entity cell)
@@ -122,6 +137,7 @@ namespace Match_3_v3._0.Systems
                     if (!entity.Has<DontDestroy>())
                     {
                         entity.Set<Dying>();
+                        Console.WriteLine(entity.Get<Transform>().LocalPosition);
                     }
                 }
             }

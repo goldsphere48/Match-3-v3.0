@@ -23,7 +23,7 @@ namespace Match_3_v3._0.Utils
 
         public Entity RequestCell(Cell cellInfo, float verticalOffset, Transform parent)
         {
-            Entity? cell = _cells.Find(e => !e.Value.IsEnabled() && e.Value.Get<Cell>().Color == cellInfo.Color);
+            Entity? cell = _cells.Find(e => !e.Value.IsAlive && e.Value.Get<Cell>().Color == cellInfo.Color);
             if (cell.HasValue == false)
             {
                 cell = _cellFactory.Create(cellInfo, parent);
@@ -39,9 +39,13 @@ namespace Match_3_v3._0.Utils
             return cell.Value;
         }
 
-        internal void Return(Entity entity)
+        internal void Disable(Entity entity)
         {
-            
+            var cell = _cells.Find(e => e.Value.Get<Cell>().PositionInGrid == entity.Get<Cell>().PositionInGrid);
+            if (cell.HasValue)
+            {
+                cell.Value.Disable();
+            }
         }
 
         private void PlaceCell(Entity? cell, Point positionInGrid, int cellSize, float verticalOffset)

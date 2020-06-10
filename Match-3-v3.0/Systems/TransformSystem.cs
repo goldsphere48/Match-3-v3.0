@@ -17,7 +17,7 @@ namespace Match_3_v3._0.Systems
     class TransformSystem : AEntitySystem<float>
     {
         public TransformSystem(World world, IParallelRunner runner)
-            : base(world.GetEntities().WhenAdded<Transform>().WhenChanged<Transform>().WithEither<SpriteRenderer>().Or<TextRenderer>().Or<FrameAnimation>().AsSet(), runner)
+            : base(world.GetEntities().WhenAdded<Transform>().WhenChanged<Transform>().WithEither<SpriteRenderer>().Or<TextRenderer>().Or<FrameAnimation>().AsSet())
         {
 
         }

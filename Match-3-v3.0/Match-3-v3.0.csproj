@@ -49,7 +49,6 @@
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\Cell.cs" />
     <Compile Include="Components\GenerationZone.cs" />
-    <Compile Include="Components\States\FindMatchesState.cs" />
     <Compile Include="Components\SwapSuccess.cs" />
     <Compile Include="Data\GameState.cs" />
     <Compile Include="Components\Grid.cs" />
@@ -58,9 +57,6 @@
     <Compile Include="Components\CountPresenter.cs" />
     <Compile Include="Components\Selected.cs" />
     <Compile Include="Components\SpriteRenderer.cs" />
-    <Compile Include="Components\States\State.cs" />
-    <Compile Include="Components\States\Swaping.cs" />
-    <Compile Include="Components\States\WaitForUserInputState.cs" />
     <Compile Include="Components\Swap.cs" />
     <Compile Include="Components\TargetPosition.cs" />
     <Compile Include="Components\Text.cs" />
@@ -89,7 +85,6 @@
     <Compile Include="Systems\ButtonSystem.cs" />
     <Compile Include="Systems\CounterSystem.cs" />
     <Compile Include="Systems\FrameAnimationUpdateSystem.cs" />
-    <Compile Include="Systems\GameStateContext.cs" />
     <Compile Include="Systems\GenerationSystem.cs" />
     <Compile Include="Systems\InputSystem.cs" />
     <Compile Include="Systems\SelectSystem.cs" />
