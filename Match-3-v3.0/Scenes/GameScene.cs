@@ -27,6 +27,7 @@ namespace Match_3_v3._0.Scenes
         private Counter _timerCounter;
         private int _cellSize = 81;
         private CellPool _cellPool;
+        private GameStateContext _gameStateContext;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
@@ -34,6 +35,7 @@ namespace Match_3_v3._0.Scenes
             _backgroundFactory = new BackgroundFactory(world);
             _gridFactory = new GridFactory(world, _game.GraphicsDevice, 8, 8, _cellSize);
             _cellPool = new CellPool(new CellFactory(world, PlayerPrefs.Get<int>("CellSize")));
+            _gameStateContext = new GameStateContext(world);
             InitializeSystems(world, out systems);
             SetupWorld(world);
         }
@@ -51,6 +53,7 @@ namespace Match_3_v3._0.Scenes
                 new SelectSystem(world, _game.Window),
                 new SwapSystem(world),
                 new CancelSwapSystem(world),
+                new SwapFinishedSystem(world),
                 new FrameAnimationUpdateSystem(world),
                 new SpriteRenderSystem(_batch, world),
                 new FrameAnimationDrawSystem(_batch, world),

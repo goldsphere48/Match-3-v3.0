@@ -1,6 +1,7 @@
 ﻿using DefaultEcs;
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
+using Match_3_v3._0.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,9 +39,11 @@ namespace Match_3_v3._0.Systems
             var matches = FindMatchesSystem.FindMatches(grid).Count();
             if (matches == 0)
             {
+                first.Set(new SwapSuccess { Value = SwapResult.Fail });
                 SwapBack(first, second);
             } else
             {
+                first.Set(new SwapSuccess { Value = SwapResult.Success});
                 entity.Set(grid);
                 entity.Remove<Swap>();
             }

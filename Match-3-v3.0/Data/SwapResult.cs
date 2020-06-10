@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Match_3_v3._0.Messages
+namespace Match_3_v3._0.Data
 {
-    struct SwapFinishedMessage
+    enum SwapResult
     {
+        Fail,
+        Success
     }
 }

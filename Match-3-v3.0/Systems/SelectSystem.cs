@@ -23,9 +23,11 @@ namespace Match_3_v3._0.Systems
             : base(world.GetEntities().With(typeof(FrameAnimation)).With(typeof(Cell)).AsSet(), window)
         {
             _world = world;
+            _world.Subscribe(this);
         }
 
-        private void On(SwapFinishedMessage _)
+        [Subscribe]
+        private void On(in SwapFinishedMessage _)
         {
             Unselect(ref _firstSelected);
             Unselect(ref _secondSelected);
@@ -53,32 +55,30 @@ namespace Match_3_v3._0.Systems
             {
                 Select(entity, ref _secondSelected);
             }
-            if (TryGetSelectedCells(out var firstCell, out var secondCell))
+            if (_secondSelected.HasValue && _firstSelected.HasValue)
             {
-                var isNeighbours = GridUtil.IsNeighbours(firstCell, secondCell);
-                if (_firstSelected == _secondSelected || isNeighbours == false)
+                if (CanSwap(_firstSelected.Value, _secondSelected.Value))
                 {
-                    Unselect(ref _firstSelected);
-                    Unselect(ref _secondSelected);
+                    CreateSwap(_firstSelected.Value, _secondSelected.Value);
                 } else
                 {
-                    var grid = _world.First(e => e.Has<Grid>());
-                    grid.Set(new Swap(_firstSelected.Value, _secondSelected.Value));
+
+                    Unselect(ref _firstSelected);
+                    Unselect(ref _secondSelected);
                 }
             }
         }
 
-        private bool TryGetSelectedCells(out Cell first, out Cell second)
+        private bool CanSwap(Entity first, Entity second)
         {
-            if (_secondSelected.HasValue && _firstSelected.HasValue)
-            {
-                first = _firstSelected.Value.Get<Cell>();
-                second = _secondSelected.Value.Get<Cell>();
-                return true;
-            }
-            first = null;
-            second = null;
-            return false;
+            var isNeighbours = GridUtil.IsNeighbours(first.Get<Cell>(), second.Get<Cell>());
+            return _firstSelected != _secondSelected && isNeighbours == true;
+        }
+
+        private void CreateSwap(Entity first, Entity second)
+        {
+            var grid = _world.First(e => e.Has<Grid>());
+            grid.Set(new Swap(first, second));
         }
 
         private void Select(Entity entity, ref Entity? contanier)
