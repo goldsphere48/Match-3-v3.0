@@ -1,4 +1,7 @@
-﻿using Match_3_v3._0.Components;
+﻿using DefaultEcs;
+using Match_3_v3._0.Components;
+using Match_3_v3._0.Data;
+using Match_3_v3._0.Messages;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -31,6 +34,73 @@ namespace Match_3_v3._0.Utils
             return positions;
         }
 
+        public static void Print(Grid grid)
+        {
+            //Console.Clear();
+            for (int i = 0; i < grid.Width; ++i)
+            {
+                var columns = new List<string>();
+                for (int j = 0; j < grid.Height; ++j)
+                {
+                    columns.Add(grid.Cells[j, i].Color.ToString());
+                }
+                PrintRow(columns.ToArray());
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+        }
+
+        static int tableWidth = 50;
+
+        static void PrintLine()
+        {
+            Console.WriteLine(new string('-', tableWidth));
+        }
+
+        static void PrintRow(params string[] columns)
+        {
+            foreach (string column in columns)
+            {
+                string row = "       ";
+                Console.BackgroundColor = PickColor(column);
+                Console.Write(row);
+            }
+
+            Console.WriteLine();
+        }
+
+        static ConsoleColor PickColor(string color)
+        {
+            switch (color)
+            {
+                case "Blue":
+                    return ConsoleColor.Blue;
+                case "Green":
+                    return ConsoleColor.Green;
+                case "Gold":
+                    return ConsoleColor.Yellow;
+                case "Brown":
+                    return ConsoleColor.Red;
+                case "Purple":
+                    return ConsoleColor.Cyan;
+                default:
+                    return ConsoleColor.White;
+            }
+        }
+
+        static string AlignCentre(string text, int width)
+        {
+            text = text.Length > width ? text.Substring(0, width - 3) + "..." : text;
+
+            if (string.IsNullOrEmpty(text))
+            {
+                return new string(' ', width);
+            }
+            else
+            {
+                return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
+            }
+        }
+
         public static Neighbours GetNeighbours(Point positionInGrid, int width, int height)
         {
             int x = positionInGrid.X;
@@ -41,9 +111,19 @@ namespace Match_3_v3._0.Utils
                 mask |= Neighbours.Left;
             }
 
+            if (x > 0 && y > 0)
+            {
+                mask |= Neighbours.BottomLeft;
+            }
+
             if (y > 0)
             {
                 mask |= Neighbours.Bottom;
+            }
+
+            if (x < width - 1 && y > 0)
+            {
+                mask |= Neighbours.BottomRight;
             }
 
             if (x < width - 1)
@@ -51,11 +131,34 @@ namespace Match_3_v3._0.Utils
                 mask |= Neighbours.Right;
             }
 
+            if (x < width - 1 && y < height - 1)
+            {
+                mask |= Neighbours.TopRight;
+            }
+
             if (y < height - 1)
             {
                 mask |= Neighbours.Top;
             }
+
+            if (y < height - 1 && x > 0)
+            {
+                mask |= Neighbours.TopLeft;
+            }
             return mask;
+        }
+
+        public static void CreateNewGenerationZone(Point[][] positions, World world, int maxColumnHeight)
+        {
+            world.First(e => e.Has<Grid>()).Set(
+                new GenerationZone
+                {
+                    NewCellPositionsInGrid = positions,
+                    VerticalOffset = -maxColumnHeight * PlayerPrefs.Get<int>("CellSize"),
+                    IsSecondaryGeneration = true
+                }
+            );
+            world.Publish(new NewStateMessage { Value = GameState.Generating });
         }
 
         public static Point NeighbourToVector2(Neighbours neighbours)

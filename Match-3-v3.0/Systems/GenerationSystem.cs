@@ -42,9 +42,9 @@ namespace Match_3_v3._0.Systems
                 var grid = entity.Get<Grid>();
                 Cell[][] newCells = Generate(ref grid, generationInfo);
 
-                while (RegenerationNeeded(grid))
+                while (!FindMatchesSystem.IsGridValid(grid))
                 {
-                    newCells = Generate(ref grid, new GenerationZone { NewCellPositionsInGrid = GridUtil.GetFullGridMatrix(grid.Width, grid.Height) });
+                    newCells = Generate(ref grid, generationInfo);
                 }
 
                 var parentTransform = entity.Get<Transform>();
@@ -69,12 +69,6 @@ namespace Match_3_v3._0.Systems
             return newCells;
         }
 
-        private bool RegenerationNeeded(Grid grid)
-        {
-            //return MatchesDoesntExist(grid) || PossibleMatchesDoesntExist(grid);
-            return false;
-        }
-
         private Cell[][] GenerateNewCells(GenerationZone generationInfo)
         {
             var newCells = new Cell[generationInfo.NewCellPositionsInGrid.Length][];
@@ -94,7 +88,7 @@ namespace Match_3_v3._0.Systems
             }
             if (!generationInfo.IsSecondaryGeneration)
             {
-                DebugSetup(newCells);
+                //DebugSetup(newCells);
             }
             return newCells;
         }
@@ -106,11 +100,11 @@ namespace Match_3_v3._0.Systems
             cells[0][2].Color = CellColor.Green;
 
             cells[1][0].Color = CellColor.Purple;
-            cells[1][1].Color = CellColor.Green;
-            cells[1][2].Color = CellColor.Purple;
+            cells[1][1].Color = CellColor.Brown;
+            cells[1][2].Color = CellColor.Green;
 
-            cells[2][0].Color = CellColor.Green;
-            cells[2][1].Color = CellColor.Purple;
+            cells[2][0].Color = CellColor.Blue;
+            cells[2][1].Color = CellColor.Gold;
             cells[2][2].Color = CellColor.Green;
         }
 
@@ -123,16 +117,6 @@ namespace Match_3_v3._0.Systems
                     grid.Cells[cell.PositionInGrid.X, cell.PositionInGrid.Y] = cell; 
                 }
             }
-        }
-
-        private bool MatchesDoesntExist(Grid grid)
-        {
-            return FindMatchesSystem.FindMatches(grid).Count() == 0;
-        }
-
-        private bool PossibleMatchesDoesntExist(Grid grid)
-        {
-            return FindMatchesSystem.FindPossibleMatches(grid).Count() == 0;
         }
     }
 }

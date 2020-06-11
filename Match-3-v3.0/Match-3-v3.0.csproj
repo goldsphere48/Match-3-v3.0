@@ -82,6 +82,7 @@
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Systems\CancelSwapSystem.cs" />
     <Compile Include="Systems\CombinationSystem.cs" />
+    <Compile Include="Systems\DebugSystem.cs" />
     <Compile Include="Systems\DyingSystem.cs" />
     <Compile Include="Systems\FallSystem.cs" />
     <Compile Include="Systems\FindMatchesSystem.cs" />

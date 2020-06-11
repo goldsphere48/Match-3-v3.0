@@ -48,6 +48,7 @@ namespace Match_3_v3._0.Scenes
         {
             var _runner = new DefaultParallelRunner(Environment.ProcessorCount);
             systems = new SequentialSystem<float>(
+                new DebugSystem(world, _game.Window, _gameState),
                 new CounterSystem(world),
                 new TimerSystem(world),
                 new GenerationSystem(world, _cellPool, _gameState),

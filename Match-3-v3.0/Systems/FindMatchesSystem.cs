@@ -93,6 +93,43 @@ namespace Match_3_v3._0.Systems
             }
         }
 
+        public static bool IsGridValid(Grid grid)
+        {
+            var combinations = FindCombinations(grid, AllNeighbours);
+            foreach (var combination in combinations)
+            {
+                var matchesCount = GetMatches(combination, grid.Width, grid.Height).Count();
+                if (matchesCount > 0 || IsPossibleMatchExist(combination, grid.Width, grid.Height))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool IsPossibleMatchExist(List<Cell> solution, int width, int height)
+        {
+            InitAmountLists(solution, width, height, out var xAmount, out var yAmount);
+            var xSize = xAmount.FindAll(e => e.Count > 0).Count();
+            var ySize = yAmount.FindAll(e => e.Count > 0).Count();
+            return IsPossibleMatchExist(xSize, yAmount) || IsPossibleMatchExist(ySize, xAmount);
+        }
+
+        private static bool IsPossibleMatchExist(int size, List<Combination> amount)
+        {
+            if (size > 2)
+            {
+                for (int i = 0; i < amount.Count; ++i)
+                {
+                    if (amount[i].Count > 1)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public static IEnumerable<List<Cell>> FindCombinations(Grid grid, IEnumerable<Neighbours> checkingNeighbours)
         {
             var visited = new Dictionary<Point, bool>(grid.Width * grid.Height);
@@ -121,10 +158,10 @@ namespace Match_3_v3._0.Systems
             return list;
         }
 
-        private static IEnumerable<Combination> GetMatches(List<Cell> solution, int width, int height)
+        public static void InitAmountLists(List<Cell> solution, int width, int height, out List<Combination> xAmount, out List<Combination> yAmount)
         {
-            var xAmount = InitAmountList(width);
-            var yAmount = InitAmountList(height);
+            xAmount = InitAmountList(width);
+            yAmount = InitAmountList(height);
 
             for (int i = 0; i < solution.Count; ++i)
             {
@@ -132,6 +169,11 @@ namespace Match_3_v3._0.Systems
                 xAmount[position.X].Add(position);
                 yAmount[position.Y].Add(position);
             }
+        }
+
+        private static IEnumerable<Combination> GetMatches(List<Cell> solution, int width, int height)
+        {
+            InitAmountLists(solution, width, height, out var xAmount, out var yAmount);
 
             for (int i = 0; i < yAmount.Count; i++)
             {
@@ -160,12 +202,6 @@ namespace Match_3_v3._0.Systems
             {
                 Visit(ref args, currentCell);
             }
-        }
-
-        internal static IEnumerable<Combination> FindPossibleMatches(Grid grid)
-        {
-            
-            return Enumerable.Empty<Combination>();
         }
 
         private static void Visit(ref GridVisitorArgs args, Cell currentCell)
