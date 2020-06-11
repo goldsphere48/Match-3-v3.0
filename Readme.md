@@ -1,0 +1,1 @@
+Попытка использовать [DefaultECS](https://github.com/Doraku/DefaultEcs)
