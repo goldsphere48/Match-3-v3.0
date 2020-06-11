@@ -21,12 +21,14 @@ namespace Match_3_v3._0.Systems
         public Grid Grid;
         public List<Cell> Solutions;
         public Dictionary<Point, bool> Visited;
+        public IEnumerable<Neighbours> CheckingNeighbours;
 
-        public GridVisitorArgs(Grid grid, ref Dictionary<Point, bool> visited)
+        public GridVisitorArgs(Grid grid, ref Dictionary<Point, bool> visited, IEnumerable<Neighbours> neighbours)
         {
             Grid = grid;
             Solutions = null;
             Visited = visited;
+            CheckingNeighbours = neighbours;
         }
     }
 
@@ -35,6 +37,13 @@ namespace Match_3_v3._0.Systems
     {
         private GameState _gameState;
         private World _world;
+
+        private static IEnumerable<Neighbours> NotCornerNeighbours => 
+            new Neighbours[] { Neighbours.Top, Neighbours.Right, Neighbours.Bottom, Neighbours.Left };
+
+        private static IEnumerable<Neighbours> AllNeighbours =>
+            Enum.GetValues(typeof(Neighbours)) as IEnumerable<Neighbours>;
+
 
         public FindMatchesSystem(World world, GameState initState)
             : base(world)
@@ -70,14 +79,24 @@ namespace Match_3_v3._0.Systems
         {
             _world.CreateEntity().Set(new CombinationsArray { Value = combinations });
             _world.Publish(new NewStateMessage { Value = GameState.CombinationChecking });
-
         }
 
         public static IEnumerable<Combination> FindMatches(Grid grid)
         {
+            var combinations = FindCombinations(grid, NotCornerNeighbours);
+            foreach (var combination in combinations)
+            {
+                foreach (var match in GetMatches(combination, grid.Width, grid.Height))
+                {
+                    yield return match;
+                }
+            }
+        }
+
+        public static IEnumerable<List<Cell>> FindCombinations(Grid grid, IEnumerable<Neighbours> checkingNeighbours)
+        {
             var visited = new Dictionary<Point, bool>(grid.Width * grid.Height);
-            var args = new GridVisitorArgs(grid, ref visited);
-            List<Combination> combinations = new List<Combination>();
+            var args = new GridVisitorArgs(grid, ref visited, checkingNeighbours);
             for (int i = 0; i < grid.Width; ++i)
             {
                 for (int j = 0; j < grid.Height; ++j)
@@ -86,14 +105,10 @@ namespace Match_3_v3._0.Systems
                     Find(ref args, grid.Cells[i, j]);
                     if (args.Solutions.Count >= 3)
                     {
-                        foreach (var combination in GetCombinations(args.Solutions, grid.Width, grid.Height))
-                        {
-                            combinations.Add(combination);
-                        }
+                        yield return args.Solutions;
                     }
                 }
             }
-            return combinations;
         }
 
         private static List<Combination> InitAmountList(int size)
@@ -106,7 +121,7 @@ namespace Match_3_v3._0.Systems
             return list;
         }
 
-        private static IEnumerable<Combination> GetCombinations(List<Cell> solution, int width, int height)
+        private static IEnumerable<Combination> GetMatches(List<Cell> solution, int width, int height)
         {
             var xAmount = InitAmountList(width);
             var yAmount = InitAmountList(height);
@@ -149,16 +164,7 @@ namespace Match_3_v3._0.Systems
 
         internal static IEnumerable<Combination> FindPossibleMatches(Grid grid)
         {
-            /*           
-                /(TT..{number_of_columns - 1}T)/
-                /(T.T.{number_of_columns - 2}T)/
-                /(.TT.{number_of_columns - 3}T)/
-             */
-            /*           
-                /(T.{number_of_columns - 1}T.{number_of_columns}T)/
-                /(T.{number_of_columns}T.{number_of_columns - 2}T)/
-                /(.T.{number_of_columns - 2}T.{number_of_columns - 1}T)/
-            */
+            
             return Enumerable.Empty<Combination>();
         }
 
@@ -177,10 +183,10 @@ namespace Match_3_v3._0.Systems
             solutions.Add(currentCell);
             var neighbours = GridUtil.GetNeighbours(currentCell.PositionInGrid, grid.Width, grid.Height);
 
-            CheckNeighbour(currentCell, Neighbours.Top, neighbours, ref args);
-            CheckNeighbour(currentCell, Neighbours.Right, neighbours, ref args);
-            CheckNeighbour(currentCell, Neighbours.Bottom, neighbours, ref args);
-            CheckNeighbour(currentCell, Neighbours.Left, neighbours, ref args);
+            foreach (var checkedNeighbour in args.CheckingNeighbours)
+            {
+                CheckNeighbour(currentCell, checkedNeighbour, neighbours, ref args);
+            }
         }
 
         private static void CheckNeighbour(Cell currentCell, Neighbours target, Neighbours neighbours, ref GridVisitorArgs args)

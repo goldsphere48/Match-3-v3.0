@@ -101,17 +101,17 @@ namespace Match_3_v3._0.Systems
 
         private void DebugSetup(Cell[][] cells)
         {
-            cells[0][0].Color = CellColor.Gold;
+            cells[0][0].Color = CellColor.Green;
             cells[0][1].Color = CellColor.Purple;
             cells[0][2].Color = CellColor.Green;
 
             cells[1][0].Color = CellColor.Purple;
-            cells[1][1].Color = CellColor.Brown;
-            cells[1][2].Color = CellColor.Green;
+            cells[1][1].Color = CellColor.Green;
+            cells[1][2].Color = CellColor.Purple;
 
-            cells[2][0].Color = CellColor.Gold;
-            cells[2][1].Color = CellColor.Green;
-            cells[2][2].Color = CellColor.Blue;
+            cells[2][0].Color = CellColor.Green;
+            cells[2][1].Color = CellColor.Purple;
+            cells[2][2].Color = CellColor.Green;
         }
 
         private void ApplyNewCells(Grid grid, Cell[][] newCells)
