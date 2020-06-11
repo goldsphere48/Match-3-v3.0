@@ -17,6 +17,7 @@ using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Entities;
 using Match_3_v3._0.Utils;
 using Match_3_v3._0.Data;
+using Match_3_v3._0.Messages;
 
 namespace Match_3_v3._0.Scenes
 {
@@ -42,6 +43,14 @@ namespace Match_3_v3._0.Scenes
             _cellPool = new CellPool(new CellFactory(world, PlayerPrefs.Get<int>("CellSize")));
             InitializeSystems(world, out systems);
             SetupWorld(world);
+            world.Subscribe(this);
+        }
+
+        [Subscribe]
+        private void On(in AddScoreMessage newScore)
+        {
+            _scoreCounter.Value += newScore.Value;
+            PlayerPrefs.Set("Score", _scoreCounter.Value);
         }
 
         private void InitializeSystems(World world, out ISystem<float> systems)
@@ -95,6 +104,7 @@ namespace Match_3_v3._0.Scenes
                 Position = new Vector2(30, 30),
                 InitialValue = 0
             });
+            _scoreCounter.GetEntity().Set<Score>();
         }
 
         private void CreateTimerBoard(World world)
@@ -104,7 +114,7 @@ namespace Match_3_v3._0.Scenes
                 Title = "Time",
                 World = world,
                 Position = new Vector2(510, 30),
-                InitialValue = 6000
+                InitialValue = PlayerPrefs.Get<int>("RoundTime")
             });
         }
 

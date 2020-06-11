@@ -34,6 +34,11 @@ namespace Match_3_v3._0.Entities
             }
         }
 
+        public Entity GetEntity()
+        {
+            return _entity;
+        }
+
         public Counter(CounterArgs args)
         {
             _entity = new TextFactory(args.World).Create(

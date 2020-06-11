@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 namespace Match_3_v3._0.Systems
 {
     [WhenAdded(typeof(Dying))]
+    [WhenChanged(typeof(Dying))]
     [With(typeof(Dying))]
     class DyingSystem : AEntitySystem<float>
     {
@@ -37,11 +38,14 @@ namespace Match_3_v3._0.Systems
         {
             if (_gameState == GameState.CellDestroying || _gameState == GameState.DestroyersMoving)
             {
+                var score = 0;
                 foreach (var entity in entities)
                 {
                     entity.Remove<Dying>();
                     entity.Disable();
+                    score++;
                 }
+                _world.Publish(new AddScoreMessage { Value = score });
                 if (_gameState == GameState.CellDestroying)
                 {
                     _world.Publish(new NewStateMessage { Value = GameState.Falling });

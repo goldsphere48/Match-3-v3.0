@@ -56,7 +56,9 @@
     <Compile Include="Components\GenerationZone.cs" />
     <Compile Include="Components\LineBonus.cs" />
     <Compile Include="Components\Rotation.cs" />
+    <Compile Include="Components\Score.cs" />
     <Compile Include="Components\SwapSuccess.cs" />
+    <Compile Include="Data\CellColor.cs" />
     <Compile Include="Data\Direction.cs" />
     <Compile Include="Data\GameState.cs" />
     <Compile Include="Components\Grid.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="EntityFactories\CellFactory.cs" />
     <Compile Include="EntityFactories\DestroyerFactory.cs" />
     <Compile Include="EntityFactories\GridFactory.cs" />
+    <Compile Include="Messages\AddScoreMessage.cs" />
     <Compile Include="Systems\BombSystem.cs" />
     <Compile Include="Systems\DelayedDyingSystem.cs" />
     <Compile Include="Systems\DestroyersDyingSystem.cs" />
