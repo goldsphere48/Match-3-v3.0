@@ -38,13 +38,13 @@ namespace Match_3_v3._0.Systems
         {
             if (_gameState == GameState.Generating)
             {
-                ref var generationInfo = ref entity.Get<GenerationZone>();
-                ref var grid = ref entity.Get<Grid>();
-                Cell[][] newCells = Generate(grid, generationInfo);
+                var generationInfo = entity.Get<GenerationZone>();
+                var grid = entity.Get<Grid>();
+                Cell[][] newCells = Generate(ref grid, generationInfo);
 
                 while (RegenerationNeeded(grid))
                 {
-                    newCells = Generate(grid, new GenerationZone { NewCellPositionsInGrid = GridUtil.GetFullGridMatrix(grid.Width, grid.Height) });
+                    newCells = Generate(ref grid, new GenerationZone { NewCellPositionsInGrid = GridUtil.GetFullGridMatrix(grid.Width, grid.Height) });
                 }
 
                 var parentTransform = entity.Get<Transform>();
@@ -56,12 +56,13 @@ namespace Match_3_v3._0.Systems
                         entity.SetAsParentOf(cell);
                     }
                 }
+                entity.Set(grid);
                 entity.Remove<GenerationZone>();
                 _world.Publish(new NewStateMessage { Value = GameState.WaitForFalling });
             }
         }
 
-        private Cell[][] Generate(Grid grid, GenerationZone generationZone)
+        private Cell[][] Generate(ref Grid grid, GenerationZone generationZone)
         {
             var newCells = GenerateNewCells(generationZone);
             ApplyNewCells(grid, newCells);
@@ -70,7 +71,8 @@ namespace Match_3_v3._0.Systems
 
         private bool RegenerationNeeded(Grid grid)
         {
-            return MatchesDoesntExist(grid) || PossibleMatchesDoesntExist(grid);
+            //return MatchesDoesntExist(grid) || PossibleMatchesDoesntExist(grid);
+            return false;
         }
 
         private Cell[][] GenerateNewCells(GenerationZone generationInfo)
@@ -130,7 +132,7 @@ namespace Match_3_v3._0.Systems
 
         private bool PossibleMatchesDoesntExist(Grid grid)
         {
-            return FindMatchesSystem.FindPossibleMatches(grid).Count == 0;
+            return FindMatchesSystem.FindPossibleMatches(grid).Count() == 0;
         }
     }
 }

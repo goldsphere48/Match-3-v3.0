@@ -149,6 +149,16 @@ namespace Match_3_v3._0.Systems
 
         internal static IEnumerable<Combination> FindPossibleMatches(Grid grid)
         {
+            /*           
+                /(TT..{number_of_columns - 1}T)/
+                /(T.T.{number_of_columns - 2}T)/
+                /(.TT.{number_of_columns - 3}T)/
+             */
+            /*           
+                /(T.{number_of_columns - 1}T.{number_of_columns}T)/
+                /(T.{number_of_columns}T.{number_of_columns - 2}T)/
+                /(.T.{number_of_columns - 2}T.{number_of_columns - 1}T)/
+            */
             return Enumerable.Empty<Combination>();
         }
 

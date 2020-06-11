@@ -14,7 +14,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(TargetPosition))]
     class TargetPositionSystem : AEntitySystem<float>
     {
-        private int _speed = 20;
+        private int _speed = PlayerPrefs.Get<int>("Speed");
 
         public TargetPositionSystem(World world)
             : base(world)

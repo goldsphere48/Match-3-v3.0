@@ -27,6 +27,7 @@ namespace Match_3_v3._0
         protected override void Initialize()
         {
             PlayerPrefs.Set("CellSize", 81);
+            PlayerPrefs.Set("Speed", 200);
             PlayerPrefs.Set("Width", 3);
             PlayerPrefs.Set("Height", 3);
             SceneManager.Instance.Initialize(this);

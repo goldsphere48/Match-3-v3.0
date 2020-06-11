@@ -53,7 +53,7 @@ namespace Match_3_v3._0.Systems
                             var notEmptyPosition = GetNextNotEmptyPosition(currentPosition, cells);
                             if (cells.TryGetValue(notEmptyPosition, out var fallingCellEntity))
                             {
-                                MoveDown(fallingCellEntity, currentPosition);
+                                MoveDown(grid, fallingCellEntity, currentPosition);
                                 cells.Remove(notEmptyPosition);
                             }
                         }
@@ -102,14 +102,21 @@ namespace Match_3_v3._0.Systems
             return newCells;
         }
 
-        private void MoveDown(Entity cellEntity, Point newPosition)
+        private void MoveDown(Grid grid, Entity cellEntity, Point newPosition)
         {
-            var transform = cellEntity.Get<Transform>();
             var cell = cellEntity.Get<Cell>();
+            Swap(grid, cell.PositionInGrid, newPosition);
             cell.PositionInGrid = newPosition;
             cellEntity.Set(cell);
             var position = newPosition.ToVector2() * PlayerPrefs.Get<int>("CellSize");
             cellEntity.Set(new TargetPosition { Position = position, UseLocalPosition = true });
+        }
+
+        private void Swap(Grid grid, Point first, Point second)
+        {
+            var tmp = grid.Cells[first.X, first.Y].Color;
+            grid.Cells[first.X, first.Y].Color = grid.Cells[second.X, second.Y].Color;
+            grid.Cells[second.X, second.Y].Color = tmp;
         }
 
         private Point GetNextNotEmptyPosition(Point position, Dictionary<Point, Entity> cells)
