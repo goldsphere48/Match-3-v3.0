@@ -11,14 +11,16 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-    class SpriteRenderSystem : AComponentSystem<float, SpriteRenderer>
+    class SpriteRenderSystem : AEntitySystem<float>
     {
         private SpriteBatch _batch;
+        private int _id;
 
-        public SpriteRenderSystem(SpriteBatch batch, World world)
-            : base(world)
+        public SpriteRenderSystem(SpriteBatch batch, EntitySet set, int id = 0)
+            : base(set)
         {
             _batch = batch;
+            _id = id;
         }
 
         protected override void PreUpdate(float state)
@@ -26,9 +28,23 @@ namespace Match_3_v3._0.Systems
             _batch.Begin();
         }
 
-        protected override void Update(float state, ref SpriteRenderer component)
+        protected override void Update(float state, in Entity entity)
         {
-            _batch.Draw(component.Sprite, component.Destination, component.Color);
+            if (_id == 228)
+            {
+                Console.WriteLine("Render destroyer");
+            }
+            var component = entity.Get<SpriteRenderer>();
+            _batch.Draw(
+                component.Sprite, 
+                component.Destination, 
+                new Rectangle(0, 0, component.Destination.Width, component.Destination.Height), 
+                component.Color, 
+                component.Angle, 
+                component.Origin, 
+                SpriteEffects.None, 
+                0
+            );
         }
 
         protected override void PostUpdate(float state)

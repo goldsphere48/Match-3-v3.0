@@ -11,5 +11,7 @@ namespace Match_3_v3._0.Components
     {
         public Color Color = Color.White;
         public Rectangle Destination;
+        public float Angle;
+        public Vector2 Origin;
     }
 }

@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Match_3_v3._0.Components
+namespace Match_3_v3._0.Data
 {
-    struct Dying
+    enum Direction
     {
+        Up,
+        Down,
+        Left,
+        Right
     }
 }

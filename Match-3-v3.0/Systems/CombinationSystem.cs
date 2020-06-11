@@ -1,9 +1,12 @@
 ﻿using DefaultEcs;
+using DefaultEcs.Resource;
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
+using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Messages;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +22,7 @@ namespace Match_3_v3._0.Systems
         private EntitySet _cells;
         private World _world;
         private GameState _gameState;
+        private List<Type> _bonusList;
 
         public CombinationSystem(World world, GameState initState)
             : base(world)
@@ -27,6 +31,7 @@ namespace Match_3_v3._0.Systems
             _world.Subscribe(this);
             _cells = _world.GetEntities().With<Cell>().AsSet();
             _gameState = initState;
+            _bonusList = new List<Type>() { typeof(LineBonus), typeof(BombBonus) };
         }
 
         [Subscribe]
@@ -63,10 +68,10 @@ namespace Match_3_v3._0.Systems
 
         private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
         {
-            ///if (combination.Count == 3)
-            //{
-            ProceedSimple(combination, cells);
-            /*} else
+            if (combination.Count == 3)
+            {
+                ProceedSimple(combination, cells);
+            } else
             {
                 var modifiable = GetModifiable(combination, cells);
                 modifiable.Set<DontDestroy>();
@@ -74,22 +79,46 @@ namespace Match_3_v3._0.Systems
                 modifiable.Remove<DontDestroy>();
                 if (combination.Count == 4)
                 {
-                    ProceedLine(modifiable);
+                    ModifyWithLine(modifiable, combination.Orientation);
                 } else
                 {
-                    ProceedBomb(modifiable);
+                    ModifyWithBomb(modifiable);
                 }
-            }*/
+            }
         }
 
-        private void ProceedBomb(Entity cell)
+        private void ModifyWithBomb(Entity cellEntity)
         {
-
+            SetModificationSprite(cellEntity, "Bomb");
+            cellEntity.Set(new BombBonus());
         }
 
-        private void ProceedLine(Entity cell)
+        public void ModifyWithLine(Entity cellEntity, LineOrientation orientation)
         {
+            var grid = _world.First(e => e.Has<Grid>());
+            var textureName = "";
+            var cell = cellEntity.Get<Cell>();
+            Direction firstDirection;
+            Direction secondDirection;
+            if (orientation == LineOrientation.Horizontal)
+            {
+                firstDirection = Direction.Left;
+                secondDirection = Direction.Right;
+                textureName = "LineHorizontal";
+            } else
+            {
+                firstDirection = Direction.Up;
+                secondDirection = Direction.Down;
+                textureName = "LineVertical";
+            }
+            SetModificationSprite(cellEntity, textureName);
+            cellEntity.Set(new LineBonus(firstDirection, secondDirection, cellEntity));
+        }
 
+        private void SetModificationSprite(Entity cell, string textureName)
+        {
+            cell.Set(new SpriteRenderer());
+            cell.Set(new ManagedResource<string, Texture2D>(textureName));
         }
 
         private Entity GetModifiable(Combination combination, Dictionary<Point, Entity> cells)
@@ -102,7 +131,8 @@ namespace Match_3_v3._0.Systems
                     modifiable = modifiable ?? entity;
                     if (entity.Has<Selected>())
                     {
-                        modifiable = entity;
+                        _world.Publish(new RemoveSelectionMessage());
+                        return entity;
                     }
                 }
             }

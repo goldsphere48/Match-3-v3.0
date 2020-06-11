@@ -52,21 +52,29 @@ namespace Match_3_v3._0.Scenes
                 new CounterSystem(world),
                 new TimerSystem(world),
                 new GenerationSystem(world, _cellPool, _gameState),
-                new TargetPositionSystem(world),
                 new SelectSystem(world, _game.Window, _gameState),
                 new SwapSystem(world),
                 new CancelSwapSystem(world),
                 new SwapFinishedSystem(world),
                 new FindMatchesSystem(world, _gameState),
                 new CombinationSystem(world, _gameState),
+                new DestroyersSystem(world, _gameState),
+                new LineBonusSystem(world),
+                new BombSystem(world),
                 new FallSystem(world, _gameState),
+                new TargetPositionSystem(world),
+                new DestroyersDyingSystem(world),
                 new WaitFallingSystem(world, _gameState),
+                new RotationSystem(world),
                 new TransformSystem(world, _runner),
                 new FrameAnimationUpdateSystem(world),
-                new SpriteRenderSystem(_batch, world),
+                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().Without<Cell>().AsSet()),
                 new FrameAnimationDrawSystem(_batch, world),
+                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().With<Cell>().AsSet()),
+                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().With<Destroyer>().AsSet(), 228),
                 new TextRenderSystem(_batch, world),
-                new DyingSystem(world, _cellPool, _gameState)
+                new DyingSystem(world, _gameState),
+                new DelayedDyingSystem(world)
             );
         }
 

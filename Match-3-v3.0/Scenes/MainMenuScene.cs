@@ -34,7 +34,7 @@ namespace Match_3_v3._0.Scenes
         {
             var _runner = new DefaultParallelRunner(Environment.ProcessorCount);
             systems = new SequentialSystem<float>(
-                new SpriteRenderSystem(_batch, world),
+                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().AsSet()),
                 new TransformSystem(world, _runner),
                 new ButtonSystem(world, _game.Window)
             );

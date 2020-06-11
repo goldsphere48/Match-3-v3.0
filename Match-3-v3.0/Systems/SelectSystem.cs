@@ -42,6 +42,13 @@ namespace Match_3_v3._0.Systems
             _gameState = newState.Value;
         }
 
+        [Subscribe]
+        private void On(in RemoveSelectionMessage newState)
+        {
+            RemoveSelected(_firstSelected);
+            RemoveSelected(_secondSelected);
+        }
+
         protected override void Update(float state, in Entity entity)
         {
             if (_gameState == GameState.WaitForUserInput)
@@ -106,8 +113,15 @@ namespace Match_3_v3._0.Systems
             if (entity.HasValue)
             {
                 entity.Value.Get<FrameAnimation>().Play = false;
-                entity.Value.Remove<Selected>();
                 entity = null;
+            }
+        }
+
+        private void RemoveSelected(Entity? entity)
+        {
+            if (entity.HasValue && entity.Value.Has<Selected>())
+            {
+                entity.Value.Remove<Selected>();
             }
         }
     }

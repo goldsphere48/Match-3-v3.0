@@ -40,15 +40,6 @@ namespace Match_3_v3._0.Utils
             return cellEntity.Value;
         }
 
-        internal void Disable(Entity entity)
-        {
-            var cell = _cells.Find(e => e.Value.Get<Cell>().PositionInGrid == entity.Get<Cell>().PositionInGrid);
-            if (cell.HasValue)
-            {
-                cell.Value.Disable();
-            }
-        }
-
         private void PlaceCell(Entity? cell, Point positionInGrid, int cellSize, float verticalOffset)
         {
             var transform = cell.Value.Get<Transform>();

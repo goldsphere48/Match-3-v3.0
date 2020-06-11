@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
@@ -27,12 +28,26 @@ namespace Match_3_v3._0.Systems
             _world = world;
             _world.Subscribe(this);
             _cells = _world.GetEntities().With<Cell>().AsSet();
+            new Thread(PrintDestroyersCount).Start();
         }
 
         [Subscribe]
         private void On(in NewStateMessage newState)
         {
             _gameState = newState.Value;
+        }
+
+        private void PrintDestroyersCount()
+        {
+            while (true)
+            {
+                Console.Clear();
+                var lineBonuses = _world.Get<LineBonus>();
+                Console.WriteLine("Line bonuses: " + lineBonuses.Length);
+                var bombBonuses = _world.Get<BombBonus>();
+                Console.WriteLine("Bomb bonuses: " + bombBonuses.Length);
+                Thread.Sleep(1000);
+            }
         }
 
         protected override void Update(float state, in Entity entity)

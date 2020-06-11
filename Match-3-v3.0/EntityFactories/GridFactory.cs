@@ -35,8 +35,8 @@ namespace Match_3_v3._0.EntityFactories
         {
             var entity = _world.CreateEntity();
             entity.Set(
-                new SpriteRenderer 
-                { 
+                new SpriteRenderer
+                {
                     Sprite = _background, 
                     Destination = new Rectangle(0, 0, _background.Width * _cellSize, _background.Height * _cellSize) 
                 }

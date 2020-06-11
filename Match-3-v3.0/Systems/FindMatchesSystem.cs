@@ -179,7 +179,7 @@ namespace Match_3_v3._0.Systems
             {
                 if (yAmount[i].Count >= 3)
                 {
-                    yAmount[i].Orientation = Orientation.Horizontal;
+                    yAmount[i].Orientation = LineOrientation.Horizontal;
                     yield return yAmount[i];
                 }
             }
@@ -188,7 +188,7 @@ namespace Match_3_v3._0.Systems
             {
                 if (xAmount[i].Count >= 3)
                 {
-                    xAmount[i].Orientation = Orientation.Vertical;
+                    xAmount[i].Orientation = LineOrientation.Vertical;
                     yield return xAmount[i];
                 }
             }

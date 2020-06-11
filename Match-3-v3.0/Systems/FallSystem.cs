@@ -3,6 +3,7 @@ using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
 using Match_3_v3._0.Messages;
+using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace Match_3_v3._0.Systems
             {
                 var maxColumnHeight = 0;
                 var grid = entity.Get<Grid>();
-                var cells = GetCells(grid.Width, grid.Height);
+                var cells = GridUtil.CellsSetToDictionary(_cells, grid.Width, grid.Height);
                 Point[][] newCells = new Point[grid.Width][];
                 for (int i = 0; i < grid.Width; ++i)
                 {
@@ -127,16 +128,6 @@ namespace Match_3_v3._0.Systems
             }
             while (position.Y > 0 && !cells.TryGetValue(position, out var cell));
             return position;
-        }
-
-        private Dictionary<Point, Entity> GetCells(int width, int height)
-        {
-            var result = new Dictionary<Point, Entity>(width * height);
-            foreach (var cell in _cells.GetEntities())
-            {
-                result.Add(cell.Get<Cell>().PositionInGrid, cell);
-            }
-            return result;
         }
     }
 }

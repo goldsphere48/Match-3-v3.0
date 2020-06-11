@@ -10,6 +10,7 @@ namespace Match_3_v3._0.Components
     class Transform
     {
         public float Angle { get; set; }
+        public Vector2 Origin { get; set; }
         public List<Transform> Childrens { get; } = new List<Transform>();
         public Vector2 LocalPosition
         {
@@ -23,7 +24,6 @@ namespace Match_3_v3._0.Components
             }
             set => HandleLocalPositionChange(value);
         }
-        public Vector2 Origin { get; set; }
         public Transform Parent
         {
             get => _parent;

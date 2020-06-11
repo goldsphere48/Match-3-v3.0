@@ -36,7 +36,6 @@ namespace Match_3_v3._0.Utils
 
         public static void Print(Grid grid)
         {
-            //Console.Clear();
             for (int i = 0; i < grid.Width; ++i)
             {
                 var columns = new List<string>();
@@ -159,6 +158,16 @@ namespace Match_3_v3._0.Utils
                 }
             );
             world.Publish(new NewStateMessage { Value = GameState.Generating });
+        }
+
+        public static Dictionary<Point, Entity> CellsSetToDictionary(EntitySet cells, int width, int height)
+        {
+            var result = new Dictionary<Point, Entity>(width * height);
+            foreach (var cell in cells.GetEntities())
+            {
+                result.Add(cell.Get<Cell>().PositionInGrid, cell);
+            }
+            return result;
         }
 
         public static Point NeighbourToVector2(Neighbours neighbours)

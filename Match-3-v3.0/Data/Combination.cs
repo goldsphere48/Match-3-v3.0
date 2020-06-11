@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Data
 {
-    enum Orientation
+    enum LineOrientation
     {
         Vertical,
         Horizontal
@@ -18,7 +18,7 @@ namespace Match_3_v3._0.Data
     {
         private List<Point> _cellPositions = new List<Point>();
 
-        public Orientation Orientation { get; set; }
+        public LineOrientation Orientation { get; set; }
         public int Count => _cellPositions.Count;
 
         public void Add(Point p)

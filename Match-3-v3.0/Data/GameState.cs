@@ -16,5 +16,6 @@ namespace Match_3_v3._0.Data
         CombinationChecking,
         CellDestroying,
         WaitForFalling,
+        DestroyersMoving
     }
 }

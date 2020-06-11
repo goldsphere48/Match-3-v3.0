@@ -16,14 +16,12 @@ namespace Match_3_v3._0.Systems
     [With(typeof(Dying))]
     class DyingSystem : AEntitySystem<float>
     {
-        private CellPool _cellPool;
         private World _world;
         private GameState _gameState = GameState.Generating;
 
-        public DyingSystem(World world, CellPool cellPool, GameState initState)
+        public DyingSystem(World world, GameState initState)
             : base(world)
         {
-            _cellPool = cellPool;
             _world = world;
             _world.Subscribe(this);
             _gameState = initState;
@@ -37,17 +35,17 @@ namespace Match_3_v3._0.Systems
 
         protected override void Update(float state, ReadOnlySpan<Entity> entities)
         {
-            if (_gameState == GameState.CellDestroying)
+            if (_gameState == GameState.CellDestroying || _gameState == GameState.DestroyersMoving)
             {
-                var grid = _world.First(e => e.Has<Grid>()).Get<Grid>();
                 foreach (var entity in entities)
                 {
-                    var cell = entity.Get<Cell>().PositionInGrid;
                     entity.Remove<Dying>();
                     entity.Disable();
-                   // entity.Dispose();
                 }
-                _world.Publish(new NewStateMessage { Value = GameState.Falling });
+                if (_gameState == GameState.CellDestroying)
+                {
+                    _world.Publish(new NewStateMessage { Value = GameState.Falling });
+                }
             }
         }
     }

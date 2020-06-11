@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{311EFE95-6BCF-44F6-BAB3-8FB0D43E7D8D}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Match_3_v3._0</RootNamespace>
     <AssemblyName>Match-3-v3.0</AssemblyName>
@@ -44,14 +44,20 @@
     <StartupObject>Match_3_v3._0.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\BombBonus.cs" />
     <Compile Include="Components\CombinationsArray.cs" />
+    <Compile Include="Components\DelayedDying.cs" />
+    <Compile Include="Components\Destroyer.cs" />
     <Compile Include="Components\DontDestroy.cs" />
     <Compile Include="Components\Dying.cs" />
     <Compile Include="Components\FrameAnimation.cs" />
     <Compile Include="Components\Button.cs" />
     <Compile Include="Components\Cell.cs" />
     <Compile Include="Components\GenerationZone.cs" />
+    <Compile Include="Components\LineBonus.cs" />
+    <Compile Include="Components\Rotation.cs" />
     <Compile Include="Components\SwapSuccess.cs" />
+    <Compile Include="Data\Direction.cs" />
     <Compile Include="Data\GameState.cs" />
     <Compile Include="Components\Grid.cs" />
     <Compile Include="Components\OriginalPosition.cs" />
@@ -71,9 +77,17 @@
     <Compile Include="EntityFactories\BackgroundFactory.cs" />
     <Compile Include="EntityFactories\ButtonFactory.cs" />
     <Compile Include="EntityFactories\CellFactory.cs" />
+    <Compile Include="EntityFactories\DestroyerFactory.cs" />
     <Compile Include="EntityFactories\GridFactory.cs" />
+    <Compile Include="Systems\BombSystem.cs" />
+    <Compile Include="Systems\DelayedDyingSystem.cs" />
+    <Compile Include="Systems\DestroyersDyingSystem.cs" />
+    <Compile Include="Systems\DestroyersSystem.cs" />
+    <Compile Include="Systems\LineBonusSystem.cs" />
+    <Compile Include="Systems\RotationSystem.cs" />
     <Compile Include="EntityFactories\TextFactory.cs" />
     <Compile Include="Messages\NewStateMessage.cs" />
+    <Compile Include="Messages\RemoveSelectionMessage.cs" />
     <Compile Include="Messages\SwapFinishedMessage.cs" />
     <Compile Include="PlayerPrefs.cs" />
     <Compile Include="ResourceManagers\SpriteFontResourceManager.cs" />
@@ -111,6 +125,8 @@
     <Compile Include="Systems\WaitFallingSystem.cs" />
     <Compile Include="Utils\CellColorGenerator.cs" />
     <Compile Include="Utils\CellPool.cs" />
+    <Compile Include="Utils\CellUtil.cs" />
+    <Compile Include="Utils\DestroyersPool.cs" />
     <Compile Include="Utils\EntityExtension.cs" />
     <Compile Include="Utils\GridUtil.cs" />
     <Compile Include="Utils\Neighbours.cs" />
