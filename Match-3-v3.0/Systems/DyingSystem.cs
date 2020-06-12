@@ -12,8 +12,7 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-    [WhenAdded(typeof(Dying))]
-    [WhenChanged(typeof(Dying))]
+
     [With(typeof(Dying))]
     class DyingSystem : AEntitySystem<float>
     {
