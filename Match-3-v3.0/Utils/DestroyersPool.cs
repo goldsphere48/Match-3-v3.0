@@ -3,15 +3,11 @@ using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
 using Match_3_v3._0.EntityFactories;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Utils
 {
-    class DestroyersPool
+    internal class DestroyersPool
     {
         private readonly DestroyerFactory _destroyerFactory;
         private readonly List<Entity?> _destroyers;
@@ -39,23 +35,6 @@ namespace Match_3_v3._0.Utils
             return destroyerEntity.Value;
         }
 
-        private void Reset(Entity? entity, Direction direction)
-        {
-            entity.Value.Enable();
-            var component = entity.Value.Get<Destroyer>();
-            component.Direction = direction;
-            entity.Value.Set(component);
-        }
-
-        private void PlaceDestroyer(Entity? destroyer, Point spawnPositionInGrid, Transform parent)
-        {
-            var destroyerTransform = new Transform();
-            destroyerTransform.Parent = parent;
-            destroyerTransform.LocalPosition = spawnPositionInGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
-            destroyerTransform.Origin = new Vector2(40, 40);
-            destroyer.Value.Set(destroyerTransform);
-        }
-
         private Vector2 GetTargetPosition(Direction direction, Point spawnPositionInGrid)
         {
             var cellSize = PlayerPrefs.Get<int>("CellSize");
@@ -78,6 +57,23 @@ namespace Match_3_v3._0.Utils
                     break;
             }
             return targetPosition;
+        }
+
+        private void PlaceDestroyer(Entity? destroyer, Point spawnPositionInGrid, Transform parent)
+        {
+            var destroyerTransform = new Transform();
+            destroyerTransform.Parent = parent;
+            destroyerTransform.LocalPosition = spawnPositionInGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
+            destroyerTransform.Origin = new Vector2(40, 40);
+            destroyer.Value.Set(destroyerTransform);
+        }
+
+        private void Reset(Entity? entity, Direction direction)
+        {
+            entity.Value.Enable();
+            var component = entity.Value.Get<Destroyer>();
+            component.Direction = direction;
+            entity.Value.Set(component);
         }
     }
 }

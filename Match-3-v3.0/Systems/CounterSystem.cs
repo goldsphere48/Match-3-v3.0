@@ -1,11 +1,6 @@
 ﻿using DefaultEcs;
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
@@ -13,15 +8,14 @@ namespace Match_3_v3._0.Systems
     [WhenChanged(typeof(CountPresenter))]
     [With(typeof(CountPresenter))]
     [With(typeof(Text))]
-    class CounterSystem : AEntitySystem<float>
+    internal class CounterSystem : AEntitySystem<float>
     {
         public CounterSystem(World world)
             : base(world)
         {
-
         }
 
-        protected override void Update(float state, in Entity entity) 
+        protected override void Update(float state, in Entity entity)
         {
             var text = entity.Get<Text>();
             var counter = entity.Get<CountPresenter>();

@@ -5,17 +5,13 @@ using Match_3_v3._0.Data;
 using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Messages;
 using Match_3_v3._0.Utils;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [WhenAdded(typeof(Dying))]
     [With(typeof(LineBonus))]
-    class LineBonusSystem : AEntitySystem<float>
+    internal class LineBonusSystem : AEntitySystem<float>
     {
         private readonly DestroyersPool _destroyersPool;
         private readonly World _world;

@@ -3,22 +3,17 @@ using DefaultEcs.Resource;
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
-using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Messages;
 using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [WhenAdded(typeof(CombinationsArray))]
     [With(typeof(CombinationsArray))]
-    class CombinationSystem : AEntitySystem<float>
+    internal class CombinationSystem : AEntitySystem<float>
     {
         private readonly EntitySet _cells;
         private readonly World _world;
@@ -31,47 +26,6 @@ namespace Match_3_v3._0.Systems
             _world.Subscribe(this);
             _cells = _world.GetEntities().With<Cell>().AsSet();
             _gameState = initState;
-        }
-
-        [Subscribe]
-        private void On(in NewStateMessage newState) => _gameState = newState.Value;
-
-        protected override void Update(float state, in Entity entity)
-        {
-            if (_gameState == GameState.CombinationChecking)
-            {
-                var combinations = entity.Get<CombinationsArray>();
-                var width = PlayerPrefs.Get<int>("Width");
-                var height = PlayerPrefs.Get<int>("Height");
-                foreach (var combination in combinations.Value)
-                {
-                    ProceedCombination(combination, GridUtil.CellsSetToDictionary(_cells, width, height));
-                }
-                entity.Remove<CombinationsArray>();
-                _world.Publish(new UnselectMessage());
-                _world.Publish(new NewStateMessage { Value = GameState.CellDestroying });
-            }
-        }
-
-        private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
-        {
-            if (combination.Count > 3)
-            {
-                var modifiable = GetModifiable(combination, cells);
-                if (!CellUtil.IsBonus(modifiable))
-                {
-                    modifiable.Set<DontDestroy>();
-                    if (combination.Count == 4)
-                    {
-                        ModifyWithLine(modifiable, combination.Orientation);
-                    }
-                    else
-                    {
-                        ModifyWithBomb(modifiable);
-                    }
-                }
-            }
-            Destroy(combination, cells);
         }
 
         public static void ModifyWithBomb(Entity cellEntity)
@@ -92,6 +46,23 @@ namespace Match_3_v3._0.Systems
             }
         }
 
+        protected override void Update(float state, in Entity entity)
+        {
+            if (_gameState == GameState.CombinationChecking)
+            {
+                var combinations = entity.Get<CombinationsArray>();
+                var width = PlayerPrefs.Get<int>("Width");
+                var height = PlayerPrefs.Get<int>("Height");
+                foreach (var combination in combinations.Value)
+                {
+                    ProceedCombination(combination, GridUtil.CellsSetToDictionary(_cells, width, height));
+                }
+                entity.Remove<CombinationsArray>();
+                _world.Publish(new UnselectMessage());
+                _world.Publish(new NewStateMessage { Value = GameState.CellDestroying });
+            }
+        }
+
         private static void ModifyWithLine(Entity cell, Direction firstDirection, Direction secondDirection, string textureName)
         {
             cell.Set(new LineBonus(firstDirection, secondDirection, cell));
@@ -102,6 +73,24 @@ namespace Match_3_v3._0.Systems
         {
             cell.Set(new SpriteRenderer());
             cell.Set(new ManagedResource<string, Texture2D>(textureName));
+        }
+
+        private void Destroy(Combination combination, Dictionary<Point, Entity> cells)
+        {
+            foreach (var position in combination)
+            {
+                if (cells.TryGetValue(position, out Entity entity))
+                {
+                    if (!(entity.Has<DontDestroy>() || entity.Has<Dying>()))
+                    {
+                        entity.Set<Dying>();
+                    }
+                    else
+                    {
+                        entity.Remove<DontDestroy>();
+                    }
+                }
+            }
         }
 
         private Entity GetModifiable(Combination combination, Dictionary<Point, Entity> cells)
@@ -121,21 +110,28 @@ namespace Match_3_v3._0.Systems
             return modifiable.Value;
         }
 
-        private void Destroy(Combination combination, Dictionary<Point, Entity> cells)
+        [Subscribe]
+        private void On(in NewStateMessage newState) => _gameState = newState.Value;
+
+        private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
         {
-            foreach (var position in combination)
+            if (combination.Count > 3)
             {
-                if (cells.TryGetValue(position, out Entity entity))
+                var modifiable = GetModifiable(combination, cells);
+                if (!CellUtil.IsBonus(modifiable))
                 {
-                    if (!(entity.Has<DontDestroy>() || entity.Has<Dying>()))
+                    modifiable.Set<DontDestroy>();
+                    if (combination.Count == 4)
                     {
-                        entity.Set<Dying>();
-                    } else
+                        ModifyWithLine(modifiable, combination.Orientation);
+                    }
+                    else
                     {
-                        entity.Remove<DontDestroy>();
+                        ModifyWithBomb(modifiable);
                     }
                 }
             }
+            Destroy(combination, cells);
         }
     }
 }

@@ -4,22 +4,18 @@ using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.EntityFactories
 {
-    class GridFactory : IDisposable
+    internal class GridFactory : IDisposable
     {
-        private readonly World _world;
-        private readonly GraphicsDevice _device;
         private readonly Texture2D _background;
-        private readonly int _width;
-        private readonly int _height;
         private readonly int _cellSize;
+        private readonly GraphicsDevice _device;
+        private readonly int _height;
+        private readonly int _width;
+        private readonly World _world;
 
         public GridFactory(World world, GraphicsDevice device, int width, int height, int cellSize)
         {
@@ -37,8 +33,8 @@ namespace Match_3_v3._0.EntityFactories
             entity.Set(
                 new SpriteRenderer
                 {
-                    Texture = _background, 
-                    Destination = new Rectangle(0, 0, _background.Width * _cellSize, _background.Height * _cellSize) 
+                    Texture = _background,
+                    Destination = new Rectangle(0, 0, _background.Width * _cellSize, _background.Height * _cellSize)
                 }
             );
             var position = Vector2.Add(SceneUtil.GetCenterFor(entity, _device), new Vector2(0, 30));
@@ -46,6 +42,11 @@ namespace Match_3_v3._0.EntityFactories
             entity.Set(new Grid(_width, _height));
             entity.Set(new GenerationZone { NewCellPositionsInGrid = GridUtil.GetFullGridMatrix(_width, _height), VerticalOffset = 0 });
             return entity;
+        }
+
+        public void Dispose()
+        {
+            _background.Dispose();
         }
 
         private Texture2D CreateTexture()
@@ -58,11 +59,6 @@ namespace Match_3_v3._0.EntityFactories
             }
             texture.SetData(data);
             return texture;
-        }
-
-        public void Dispose()
-        {
-            _background.Dispose();
         }
     }
 }

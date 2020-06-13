@@ -1,46 +1,37 @@
-﻿using SceneSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DefaultEcs;
+﻿using DefaultEcs;
 using DefaultEcs.System;
-using Match_3_v3._0.ResourceManagers;
-using Match_3_v3._0.Systems;
 using DefaultEcs.Threading;
 using Match_3_v3._0.Components;
-using DefaultEcs.Resource;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using Match_3_v3._0.EntityFactories;
-using Match_3_v3._0.Entities;
-using Match_3_v3._0.Utils;
 using Match_3_v3._0.Data;
+using Match_3_v3._0.Entities;
+using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Messages;
+using Match_3_v3._0.Systems;
+using Match_3_v3._0.Utils;
+using Microsoft.Xna.Framework;
+using SceneSystem;
+using System;
 
 namespace Match_3_v3._0.Scenes
 {
-    class GameScene : BaseScene
+    internal class GameScene : BaseScene
     {
         private BackgroundFactory _backgroundFactory;
+        private EntitySet _backgroundLayer;
+        private EntitySet _borderLayer;
+        private CellPool _cellPool;
+        private EntitySet _cellsLayer;
+        private EntitySet _destroyersLayer;
+        private GameState _gameState = GameState.Generating;
         private GridFactory _gridFactory;
         private Counter _scoreCounter;
         private Counter _timerCounter;
-        private CellPool _cellPool;
-        private EntitySet _cellsLayer;
-        private EntitySet _borderLayer;
-        private EntitySet _destroyersLayer;
-        private EntitySet _backgroundLayer;
-
-        private GameState _gameState = GameState.Generating;
-
 
         public override void Setup(World world, out ISystem<float> systems)
         {
             _backgroundFactory = new BackgroundFactory(world);
             _gridFactory = new GridFactory(
-                world, 
+                world,
                 _game.GraphicsDevice,
                 PlayerPrefs.Get<int>("Width"),
                 PlayerPrefs.Get<int>("Height"),
@@ -53,19 +44,40 @@ namespace Match_3_v3._0.Scenes
             world.Subscribe(this);
         }
 
-        private void InitLayers(World world)
+        private void CreateBorders()
         {
-            _cellsLayer = world.GetEntities().With<SpriteRenderer>().With<Cell>().AsSet();
-            _backgroundLayer = world.GetEntities().With<SpriteRenderer>().Without<Cell>().AsSet();
-            _destroyersLayer = world.GetEntities().With<SpriteRenderer>().With<Destroyer>().AsSet();
-            _borderLayer = world.GetEntities().With<SpriteRenderer>().With<Borders>().AsSet();
+            var entity = _backgroundFactory.Create("borders");
+            entity.Set<Borders>();
         }
 
-        [Subscribe]
-        private void On(in AddScoreMessage newScore)
+        private void CreateScoreBoard(World world)
         {
-            _scoreCounter.Value += newScore.Value;
-            PlayerPrefs.Set("Score", _scoreCounter.Value);
+            _scoreCounter = new Counter(new CounterArgs
+            {
+                Title = "Score",
+                World = world,
+                Position = new Vector2(30, 30),
+                InitialValue = 0
+            });
+            _scoreCounter.GetEntity().Set<Score>();
+        }
+
+        private void CreateTimer(World world)
+        {
+            CreateTimerBoard(world);
+            var entity = world.CreateEntity();
+            entity.Set(new Timer { Interval = 1, TimerTick = OnTimerTick });
+        }
+
+        private void CreateTimerBoard(World world)
+        {
+            _timerCounter = new Counter(new CounterArgs
+            {
+                Title = "Time",
+                World = world,
+                Position = new Vector2(510, 30),
+                InitialValue = PlayerPrefs.Get<int>("RoundTime")
+            });
         }
 
         private void InitializeSystems(World world, out ISystem<float> systems)
@@ -102,49 +114,19 @@ namespace Match_3_v3._0.Scenes
             );
         }
 
-        private void SetupWorld(World world)
+        private void InitLayers(World world)
         {
-            _backgroundFactory.Create("background", Color.White);
-            _gridFactory.Create();
-            CreateScoreBoard(world);
-            CreateTimer(world);
-            CreateBorders();
+            _cellsLayer = world.GetEntities().With<SpriteRenderer>().With<Cell>().AsSet();
+            _backgroundLayer = world.GetEntities().With<SpriteRenderer>().Without<Cell>().AsSet();
+            _destroyersLayer = world.GetEntities().With<SpriteRenderer>().With<Destroyer>().AsSet();
+            _borderLayer = world.GetEntities().With<SpriteRenderer>().With<Borders>().AsSet();
         }
 
-        private void CreateBorders()
+        [Subscribe]
+        private void On(in AddScoreMessage newScore)
         {
-            var entity = _backgroundFactory.Create("borders");
-            entity.Set<Borders>();
-        }
-
-        private void CreateScoreBoard(World world)
-        {
-            _scoreCounter = new Counter(new CounterArgs
-            {
-                Title = "Score",
-                World = world,
-                Position = new Vector2(30, 30),
-                InitialValue = 0
-            });
-            _scoreCounter.GetEntity().Set<Score>();
-        }
-
-        private void CreateTimerBoard(World world)
-        {
-            _timerCounter = new Counter(new CounterArgs
-            {
-                Title = "Time",
-                World = world,
-                Position = new Vector2(510, 30),
-                InitialValue = PlayerPrefs.Get<int>("RoundTime")
-            });
-        }
-
-        private void CreateTimer(World world)
-        {
-            CreateTimerBoard(world);
-            var entity = world.CreateEntity();
-            entity.Set(new Timer { Interval = 1, TimerTick = OnTimerTick});
+            _scoreCounter.Value += newScore.Value;
+            PlayerPrefs.Set("Score", _scoreCounter.Value);
         }
 
         private void OnTimerTick()
@@ -155,6 +137,15 @@ namespace Match_3_v3._0.Scenes
                 PlayerPrefs.Set("Score", _scoreCounter.Value);
                 SceneManager.Instance.SetActiveScene<GameOverScene>();
             }
+        }
+
+        private void SetupWorld(World world)
+        {
+            _backgroundFactory.Create("background", Color.White);
+            _gridFactory.Create();
+            CreateScoreBoard(world);
+            CreateTimer(world);
+            CreateBorders();
         }
     }
 }

@@ -3,21 +3,15 @@ using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
 using Match_3_v3._0.Messages;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-    class WaitFallingSystem : ISystem<float>
+    internal class WaitFallingSystem : ISystem<float>
     {
-        public bool IsEnabled { get; set; }
         private readonly EntitySet _fallingEntities;
         private readonly World _world;
         private GameState _gameState;
+        public bool IsEnabled { get; set; }
 
         public WaitFallingSystem(World world, GameState _initState)
         {
@@ -27,10 +21,9 @@ namespace Match_3_v3._0.Systems
             _world.Subscribe(this);
         }
 
-        [Subscribe]
-        private void On(in NewStateMessage newStateMessage) => _gameState = newStateMessage.Value;
-
-        public void Dispose() { }
+        public void Dispose()
+        {
+        }
 
         public void Update(float state)
         {
@@ -42,5 +35,8 @@ namespace Match_3_v3._0.Systems
                 }
             }
         }
+
+        [Subscribe]
+        private void On(in NewStateMessage newStateMessage) => _gameState = newStateMessage.Value;
     }
 }

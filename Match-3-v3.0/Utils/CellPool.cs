@@ -2,15 +2,11 @@
 using Match_3_v3._0.Components;
 using Match_3_v3._0.EntityFactories;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Utils
 {
-    class CellPool
+    internal class CellPool
     {
         private readonly CellFactory _cellFactory;
         private readonly List<Entity?> _cells;
@@ -44,14 +40,6 @@ namespace Match_3_v3._0.Utils
 
         private Vector2 GetLocalPosition(Cell cellInfo) => cellInfo.PositionInGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
 
-        private void Reset(Entity? entity, Cell cellInfo)
-        {
-            entity.Value.Enable();
-            var component = entity.Value.Get<Cell>();
-            component.PositionInGrid = cellInfo.PositionInGrid;
-            entity.Value.Set(component);
-        }
-
         private void PlaceCell(Entity? cell, Vector2 localPosition, float verticalOffset)
         {
             var transform = cell.Value.Get<Transform>();
@@ -61,6 +49,14 @@ namespace Match_3_v3._0.Utils
                     new Vector2(0, verticalOffset)
                 );
             cell.Value.Set(transform);
+        }
+
+        private void Reset(Entity? entity, Cell cellInfo)
+        {
+            entity.Value.Enable();
+            var component = entity.Value.Get<Cell>();
+            component.PositionInGrid = cellInfo.PositionInGrid;
+            entity.Value.Set(component);
         }
     }
 }

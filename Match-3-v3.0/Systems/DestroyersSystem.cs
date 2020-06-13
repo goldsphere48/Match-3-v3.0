@@ -7,18 +7,15 @@ using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [With(typeof(Destroyer))]
-    class DestroyersSystem : AEntitySystem<float>
+    internal class DestroyersSystem : AEntitySystem<float>
     {
         private readonly World _world;
-        private GameState _gameState;
         private Dictionary<Point, Entity> _cells;
+        private GameState _gameState;
 
         public DestroyersSystem(World world, GameState initState)
             : base(world)
@@ -26,20 +23,6 @@ namespace Match_3_v3._0.Systems
             _gameState = initState;
             _world = world;
             _world.Subscribe(this);
-        }
-
-        [Subscribe]
-        private void On(in NewStateMessage newStateMessage)
-        {
-            _gameState = newStateMessage.Value;
-            if (_gameState == GameState.DestroyersMoving)
-            {
-                _cells = GridUtil.CellsSetToDictionary(
-                    _world.GetEntities().With<Cell>().AsSet(), 
-                    PlayerPrefs.Get<int>("Width"), 
-                    PlayerPrefs.Get<int>("Height")
-                );
-            }
         }
 
         protected override void Update(float state, ReadOnlySpan<Entity> destroyers)
@@ -53,6 +36,50 @@ namespace Match_3_v3._0.Systems
                     var positionIngrid = GetCurrentPositinInGrid(destroyerLocalPosition, destroyerDirection);
                     TryToDestroyCell(positionIngrid, destroyerLocalPosition, destroyerDirection);
                 }
+            }
+        }
+
+        private int CalculatePartialPosition(float value, Direction direction)
+        {
+            int partialPosition;
+            if (direction == Direction.Left || direction == Direction.Up)
+            {
+                partialPosition = (int)Math.Ceiling(value / PlayerPrefs.Get<int>("CellSize"));
+            }
+            else
+            {
+                partialPosition = (int)Math.Floor(value / PlayerPrefs.Get<int>("CellSize"));
+            }
+            return partialPosition;
+        }
+
+        private void DestroyCellUnderDestroyerWithCondition(Entity entity, Cell cell, Func<bool> canDestroy)
+        {
+            if (canDestroy() && !entity.Has<Dying>())
+            {
+                CellUtil.Kill(entity);
+                _cells.Remove(cell.PositionInGrid);
+            }
+        }
+
+        private Point GetCurrentPositinInGrid(Vector2 destroyerLocalPosition, Direction direction)
+        {
+            int posX = CalculatePartialPosition(destroyerLocalPosition.X, direction);
+            int posY = CalculatePartialPosition(destroyerLocalPosition.Y, direction);
+            return new Point(posX, posY);
+        }
+
+        [Subscribe]
+        private void On(in NewStateMessage newStateMessage)
+        {
+            _gameState = newStateMessage.Value;
+            if (_gameState == GameState.DestroyersMoving)
+            {
+                _cells = GridUtil.CellsSetToDictionary(
+                    _world.GetEntities().With<Cell>().AsSet(),
+                    PlayerPrefs.Get<int>("Width"),
+                    PlayerPrefs.Get<int>("Height")
+                );
             }
         }
 
@@ -77,35 +104,6 @@ namespace Match_3_v3._0.Systems
                         DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cellComponent, () => destroyerLocalPosition.X >= cellLocalPosition.X);
                         break;
                 }
-            }
-        }
-
-        private Point GetCurrentPositinInGrid(Vector2 destroyerLocalPosition, Direction direction)
-        {
-            int posX = CalculatePartialPosition(destroyerLocalPosition.X, direction);
-            int posY = CalculatePartialPosition(destroyerLocalPosition.Y, direction);
-            return new Point(posX, posY);
-        }
-
-        private int CalculatePartialPosition(float value, Direction direction)
-        {
-            int partialPosition;
-            if (direction == Direction.Left || direction == Direction.Up)
-            {
-                partialPosition = (int)Math.Ceiling(value / PlayerPrefs.Get<int>("CellSize"));
-            } else
-            {
-                partialPosition = (int)Math.Floor(value / PlayerPrefs.Get<int>("CellSize"));
-            }
-            return partialPosition;
-        }
-
-        private void DestroyCellUnderDestroyerWithCondition(Entity entity, Cell cell, Func<bool> canDestroy)
-        {
-            if (canDestroy() && !entity.Has<Dying>())
-            {
-                CellUtil.Kill(entity);
-                _cells.Remove(cell.PositionInGrid);
             }
         }
     }

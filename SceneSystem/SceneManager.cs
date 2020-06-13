@@ -1,33 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SceneSystem
 {
     public sealed class SceneManager : ISceneManager
     {
+        private static SceneManager _instance;
+        private readonly List<SceneController> _scenes = new List<SceneController>();
+        private SceneController _currentScene;
+        private Game _game;
         public static SceneManager Instance => _instance ?? (_instance = new SceneManager());
 
-        public void Initialize(Game game)
-        {
-            _game = game;
-        }
+        public IScene CurrentScene => _currentScene;
 
         private SceneManager()
         {
         }
-
-        private static SceneManager _instance;
-
-        private Game _game;
-        private SceneController _currentScene;
-        private readonly List<SceneController> _scenes = new List<SceneController>();
-
-        public IScene CurrentScene => _currentScene;
 
         public void Clear()
         {
@@ -36,6 +26,11 @@ namespace SceneSystem
                 scene.Dispose();
             }
             _scenes.Clear();
+        }
+
+        public void Initialize(Game game)
+        {
+            _game = game;
         }
 
         public void LoadScene<T>() where T : IScene
@@ -117,6 +112,13 @@ namespace SceneSystem
             _currentScene.Update(elapsedTime);
         }
 
+        private static bool IsScene(Type type) => typeof(IScene).IsAssignableFrom(type);
+
+        private bool Contains(Type sceneType)
+        {
+            return _scenes.Any(sceneController => sceneType == sceneController.SceneType);
+        }
+
         private SceneController GetSceneController(Type type)
         {
             return _scenes.Find(sceneController => sceneController.SceneType == type);
@@ -125,13 +127,6 @@ namespace SceneSystem
         private SceneController GetSceneController<T>() where T : IScene
         {
             return GetSceneController(typeof(T));
-        }
-
-        private static bool IsScene(Type type) => typeof(IScene).IsAssignableFrom(type);
-
-        private bool Contains(Type sceneType)
-        {
-            return _scenes.Any(sceneController => sceneType == sceneController.SceneType);
         }
     }
 }

@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0
 {
-    static class PlayerPrefs
+    internal static class PlayerPrefs
     {
         private static Dictionary<string, object> _preferencies = new Dictionary<string, object>();
         private static object locker = new object();
 
-        public static void Set<T>(string key, T value)
+        public static void ClearAll()
         {
             lock (locker)
             {
-                _preferencies[key] = value;
+                _preferencies.Clear();
             }
         }
 
@@ -24,7 +20,8 @@ namespace Match_3_v3._0
         {
             if (_preferencies.ContainsKey(key))
             {
-                lock (locker) {
+                lock (locker)
+                {
                     var value = _preferencies[key];
                     if (typeof(T).IsAssignableFrom(value.GetType()))
                     {
@@ -52,11 +49,11 @@ namespace Match_3_v3._0
             }
         }
 
-        public static void ClearAll()
+        public static void Set<T>(string key, T value)
         {
             lock (locker)
             {
-                _preferencies.Clear();
+                _preferencies[key] = value;
             }
         }
     }

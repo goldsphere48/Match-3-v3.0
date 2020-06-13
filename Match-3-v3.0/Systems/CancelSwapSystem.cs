@@ -2,22 +2,17 @@
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [With(typeof(OriginalPosition))]
     [With(typeof(FrameAnimation))]
     [WhenRemoved(typeof(TargetPosition))]
-    class CancelSwapSystem : AEntitySystem<float>
+    internal class CancelSwapSystem : AEntitySystem<float>
     {
         public CancelSwapSystem(World world)
             : base(world)
         {
-
         }
 
         protected override void Update(float state, ReadOnlySpan<Entity> entities)

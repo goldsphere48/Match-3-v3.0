@@ -2,23 +2,18 @@
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [WhenAdded(typeof(Swap))]
     [With(typeof(Swap))]
     [With(typeof(Grid))]
-    class SwapSystem : AEntitySystem<float>
+    internal class SwapSystem : AEntitySystem<float>
     {
         public SwapSystem(World world)
             : base(world)
         {
-
         }
 
         protected override void Update(float state, in Entity entity)
@@ -42,22 +37,28 @@ namespace Match_3_v3._0.Systems
                 Swap(grid, secondCell, firstCell);
                 first.Set(new SwapSuccess { Value = SwapResult.Fail });
                 SetOriginPositions(first, second);
-            } else
+            }
+            else
             {
                 SwapPostions(ref firstCell, ref secondCell);
                 first.Set(firstCell);
                 second.Set(secondCell);
-                first.Set(new SwapSuccess { Value = SwapResult.Success});
+                first.Set(new SwapSuccess { Value = SwapResult.Success });
                 entity.Set(grid);
                 entity.Remove<Swap>();
             }
         }
 
-        private void SwapPostions(ref Cell first, ref Cell second)
+        private void SetNewPostions(Entity first, Entity second)
         {
-            var tmp = first.PositionInGrid;
-            first.PositionInGrid = second.PositionInGrid;
-            second.PositionInGrid = tmp;
+            first.Set(new TargetPosition { Position = second.Get<Transform>().Position });
+            second.Set(new TargetPosition { Position = first.Get<Transform>().Position });
+        }
+
+        private void SetOriginPositions(Entity first, Entity second)
+        {
+            first.Set(new OriginalPosition { Value = first.Get<Transform>().Position });
+            second.Set(new OriginalPosition { Value = second.Get<Transform>().Position });
         }
 
         private void Swap(Grid grid, Cell first, Cell second)
@@ -74,16 +75,11 @@ namespace Match_3_v3._0.Systems
             second.Color = tmp;
         }
 
-        private void SetNewPostions(Entity first, Entity second)
+        private void SwapPostions(ref Cell first, ref Cell second)
         {
-            first.Set(new TargetPosition { Position = second.Get<Transform>().Position });
-            second.Set(new TargetPosition { Position = first.Get<Transform>().Position });
-        }
-
-        private void SetOriginPositions(Entity first, Entity second)
-        {
-            first.Set(new OriginalPosition { Value = first.Get<Transform>().Position });
-            second.Set(new OriginalPosition { Value = second.Get<Transform>().Position });
+            var tmp = first.PositionInGrid;
+            first.PositionInGrid = second.PositionInGrid;
+            second.PositionInGrid = tmp;
         }
     }
 }

@@ -3,21 +3,16 @@ using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
 using Match_3_v3._0.Messages;
-using Match_3_v3._0.Utils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [With(typeof(Dying))]
-    class DyingSystem : AEntitySystem<float>
+    internal class DyingSystem : AEntitySystem<float>
     {
+        private readonly EntitySet _destroyers;
         private readonly World _world;
         private GameState _gameState = GameState.Generating;
-        private readonly EntitySet _destroyers;
 
         public DyingSystem(World world, GameState initState)
             : base(world)
@@ -27,9 +22,6 @@ namespace Match_3_v3._0.Systems
             _gameState = initState;
             _destroyers = _world.GetEntities().With<Destroyer>().AsSet();
         }
-
-        [Subscribe]
-        private void On(in NewStateMessage newState) => _gameState = newState.Value;
 
         protected override void Update(float state, ReadOnlySpan<Entity> entities)
         {
@@ -52,5 +44,8 @@ namespace Match_3_v3._0.Systems
                 _world.Publish(new NewStateMessage { Value = GameState.Falling });
             }
         }
+
+        [Subscribe]
+        private void On(in NewStateMessage newState) => _gameState = newState.Value;
     }
 }

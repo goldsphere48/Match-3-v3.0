@@ -3,22 +3,18 @@ using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [WhenAdded(typeof(Dying))]
     [With(typeof(BombBonus))]
     [With(typeof(Cell))]
-    class BombSystem : AEntitySystem<float>
+    internal class BombSystem : AEntitySystem<float>
     {
-        private Dictionary<Point, Entity> _cells;
         private readonly EntitySet _cellsSet;
+        private Dictionary<Point, Entity> _cells;
 
         public BombSystem(World world)
             : base(world)
@@ -48,6 +44,17 @@ namespace Match_3_v3._0.Systems
             }
         }
 
+        private void Clear(Entity entity)
+        {
+            entity.Remove<SpriteRenderer>();
+            entity.Remove<BombBonus>();
+        }
+
+        private int End(int value, int width)
+        {
+            return value + 1 < width ? value + 1 : width - 1;
+        }
+
         private IEnumerable<Point> GetExplosionZone(Point position, int width, int height)
         {
             for (int i = Start(position.X); i <= End(position.X, width); ++i)
@@ -62,17 +69,6 @@ namespace Match_3_v3._0.Systems
         private int Start(int value)
         {
             return value - 1 >= 0 ? value - 1 : 0;
-        }
-
-        private int End(int value, int width)
-        {
-            return value + 1 < width ? value + 1 : width - 1;
-        }
-
-        private void Clear(Entity entity)
-        {
-            entity.Remove<SpriteRenderer>();
-            entity.Remove<BombBonus>();
         }
     }
 }

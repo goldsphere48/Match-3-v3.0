@@ -7,7 +7,7 @@ namespace Match_3_v3._0
 {
     public class Match3Game : Game
     {
-        GraphicsDeviceManager _deviceManager;
+        private GraphicsDeviceManager _deviceManager;
 
         public Match3Game()
         {
@@ -22,6 +22,13 @@ namespace Match_3_v3._0
             GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
             Content.RootDirectory = "Content";
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            SceneManager.Instance.Clear();
+            _deviceManager.Dispose();
+            base.Dispose(disposing);
         }
 
         protected override void Initialize()
@@ -45,13 +52,6 @@ namespace Match_3_v3._0
         {
             GraphicsDevice.Clear(Color.Black);
             SceneManager.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            SceneManager.Instance.Clear();
-            _deviceManager.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

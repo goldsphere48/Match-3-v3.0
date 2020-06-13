@@ -1,14 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework.Graphics;
 
 namespace Match_3_v3._0.Components
 {
-    class TextRenderer : RendererComponent
+    internal class TextRenderer : RendererComponent
     {
         public SpriteFont SpriteFont = null;
     }

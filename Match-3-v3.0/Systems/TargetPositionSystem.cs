@@ -3,23 +3,18 @@ using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [With(typeof(Transform))]
     [With(typeof(TargetPosition))]
-    class TargetPositionSystem : AEntitySystem<float>
+    internal class TargetPositionSystem : AEntitySystem<float>
     {
         private int _speed = PlayerPrefs.Get<int>("Speed");
 
         public TargetPositionSystem(World world)
             : base(world)
         {
-
         }
 
         protected override void Update(float state, ReadOnlySpan<Entity> entities)
@@ -40,6 +35,9 @@ namespace Match_3_v3._0.Systems
             }
         }
 
+        private Vector2 GetDirection(Vector2 target, Vector2 transform)
+            => Vector2.Normalize(Vector2.Subtract(target, transform));
+
         private Vector2 GetNewPosition(Entity entity, Vector2 currentPosition, Vector2 targetPosition, float state)
         {
             Vector2 newPosition = currentPosition;
@@ -58,9 +56,6 @@ namespace Match_3_v3._0.Systems
         }
 
         private Vector2 GetStep(Vector2 direction, float offset) => direction * offset;
-
-        private Vector2 GetDirection(Vector2 target, Vector2 transform) 
-            => Vector2.Normalize(Vector2.Subtract(target, transform));
 
         private bool IsOnThePlace(Vector2 position, Vector2 target, float step)
         {

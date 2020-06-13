@@ -1,15 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace SceneSystem
 {
-    interface ISceneManager
+    internal interface ISceneManager
     {
         IScene CurrentScene { get; }
+
         void Clear();
 
         void LoadScene<T>() where T : IScene;

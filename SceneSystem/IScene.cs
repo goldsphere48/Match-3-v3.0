@@ -1,18 +1,15 @@
-﻿using DefaultEcs;
-using DefaultEcs.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace SceneSystem
 {
     public interface IScene : IDisposable
     {
-        void Setup();
-        void OnEnable();
         void OnDisable();
+
+        void OnEnable();
+
+        void Setup();
+
         void Update(float elapsedTime);
     }
 }

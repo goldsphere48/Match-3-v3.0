@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Data
 {
     [Flags]
-    enum Neighbours
+    internal enum Neighbours
     {
         None = 0,
         Top = 1 << 0,

@@ -1,16 +1,9 @@
 ﻿using DefaultEcs;
-using DefaultEcs.Resource;
 using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
-using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Messages;
 using Match_3_v3._0.Utils;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Match_3_v3._0.Systems
 {
@@ -18,11 +11,11 @@ namespace Match_3_v3._0.Systems
     [With(typeof(GenerationZone))]
     [With(typeof(Grid))]
     [With(typeof(Transform))]
-    class GenerationSystem : AEntitySystem<float>
+    internal class GenerationSystem : AEntitySystem<float>
     {
         private readonly CellPool _cellPool;
-        private GameState _gameState;
         private readonly World _world;
+        private GameState _gameState;
 
         public GenerationSystem(World world, CellPool cellPool, GameState initState)
             : base(world)
@@ -32,9 +25,6 @@ namespace Match_3_v3._0.Systems
             _world = world;
             _world.Subscribe(this);
         }
-
-        [Subscribe]
-        private void On(in NewStateMessage newStateMessage) => _gameState = newStateMessage.Value;
 
         protected override void Update(float state, in Entity entity)
         {
@@ -54,15 +44,13 @@ namespace Match_3_v3._0.Systems
             }
         }
 
-        private void InstatiateNewCells(Cell[][] newCells, Entity grid, float verticalOffset)
+        private void ApplyNewCells(Grid grid, Cell[][] newCells)
         {
-            var parentTransform = grid.Get<Transform>();
             foreach (var column in newCells)
             {
-                foreach (var cellComponent in column)
+                foreach (var cell in column)
                 {
-                    Entity cell = _cellPool.RequestCell(cellComponent, verticalOffset, parentTransform);
-                    grid.SetAsParentOf(cell);
+                    grid.Cells[cell.PositionInGrid.X, cell.PositionInGrid.Y] = cell;
                 }
             }
         }
@@ -80,7 +68,7 @@ namespace Match_3_v3._0.Systems
             for (int i = 0; i < newCells.Length; ++i)
             {
                 newCells[i] = new Cell[generationInfo.NewCellPositionsInGrid[i].Length];
-                for(int j = 0; j <  newCells[i].Length; ++j)
+                for (int j = 0; j < newCells[i].Length; ++j)
                 {
                     newCells[i][j] = new Cell
                     {
@@ -92,15 +80,20 @@ namespace Match_3_v3._0.Systems
             return newCells;
         }
 
-        private void ApplyNewCells(Grid grid, Cell[][] newCells)
+        private void InstatiateNewCells(Cell[][] newCells, Entity grid, float verticalOffset)
         {
+            var parentTransform = grid.Get<Transform>();
             foreach (var column in newCells)
             {
-                foreach (var cell in column)
+                foreach (var cellComponent in column)
                 {
-                    grid.Cells[cell.PositionInGrid.X, cell.PositionInGrid.Y] = cell; 
+                    Entity cell = _cellPool.RequestCell(cellComponent, verticalOffset, parentTransform);
+                    grid.SetAsParentOf(cell);
                 }
             }
         }
+
+        [Subscribe]
+        private void On(in NewStateMessage newStateMessage) => _gameState = newStateMessage.Value;
     }
 }

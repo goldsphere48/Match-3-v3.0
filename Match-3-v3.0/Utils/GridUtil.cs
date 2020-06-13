@@ -6,18 +6,32 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Utils
 {
-    static class GridUtil
+    internal static class GridUtil
     {
-        public static bool IsNeighbours(Cell first, Cell second)
+        public static Dictionary<Point, Entity> CellsSetToDictionary(EntitySet cells, int width, int height)
         {
-            var difference = first.PositionInGrid - second.PositionInGrid;
-            var length = difference.ToVector2().Length();
-            return length == 1;
+            var result = new Dictionary<Point, Entity>(width * height);
+            foreach (var cell in cells.GetEntities())
+            {
+                result.Add(cell.Get<Cell>().PositionInGrid, cell);
+            }
+            return result;
+        }
+
+        public static void Generate(World world, Point[][] positions, int verticalOffset)
+        {
+            world.First(e => e.Has<Grid>()).Set(
+                new GenerationZone
+                {
+                    NewCellPositionsInGrid = positions,
+                    VerticalOffset = verticalOffset,
+                    IsSecondaryGeneration = true
+                }
+            );
+            world.Publish(new NewStateMessage { Value = GameState.Generating });
         }
 
         public static Point[][] GetFullGridMatrix(int width, int height)
@@ -81,27 +95,11 @@ namespace Match_3_v3._0.Utils
             return mask;
         }
 
-        public static void Generate(World world, Point[][] positions, int verticalOffset)
+        public static bool IsNeighbours(Cell first, Cell second)
         {
-            world.First(e => e.Has<Grid>()).Set(
-                new GenerationZone
-                {
-                    NewCellPositionsInGrid = positions,
-                    VerticalOffset = verticalOffset,
-                    IsSecondaryGeneration = true
-                }
-            );
-            world.Publish(new NewStateMessage { Value = GameState.Generating });
-        }
-
-        public static Dictionary<Point, Entity> CellsSetToDictionary(EntitySet cells, int width, int height)
-        {
-            var result = new Dictionary<Point, Entity>(width * height);
-            foreach (var cell in cells.GetEntities())
-            {
-                result.Add(cell.Get<Cell>().PositionInGrid, cell);
-            }
-            return result;
+            var difference = first.PositionInGrid - second.PositionInGrid;
+            var length = difference.ToVector2().Length();
+            return length == 1;
         }
 
         public static Point NeighbourToVector2(Neighbours neighbours)

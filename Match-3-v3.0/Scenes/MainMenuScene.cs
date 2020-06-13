@@ -1,23 +1,16 @@
-﻿using SceneSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DefaultEcs;
+﻿using DefaultEcs;
 using DefaultEcs.System;
-using Match_3_v3._0.ResourceManagers;
-using Match_3_v3._0.Systems;
 using DefaultEcs.Threading;
 using Match_3_v3._0.Components;
-using DefaultEcs.Resource;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 using Match_3_v3._0.EntityFactories;
+using Match_3_v3._0.Systems;
+using Microsoft.Xna.Framework;
+using SceneSystem;
+using System;
 
 namespace Match_3_v3._0.Scenes
 {
-    class MainMenuScene : BaseScene
+    internal class MainMenuScene : BaseScene
     {
         private BackgroundFactory _backgroundFactory;
         private ButtonFactory _buttonFactory;
@@ -40,15 +33,15 @@ namespace Match_3_v3._0.Scenes
             );
         }
 
+        private void Play()
+        {
+            SceneManager.Instance.SetActiveScene<GameScene>();
+        }
+
         private void SetupWorld()
         {
             _backgroundFactory.Create("background", Color.White);
             _buttonFactory.CreateAtCenter("playButton", Play);
-        }
-
-        private void Play()
-        {
-            SceneManager.Instance.SetActiveScene<GameScene>();
         }
     }
 }

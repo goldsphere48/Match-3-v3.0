@@ -1,17 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Components
 {
-    class Transform
+    internal class Transform
     {
+        private Transform _parent;
+        private Vector2 _position = Vector2.Zero;
         public float Angle { get; set; }
-        public Vector2 Origin { get; set; }
         public List<Transform> Children { get; } = new List<Transform>();
+
         public Vector2 LocalPosition
         {
             get
@@ -24,6 +22,9 @@ namespace Match_3_v3._0.Components
             }
             set => HandleLocalPositionChange(value);
         }
+
+        public Vector2 Origin { get; set; }
+
         public Transform Parent
         {
             get => _parent;
@@ -32,7 +33,6 @@ namespace Match_3_v3._0.Components
                 if (value != null && !value.Children.Contains(this))
                 {
                     value.Children.Add(this);
-
                 }
                 else if (value == null && _parent == null)
                 {
@@ -41,9 +41,8 @@ namespace Match_3_v3._0.Components
                 _parent = value;
             }
         }
+
         public Vector2 Position { get => _position; set => HandleAbsolutePositionChange(value); }
-        private Transform _parent;
-        private Vector2 _position = Vector2.Zero;
 
         public void MoveTowards(Vector2 dir, Vector2 speed)
         {

@@ -10,18 +10,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SceneSystem;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Scenes
 {
-    class GameOverScene : BaseScene
+    internal class GameOverScene : BaseScene
     {
-        private ButtonFactory _buttonFactory;
         private BackgroundFactory _backgroundFactory;
+        private ButtonFactory _buttonFactory;
         private TextFactory _textFactory;
+
+        public void GoToMenu()
+        {
+            SceneManager.Instance.SetActiveScene<MainMenuScene>();
+        }
 
         public override void Setup(World world, out ISystem<float> systems)
         {
@@ -30,31 +31,6 @@ namespace Match_3_v3._0.Scenes
             _textFactory = new TextFactory(world);
             InitializeSystems(world, out systems);
             SetupWorld(world);
-        }
-
-        private void InitializeSystems(World world, out ISystem<float> systems)
-        {
-            var _runner = new DefaultParallelRunner(Environment.ProcessorCount);
-            systems = new SequentialSystem<float>(
-                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().AsSet()),
-                new ButtonSystem(world, _game.Window),
-                new TransformSystem(world, _runner),
-                new TextRenderSystem(_batch, world),
-                new TextSystem(world)
-            );
-        }
-
-        private void SetupWorld(World world)
-        {
-            _backgroundFactory.Create("background");
-            CreateGameOver(world);
-            CreateScoreText(world);
-            CreateOkButton();
-        }
-
-        public void GoToMenu()
-        {
-            SceneManager.Instance.SetActiveScene<MainMenuScene>();
         }
 
         private void CreateGameOver(World world)
@@ -76,10 +52,10 @@ namespace Match_3_v3._0.Scenes
             transform.Position = Vector2.Add(transform.Position, new Vector2(0, 180));
         }
 
-        private void CreateScoreText(World world) 
+        private void CreateScoreText(World world)
         {
             var entity = _textFactory.Create(
-                new TextArgs 
+                new TextArgs
                 {
                     FontName = "font",
                     Text = $"Score: {PlayerPrefs.Get<int>("Score")}",
@@ -90,5 +66,24 @@ namespace Match_3_v3._0.Scenes
             entity.Set(new Transform { Position = position });
         }
 
+        private void InitializeSystems(World world, out ISystem<float> systems)
+        {
+            var _runner = new DefaultParallelRunner(Environment.ProcessorCount);
+            systems = new SequentialSystem<float>(
+                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().AsSet()),
+                new ButtonSystem(world, _game.Window),
+                new TransformSystem(world, _runner),
+                new TextRenderSystem(_batch, world),
+                new TextSystem(world)
+            );
+        }
+
+        private void SetupWorld(World world)
+        {
+            _backgroundFactory.Create("background");
+            CreateGameOver(world);
+            CreateScoreText(world);
+            CreateOkButton();
+        }
     }
 }

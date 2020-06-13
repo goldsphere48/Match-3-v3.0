@@ -3,18 +3,13 @@ using DefaultEcs.System;
 using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
 using Match_3_v3._0.Messages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
     [With(typeof(SwapSuccess))]
     [Without(typeof(OriginalPosition))]
     [WhenRemoved(typeof(TargetPosition))]
-    class SwapFinishedSystem : AEntitySystem<float>
+    internal class SwapFinishedSystem : AEntitySystem<float>
     {
         private readonly World _world;
 
@@ -31,7 +26,8 @@ namespace Match_3_v3._0.Systems
             if (success.Value == SwapResult.Success)
             {
                 newState = GameState.Matching;
-            } else
+            }
+            else
             {
                 _world.Publish(new UnselectMessage());
                 newState = GameState.WaitForUserInput;
