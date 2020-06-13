@@ -13,8 +13,7 @@ namespace Match_3_v3._0.Utils
             var windowCenter = new Vector2(device.PresentationParameters.BackBufferWidth / 2,
                   device.PresentationParameters.BackBufferHeight / 2);
             var spriteSize = GetSpriteSize(entity);
-            var position = Vector2.Subtract(windowCenter, Vector2.Divide(spriteSize, 2));
-            return position;
+            return Vector2.Subtract(windowCenter, Vector2.Divide(spriteSize, 2)); ;
         }
 
         private static Vector2 GetSpriteSize(Entity entity)

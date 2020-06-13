@@ -13,7 +13,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(Grid))]
     internal class FallSystem : AEntitySystem<float>
     {
-        private readonly EntitySet _cells;
+        private readonly EntitySet _cellSet;
         private readonly World _world;
         private GameState _gameState;
 
@@ -22,25 +22,25 @@ namespace Match_3_v3._0.Systems
         {
             _world = world;
             _world.Subscribe(this);
-            _cells = _world.GetEntities().With<Cell>().AsSet();
+            _cellSet = _world.GetEntities().With<Cell>().AsSet();
             _gameState = initState;
         }
 
-        protected override void Update(float state, in Entity entity)
+        protected override void Update(float state, in Entity gridEntity)
         {
             if (_gameState == GameState.Falling)
             {
                 var maxColumnHeight = 0;
-                var grid = entity.Get<Grid>();
-                var cells = GridUtil.CellsSetToDictionary(_cells, grid.Width, grid.Height);
+                var grid = gridEntity.Get<Grid>();
+                var cellDictionary = GridUtil.CellsSetToDictionary(_cellSet, grid.Width, grid.Height);
                 Point[][] newCells = new Point[grid.Width][];
                 for (int i = 0; i < grid.Width; ++i)
                 {
-                    var emptyCellsCount = CalculateEmptyCellsCount(grid, cells, i);
+                    var emptyCellsCount = CalculateEmptyCellsCount(grid, cellDictionary, i);
                     for (int j = grid.Height - 1; j >= 0; --j)
                     {
                         var currentPosition = new Point(i, j);
-                        ComeUpEmptyCell(currentPosition, cells, grid);
+                        ComeUpEmptyCell(currentPosition, cellDictionary, grid);
                     }
                     maxColumnHeight = Math.Max(maxColumnHeight, emptyCellsCount);
                     newCells[i] = GenerateColumnNewCellPositions(emptyCellsCount, i);
@@ -49,13 +49,13 @@ namespace Match_3_v3._0.Systems
             }
         }
 
-        private int CalculateEmptyCellsCount(Grid grid, Dictionary<Point, Entity> cells, int column)
+        private int CalculateEmptyCellsCount(Grid grid, Dictionary<Point, Entity> cellDictionary, int column)
         {
             var emptyCellsCount = 0;
             for (int j = grid.Height - 1; j >= 0; --j)
             {
                 var currentPosition = new Point(column, j);
-                if (!cells.ContainsKey(currentPosition))
+                if (!cellDictionary.ContainsKey(currentPosition))
                 {
                     emptyCellsCount++;
                 }
@@ -63,15 +63,15 @@ namespace Match_3_v3._0.Systems
             return emptyCellsCount;
         }
 
-        private void ComeUpEmptyCell(Point currentPosition, Dictionary<Point, Entity> cells, Grid grid)
+        private void ComeUpEmptyCell(Point currentPosition, Dictionary<Point, Entity> cellDictionary, Grid grid)
         {
-            if (!cells.ContainsKey(currentPosition))
+            if (!cellDictionary.ContainsKey(currentPosition))
             {
-                var notEmptyPosition = GetNextNotEmptyPosition(currentPosition, cells);
-                if (cells.TryGetValue(notEmptyPosition, out var fallingCellEntity))
+                var notEmptyPosition = GetNextNotEmptyPosition(currentPosition, cellDictionary);
+                if (cellDictionary.TryGetValue(notEmptyPosition, out var fallingCellEntity))
                 {
                     MoveDown(grid, fallingCellEntity, currentPosition);
-                    cells.Remove(notEmptyPosition);
+                    cellDictionary.Remove(notEmptyPosition);
                 }
             }
         }
@@ -86,24 +86,24 @@ namespace Match_3_v3._0.Systems
             return newCells;
         }
 
-        private Point GetNextNotEmptyPosition(Point position, Dictionary<Point, Entity> cells)
+        private Point GetNextNotEmptyPosition(Point position, Dictionary<Point, Entity> cellDictionary)
         {
             do
             {
                 position.Y--;
             }
-            while (position.Y > 0 && !cells.TryGetValue(position, out var _));
+            while (position.Y > 0 && !cellDictionary.TryGetValue(position, out var _));
             return position;
         }
 
-        private void MoveDown(Grid grid, Entity cellEntity, Point newPosition)
+        private void MoveDown(Grid grid, Entity cellEntity, Point newPositioninGrid)
         {
             var cell = cellEntity.Get<Cell>();
-            Swap(grid, cell.PositionInGrid, newPosition);
-            cell.PositionInGrid = newPosition;
+            Swap(grid, cell.PositionInGrid, newPositioninGrid);
+            cell.PositionInGrid = newPositioninGrid;
             cellEntity.Set(cell);
-            var position = newPosition.ToVector2() * PlayerPrefs.Get<int>("CellSize");
-            cellEntity.Set(new TargetPosition { Position = position, UseLocalPosition = true });
+            var newPosition = newPositioninGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
+            cellEntity.Set(new TargetPosition { Position = newPosition, UseLocalPosition = true });
         }
 
         [Subscribe]

@@ -11,6 +11,22 @@ using System.Linq;
 
 namespace Match_3_v3._0.Systems
 {
+    internal struct GridVisitorArgs
+    {
+        public IEnumerable<Neighbours> CheckingNeighbours;
+        public Grid Grid;
+        public List<Cell> Solution;
+        public Dictionary<Point, bool> Visited;
+
+        public GridVisitorArgs(Grid grid, Dictionary<Point, bool> visited, IEnumerable<Neighbours> neighbours)
+        {
+            Grid = grid;
+            Solution = null;
+            Visited = visited;
+            CheckingNeighbours = neighbours;
+        }
+    }
+
     [With(typeof(Grid))]
     internal class FindMatchesSystem : AEntitySystem<float>
     {
@@ -31,12 +47,12 @@ namespace Match_3_v3._0.Systems
             _gameState = initState;
         }
 
-        public static void Find(GridVisitorArgs args, Cell currentCell)
+        public static void Find(GridVisitorArgs args, Cell startCell)
         {
-            args.Visited.TryGetValue(currentCell.PositionInGrid, out bool status);
+            args.Visited.TryGetValue(startCell.PositionInGrid, out bool status);
             if (!status)
             {
-                Visit(args, currentCell);
+                Visit(args, startCell);
             }
         }
 
@@ -48,11 +64,11 @@ namespace Match_3_v3._0.Systems
             {
                 for (int j = 0; j < grid.Height; ++j)
                 {
-                    args.Solutions = new List<Cell>();
+                    args.Solution = new List<Cell>();
                     Find(args, grid.Cells[i, j]);
-                    if (args.Solutions.Count >= 3)
+                    if (args.Solution.Count >= 3)
                     {
-                        yield return args.Solutions;
+                        yield return args.Solution;
                     }
                 }
             }
@@ -77,9 +93,9 @@ namespace Match_3_v3._0.Systems
 
             for (int i = 0; i < solution.Count; ++i)
             {
-                var position = solution[i].PositionInGrid;
-                xAmount[position.X].Add(position);
-                yAmount[position.Y].Add(position);
+                var cellPosition = solution[i].PositionInGrid;
+                xAmount[cellPosition.X].Add(cellPosition);
+                yAmount[cellPosition.Y].Add(cellPosition);
             }
         }
 
@@ -97,11 +113,11 @@ namespace Match_3_v3._0.Systems
             return false;
         }
 
-        protected override void Update(float state, in Entity entity)
+        protected override void Update(float state, in Entity gridEntity)
         {
             if (_gameState == GameState.Matching)
             {
-                var grid = entity.Get<Grid>();
+                var grid = gridEntity.Get<Grid>();
                 var combinations = FindMatches(grid);
                 if (combinations.Count() > 0)
                 {
@@ -114,14 +130,14 @@ namespace Match_3_v3._0.Systems
             }
         }
 
-        private static void CheckNeighbour(Cell currentCell, Neighbours target, Neighbours neighbours, GridVisitorArgs args)
+        private static void CheckNeighbour(Cell visitedCell, Neighbours neighbour, Neighbours neighbours, GridVisitorArgs args)
         {
             var grid = args.Grid;
-            if (IsSameColor(target, neighbours, currentCell, grid))
+            if (IsSameColor(neighbour, neighbours, visitedCell, grid))
             {
-                var position = currentCell.PositionInGrid + GridUtil.NeighbourToVector2(target);
-                currentCell = grid.Cells[position.X, position.Y];
-                Visit(args, currentCell);
+                var neighbourPositionInGrid = GetNeighbourPositionInGrid(visitedCell, neighbour);
+                visitedCell = grid.Cells[neighbourPositionInGrid.X, neighbourPositionInGrid.Y];
+                Visit(args, visitedCell);
             }
         }
 
@@ -146,6 +162,11 @@ namespace Match_3_v3._0.Systems
                     yield return xAmount[i];
                 }
             }
+        }
+
+        private static Point GetNeighbourPositionInGrid(Cell cell, Neighbours neghbour)
+        {
+            return cell.PositionInGrid + GridUtil.NeighbourToVector2(neghbour);
         }
 
         private static List<Combination> InitAmountList(int size)
@@ -181,34 +202,34 @@ namespace Match_3_v3._0.Systems
             return false;
         }
 
-        private static bool IsSameColor(Neighbours target, Neighbours neighbours, Cell cell, Grid grid)
+        private static bool IsSameColor(Neighbours neighbour, Neighbours neighbours, Cell cell, Grid grid)
         {
-            if ((target & neighbours) == 0)
+            if ((neighbour & neighbours) == 0)
             {
                 return false;
             }
-            var position = cell.PositionInGrid + GridUtil.NeighbourToVector2(target);
-            if (cell.Color == grid.Cells[position.X, position.Y].Color)
+            var neighbourPositionInGrid = GetNeighbourPositionInGrid(cell, neighbour);
+            if (cell.Color == grid.Cells[neighbourPositionInGrid.X, neighbourPositionInGrid.Y].Color)
             {
                 return true;
             }
             return false;
         }
 
-        private static void Visit(GridVisitorArgs args, Cell currentCell)
+        private static void Visit(GridVisitorArgs args, Cell visitedCell)
         {
-            args.Visited.TryGetValue(currentCell.PositionInGrid, out bool status);
+            args.Visited.TryGetValue(visitedCell.PositionInGrid, out bool status);
             if (status == true)
             {
                 return;
             }
-            args.Visited.Add(currentCell.PositionInGrid, true);
-            args.Solutions.Add(currentCell);
-            var neighbours = GridUtil.GetNeighbours(currentCell.PositionInGrid, args.Grid.Width, args.Grid.Height);
+            args.Visited.Add(visitedCell.PositionInGrid, true);
+            args.Solution.Add(visitedCell);
+            var neighbours = GridUtil.GetNeighbours(visitedCell.PositionInGrid, args.Grid.Width, args.Grid.Height);
 
             foreach (var checkedNeighbour in args.CheckingNeighbours)
             {
-                CheckNeighbour(currentCell, checkedNeighbour, neighbours, args);
+                CheckNeighbour(visitedCell, checkedNeighbour, neighbours, args);
             }
         }
 
@@ -220,21 +241,5 @@ namespace Match_3_v3._0.Systems
 
         [Subscribe]
         private void On(in NewStateMessage newState) => _gameState = newState.Value;
-    }
-
-    internal struct GridVisitorArgs
-    {
-        public IEnumerable<Neighbours> CheckingNeighbours;
-        public Grid Grid;
-        public List<Cell> Solutions;
-        public Dictionary<Point, bool> Visited;
-
-        public GridVisitorArgs(Grid grid, Dictionary<Point, bool> visited, IEnumerable<Neighbours> neighbours)
-        {
-            Grid = grid;
-            Solutions = null;
-            Visited = visited;
-            CheckingNeighbours = neighbours;
-        }
     }
 }

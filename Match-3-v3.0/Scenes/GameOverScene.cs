@@ -15,7 +15,7 @@ namespace Match_3_v3._0.Scenes
 {
     internal class GameOverScene : BaseScene
     {
-        private BackgroundFactory _backgroundFactory;
+        private ImageFactory _imageFactory;
         private ButtonFactory _buttonFactory;
         private TextFactory _textFactory;
 
@@ -26,7 +26,7 @@ namespace Match_3_v3._0.Scenes
 
         public override void Setup(World world, out ISystem<float> systems)
         {
-            _backgroundFactory = new BackgroundFactory(world);
+            _imageFactory = new ImageFactory(world);
             _buttonFactory = new ButtonFactory(world, _game.GraphicsDevice);
             _textFactory = new TextFactory(world);
             InitializeSystems(world, out systems);
@@ -52,7 +52,7 @@ namespace Match_3_v3._0.Scenes
             transform.Position = Vector2.Add(transform.Position, new Vector2(0, 180));
         }
 
-        private void CreateScoreText(World world)
+        private void CreateScoreText()
         {
             var entity = _textFactory.Create(
                 new TextArgs
@@ -80,9 +80,9 @@ namespace Match_3_v3._0.Scenes
 
         private void SetupWorld(World world)
         {
-            _backgroundFactory.Create("background");
+            _imageFactory.Create("background");
             CreateGameOver(world);
-            CreateScoreText(world);
+            CreateScoreText();
             CreateOkButton();
         }
     }

@@ -26,20 +26,20 @@ namespace Match_3_v3._0.Systems
             _world.Subscribe(this);
         }
 
-        protected override void Update(float state, in Entity entity)
+        protected override void Update(float state, in Entity gridEntity)
         {
             if (_gameState == GameState.Generating)
             {
-                var generationZone = entity.Get<GenerationZone>();
-                var grid = entity.Get<Grid>();
+                var generationZone = gridEntity.Get<GenerationZone>();
+                var grid = gridEntity.Get<Grid>();
                 Cell[][] newCells = Generate(ref grid, generationZone);
                 while (!FindMatchesSystem.IsGridValid(grid))
                 {
                     newCells = Generate(ref grid, generationZone);
                 }
-                InstatiateNewCells(newCells, entity, generationZone.VerticalOffset);
-                entity.Set(grid);
-                entity.Remove<GenerationZone>();
+                InstatiateNewCells(newCells, gridEntity, generationZone.VerticalOffset);
+                gridEntity.Set(grid);
+                gridEntity.Remove<GenerationZone>();
                 _world.Publish(new NewStateMessage { Value = GameState.WaitForFalling });
             }
         }
@@ -80,15 +80,15 @@ namespace Match_3_v3._0.Systems
             return newCells;
         }
 
-        private void InstatiateNewCells(Cell[][] newCells, Entity grid, float verticalOffset)
+        private void InstatiateNewCells(Cell[][] newCells, Entity gridEntity, float verticalOffset)
         {
-            var parentTransform = grid.Get<Transform>();
+            var parentTransform = gridEntity.Get<Transform>();
             foreach (var column in newCells)
             {
-                foreach (var cellComponent in column)
+                foreach (var cell in column)
                 {
-                    Entity cell = _cellPool.RequestCell(cellComponent, verticalOffset, parentTransform);
-                    grid.SetAsParentOf(cell);
+                    Entity cellEntity = _cellPool.RequestCell(cell, verticalOffset, parentTransform);
+                    gridEntity.SetAsParentOf(cellEntity);
                 }
             }
         }

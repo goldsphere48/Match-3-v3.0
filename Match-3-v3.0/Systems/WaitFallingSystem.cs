@@ -8,7 +8,7 @@ namespace Match_3_v3._0.Systems
 {
     internal class WaitFallingSystem : ISystem<float>
     {
-        private readonly EntitySet _fallingEntities;
+        private readonly EntitySet _fallingCells;
         private readonly World _world;
         private GameState _gameState;
         public bool IsEnabled { get; set; }
@@ -16,7 +16,7 @@ namespace Match_3_v3._0.Systems
         public WaitFallingSystem(World world, GameState _initState)
         {
             _world = world;
-            _fallingEntities = _world.GetEntities().With(typeof(TargetPosition)).AsSet();
+            _fallingCells = _world.GetEntities().With(typeof(TargetPosition)).AsSet();
             _gameState = _initState;
             _world.Subscribe(this);
         }
@@ -29,7 +29,7 @@ namespace Match_3_v3._0.Systems
         {
             if (_gameState == GameState.WaitForFalling)
             {
-                if (_fallingEntities.Count == 0)
+                if (_fallingCells.Count == 0)
                 {
                     _world.Publish(new NewStateMessage { Value = GameState.Matching });
                 }

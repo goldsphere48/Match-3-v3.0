@@ -6,6 +6,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Match_3_v3._0.EntityFactories
 {
+    internal struct TextArgs
+    {
+        public Color? Color { get; set; }
+        public string FontName { get; set; }
+        public Vector2 Position { get; set; }
+        public string Text { get; set; }
+    }
+
     internal class TextFactory
     {
         private readonly World _world;
@@ -24,13 +32,5 @@ namespace Match_3_v3._0.EntityFactories
             entity.Set(new Transform { Position = args.Position });
             return entity;
         }
-    }
-
-    internal struct TextArgs
-    {
-        public Color? Color { get; set; }
-        public string FontName { get; set; }
-        public Vector2 Position { get; set; }
-        public string Text { get; set; }
     }
 }

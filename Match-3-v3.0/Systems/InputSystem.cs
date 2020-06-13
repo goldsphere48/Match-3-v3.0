@@ -11,8 +11,8 @@ namespace Match_3_v3._0.Systems
         protected MouseState _state;
         private readonly GameWindow _window;
 
-        public InputSystem(EntitySet set, GameWindow window)
-            : base(set)
+        public InputSystem(EntitySet cellSet, GameWindow window)
+            : base(cellSet)
         {
             _window = window;
         }

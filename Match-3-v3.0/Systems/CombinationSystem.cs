@@ -15,7 +15,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(CombinationsArray))]
     internal class CombinationSystem : AEntitySystem<float>
     {
-        private readonly EntitySet _cells;
+        private readonly EntitySet _cellSet;
         private readonly World _world;
         private GameState _gameState;
 
@@ -24,7 +24,7 @@ namespace Match_3_v3._0.Systems
         {
             _world = world;
             _world.Subscribe(this);
-            _cells = _world.GetEntities().With<Cell>().AsSet();
+            _cellSet = _world.GetEntities().With<Cell>().AsSet();
             _gameState = initState;
         }
 
@@ -55,7 +55,7 @@ namespace Match_3_v3._0.Systems
                 var height = PlayerPrefs.Get<int>("Height");
                 foreach (var combination in combinations.Value)
                 {
-                    ProceedCombination(combination, GridUtil.CellsSetToDictionary(_cells, width, height));
+                    ProceedCombination(combination, GridUtil.CellsSetToDictionary(_cellSet, width, height));
                 }
                 entity.Remove<CombinationsArray>();
                 _world.Publish(new UnselectMessage());
@@ -63,47 +63,47 @@ namespace Match_3_v3._0.Systems
             }
         }
 
-        private static void ModifyWithLine(Entity cell, Direction firstDirection, Direction secondDirection, string textureName)
+        private static void ModifyWithLine(Entity cellEntity, Direction firstDirection, Direction secondDirection, string textureName)
         {
-            cell.Set(new LineBonus(firstDirection, secondDirection, cell));
-            SetModificationSprite(cell, textureName);
+            cellEntity.Set(new LineBonus(firstDirection, secondDirection, cellEntity));
+            SetModificationSprite(cellEntity, textureName);
         }
 
-        private static void SetModificationSprite(Entity cell, string textureName)
+        private static void SetModificationSprite(Entity cellEntity, string textureName)
         {
-            cell.Set(new SpriteRenderer());
-            cell.Set(new ManagedResource<string, Texture2D>(textureName));
+            cellEntity.Set(new SpriteRenderer());
+            cellEntity.Set(new ManagedResource<string, Texture2D>(textureName));
         }
 
-        private void Destroy(Combination combination, Dictionary<Point, Entity> cells)
+        private void Destroy(Combination combination, Dictionary<Point, Entity> cellDictionary)
         {
-            foreach (var position in combination)
+            foreach (var cellPosition in combination)
             {
-                if (cells.TryGetValue(position, out Entity entity))
+                if (cellDictionary.TryGetValue(cellPosition, out Entity cellEntity))
                 {
-                    if (!(entity.Has<DontDestroy>() || entity.Has<Dying>()))
+                    if (!(cellEntity.Has<DontDestroy>() || cellEntity.Has<Dying>()))
                     {
-                        entity.Set<Dying>();
+                        cellEntity.Set<Dying>();
                     }
                     else
                     {
-                        entity.Remove<DontDestroy>();
+                        cellEntity.Remove<DontDestroy>();
                     }
                 }
             }
         }
 
-        private Entity GetModifiable(Combination combination, Dictionary<Point, Entity> cells)
+        private Entity GetModifiable(Combination combination, Dictionary<Point, Entity> cellDictionary)
         {
             Entity? modifiable = null;
-            foreach (var position in combination)
+            foreach (var cellPosition in combination)
             {
-                if (cells.TryGetValue(position, out Entity entity))
+                if (cellDictionary.TryGetValue(cellPosition, out Entity cellEntity))
                 {
-                    modifiable = modifiable ?? entity;
-                    if (entity.Has<Selected>())
+                    modifiable = modifiable ?? cellEntity;
+                    if (cellEntity.Has<Selected>())
                     {
-                        return entity;
+                        return cellEntity;
                     }
                 }
             }
@@ -113,11 +113,11 @@ namespace Match_3_v3._0.Systems
         [Subscribe]
         private void On(in NewStateMessage newState) => _gameState = newState.Value;
 
-        private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
+        private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cellDictionary)
         {
             if (combination.Count > 3)
             {
-                var modifiable = GetModifiable(combination, cells);
+                var modifiable = GetModifiable(combination, cellDictionary);
                 if (!CellUtil.IsBonus(modifiable))
                 {
                     modifiable.Set<DontDestroy>();
@@ -131,7 +131,7 @@ namespace Match_3_v3._0.Systems
                     }
                 }
             }
-            Destroy(combination, cells);
+            Destroy(combination, cellDictionary);
         }
     }
 }

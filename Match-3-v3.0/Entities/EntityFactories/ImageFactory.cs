@@ -6,11 +6,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Match_3_v3._0.EntityFactories
 {
-    internal class BackgroundFactory
+    internal class ImageFactory
     {
         private readonly World _world;
 
-        public BackgroundFactory(World world)
+        public ImageFactory(World world)
         {
             _world = world;
         }

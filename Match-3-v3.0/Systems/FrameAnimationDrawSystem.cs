@@ -23,17 +23,17 @@ namespace Match_3_v3._0.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            var component = entity.Get<FrameAnimation>();
+            var renderer = entity.Get<FrameAnimation>();
             _batch.Draw(
-                component.Texture,
-                component.Destination,
+                renderer.Texture,
+                renderer.Destination,
                 new Rectangle(
-                    component.CurrentFrame * component.FrameWidth,
+                    renderer.CurrentFrame * renderer.FrameWidth,
                     0,
-                    component.FrameWidth,
-                    component.FrameHeight
+                    renderer.FrameWidth,
+                    renderer.FrameHeight
                 ),
-                component.Color
+                renderer.Color
             );
         }
     }

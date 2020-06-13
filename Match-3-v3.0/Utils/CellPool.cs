@@ -9,27 +9,27 @@ namespace Match_3_v3._0.Utils
     internal class CellPool
     {
         private readonly CellFactory _cellFactory;
-        private readonly List<Entity?> _cells;
+        private readonly List<Entity?> data;
 
         public CellPool(CellFactory cellFactory)
         {
             _cellFactory = cellFactory;
-            _cells = new List<Entity?>();
+            data = new List<Entity?>();
         }
 
-        public Entity RequestCell(Cell cellInfo, float verticalOffset, Transform parent)
+        public Entity RequestCell(Cell cell, float verticalOffset, Transform parent)
         {
-            Entity? cellEntity = _cells.Find(e => !e.Value.IsEnabled() && e.Value.Get<Cell>().Color == cellInfo.Color);
+            Entity? cellEntity = data.Find(e => !e.Value.IsEnabled() && e.Value.Get<Cell>().Color == cell.Color);
             if (!cellEntity.HasValue)
             {
-                cellEntity = _cellFactory.Create(cellInfo, parent);
-                _cells.Add(cellEntity.Value);
+                cellEntity = _cellFactory.Create(cell, parent);
+                data.Add(cellEntity.Value);
             }
             else
             {
-                Reset(cellEntity, cellInfo);
+                Reset(cellEntity, cell);
             }
-            var localPosition = GetLocalPosition(cellInfo);
+            var localPosition = GetLocalPosition(cell);
             PlaceCell(cellEntity, localPosition, verticalOffset);
             if (verticalOffset != 0)
             {
@@ -38,25 +38,25 @@ namespace Match_3_v3._0.Utils
             return cellEntity.Value;
         }
 
-        private Vector2 GetLocalPosition(Cell cellInfo) => cellInfo.PositionInGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
+        private Vector2 GetLocalPosition(Cell cell) => cell.PositionInGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
 
-        private void PlaceCell(Entity? cell, Vector2 localPosition, float verticalOffset)
+        private void PlaceCell(Entity? cellEntity, Vector2 localPosition, float verticalOffset)
         {
-            var transform = cell.Value.Get<Transform>();
+            var transform = cellEntity.Value.Get<Transform>();
             transform.LocalPosition =
                 Vector2.Add(
                     localPosition,
                     new Vector2(0, verticalOffset)
                 );
-            cell.Value.Set(transform);
+            cellEntity.Value.Set(transform);
         }
 
-        private void Reset(Entity? entity, Cell cellInfo)
+        private void Reset(Entity? cellEntity, Cell cell)
         {
-            entity.Value.Enable();
-            var component = entity.Value.Get<Cell>();
-            component.PositionInGrid = cellInfo.PositionInGrid;
-            entity.Value.Set(component);
+            cellEntity.Value.Enable();
+            var newCell = cellEntity.Value.Get<Cell>();
+            newCell.PositionInGrid = cell.PositionInGrid;
+            cellEntity.Value.Set(newCell);
         }
     }
 }

@@ -17,19 +17,19 @@ namespace Match_3_v3._0.EntityFactories
             _cellSize = cellSize;
         }
 
-        public Entity Create(Cell cellInfo, Transform parent)
+        public Entity Create(Cell cell, Transform parent)
         {
-            var entity = _world.CreateEntity();
-            entity.Set(new Transform { Parent = parent });
-            entity.Set(cellInfo);
-            entity.Set(new FrameAnimation
+            var cellEntity = _world.CreateEntity();
+            cellEntity.Set(new Transform { Parent = parent });
+            cellEntity.Set(cell);
+            cellEntity.Set(new FrameAnimation
             {
                 FrameCount = 5,
                 AnimationSpeed = 0.1f,
                 IsLooping = true
             });
-            entity.Set(new ManagedResource<string, Texture2D>(cellInfo.Color.ToString()));
-            return entity;
+            cellEntity.Set(new ManagedResource<string, Texture2D>(cell.Color.ToString()));
+            return cellEntity;
         }
 
         private Vector2 CalculateCellPosition(Vector2 positionInGrid)

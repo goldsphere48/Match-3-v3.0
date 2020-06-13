@@ -14,7 +14,7 @@ namespace Match_3_v3._0.Systems
     internal class DestroyersSystem : AEntitySystem<float>
     {
         private readonly World _world;
-        private Dictionary<Point, Entity> _cells;
+        private Dictionary<Point, Entity> _cellDictionary;
         private GameState _gameState;
 
         public DestroyersSystem(World world, GameState initState)
@@ -53,12 +53,12 @@ namespace Match_3_v3._0.Systems
             return partialPosition;
         }
 
-        private void DestroyCellUnderDestroyerWithCondition(Entity entity, Cell cell, Func<bool> canDestroy)
+        private void DestroyCellUnderDestroyerWithCondition(Entity cellEntity, Cell cell, Func<bool> canDestroy)
         {
-            if (canDestroy() && !entity.Has<Dying>())
+            if (canDestroy() && !cellEntity.Has<Dying>())
             {
-                CellUtil.Kill(entity);
-                _cells.Remove(cell.PositionInGrid);
+                CellUtil.Kill(cellEntity);
+                _cellDictionary.Remove(cell.PositionInGrid);
             }
         }
 
@@ -75,7 +75,7 @@ namespace Match_3_v3._0.Systems
             _gameState = newStateMessage.Value;
             if (_gameState == GameState.DestroyersMoving)
             {
-                _cells = GridUtil.CellsSetToDictionary(
+                _cellDictionary = GridUtil.CellsSetToDictionary(
                     _world.GetEntities().With<Cell>().AsSet(),
                     PlayerPrefs.Get<int>("Width"),
                     PlayerPrefs.Get<int>("Height")
@@ -85,23 +85,23 @@ namespace Match_3_v3._0.Systems
 
         private void TryToDestroyCell(Point cellPosition, Vector2 destroyerLocalPosition, Direction destroyerDirection)
         {
-            if (_cells.TryGetValue(cellPosition, out var nearestCellEntity))
+            if (_cellDictionary.TryGetValue(cellPosition, out var nearestCellEntity))
             {
-                var cellComponent = nearestCellEntity.Get<Cell>();
-                var cellLocalPosition = cellComponent.PositionInGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
+                var cell = nearestCellEntity.Get<Cell>();
+                var cellLocalPosition = cell.PositionInGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
                 switch (destroyerDirection)
                 {
                     case Direction.Up:
-                        DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cellComponent, () => destroyerLocalPosition.Y <= cellLocalPosition.Y);
+                        DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cell, () => destroyerLocalPosition.Y <= cellLocalPosition.Y);
                         break;
                     case Direction.Down:
-                        DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cellComponent, () => destroyerLocalPosition.Y >= cellLocalPosition.Y);
+                        DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cell, () => destroyerLocalPosition.Y >= cellLocalPosition.Y);
                         break;
                     case Direction.Left:
-                        DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cellComponent, () => destroyerLocalPosition.X <= cellLocalPosition.X);
+                        DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cell, () => destroyerLocalPosition.X <= cellLocalPosition.X);
                         break;
                     case Direction.Right:
-                        DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cellComponent, () => destroyerLocalPosition.X >= cellLocalPosition.X);
+                        DestroyCellUnderDestroyerWithCondition(nearestCellEntity, cell, () => destroyerLocalPosition.X >= cellLocalPosition.X);
                         break;
                 }
             }

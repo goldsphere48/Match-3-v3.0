@@ -5,19 +5,19 @@ namespace Match_3_v3._0.Utils
 {
     internal static class CellUtil
     {
-        public static bool IsBonus(Entity entity) => entity.Has<LineBonus>() || entity.Has<BombBonus>();
+        public static bool IsBonus(Entity cellEntity) => cellEntity.Has<LineBonus>() || cellEntity.Has<BombBonus>();
 
-        public static void Kill(Entity entity)
+        public static void Kill(Entity cellEntity)
         {
-            if (IsBonus(entity))
+            if (IsBonus(cellEntity))
             {
-                entity.Set<DelayedDying>();
+                cellEntity.Set<DelayedDying>();
             }
             else
             {
-                if (!entity.Has<Dying>() && entity.IsEnabled())
+                if (!cellEntity.Has<Dying>() && cellEntity.IsEnabled())
                 {
-                    entity.Set<Dying>();
+                    cellEntity.Set<Dying>();
                 }
             }
         }

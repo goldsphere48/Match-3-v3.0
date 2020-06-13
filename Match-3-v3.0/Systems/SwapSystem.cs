@@ -16,16 +16,16 @@ namespace Match_3_v3._0.Systems
         {
         }
 
-        protected override void Update(float state, in Entity entity)
+        protected override void Update(float state, in Entity gridEntity)
         {
-            var swap = entity.Get<Swap>();
-            CheckMatch(entity, swap);
-            entity.Remove<Swap>();
+            var swap = gridEntity.Get<Swap>();
+            CheckMatch(gridEntity, swap);
+            gridEntity.Remove<Swap>();
         }
 
-        private void CheckMatch(Entity entity, Swap swap)
+        private void CheckMatch(Entity gridEntity, Swap swap)
         {
-            var grid = entity.Get<Grid>();
+            var grid = gridEntity.Get<Grid>();
             swap.Deconstruct(out var first, out var second);
             var firstCell = first.Get<Cell>();
             var secondCell = second.Get<Cell>();
@@ -44,8 +44,8 @@ namespace Match_3_v3._0.Systems
                 first.Set(firstCell);
                 second.Set(secondCell);
                 first.Set(new SwapSuccess { Value = SwapResult.Success });
-                entity.Set(grid);
-                entity.Remove<Swap>();
+                gridEntity.Set(grid);
+                gridEntity.Remove<Swap>();
             }
         }
 

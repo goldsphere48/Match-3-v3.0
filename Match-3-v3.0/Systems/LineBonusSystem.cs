@@ -23,21 +23,21 @@ namespace Match_3_v3._0.Systems
             _destroyersPool = new DestroyersPool(new DestroyerFactory(world));
         }
 
-        protected override void Update(float state, in Entity entity)
+        protected override void Update(float state, in Entity cellEntity)
         {
             var gridTransform = _world.First(e => e.Has<Grid>()).Get<Transform>();
-            var lineBonus = entity.Get<LineBonus>();
+            var lineBonus = cellEntity.Get<LineBonus>();
             var cell = lineBonus.Reference.Get<Cell>();
             _destroyersPool.RequestDestroyer(cell.PositionInGrid, lineBonus.FirstDirection, gridTransform);
             _destroyersPool.RequestDestroyer(cell.PositionInGrid, lineBonus.SecondDirection, gridTransform);
-            Clear(entity);
+            Clear(cellEntity);
             _world.Publish(new NewStateMessage { Value = GameState.DestroyersMoving });
         }
 
-        private void Clear(Entity entity)
+        private void Clear(Entity cellEntity)
         {
-            entity.Remove<SpriteRenderer>();
-            entity.Remove<LineBonus>();
+            cellEntity.Remove<SpriteRenderer>();
+            cellEntity.Remove<LineBonus>();
         }
     }
 }

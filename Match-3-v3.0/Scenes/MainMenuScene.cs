@@ -12,12 +12,12 @@ namespace Match_3_v3._0.Scenes
 {
     internal class MainMenuScene : BaseScene
     {
-        private BackgroundFactory _backgroundFactory;
+        private ImageFactory _imageFactory;
         private ButtonFactory _buttonFactory;
 
         public override void Setup(World world, out ISystem<float> systems)
         {
-            _backgroundFactory = new BackgroundFactory(world);
+            _imageFactory = new ImageFactory(world);
             _buttonFactory = new ButtonFactory(world, _game.GraphicsDevice);
             InitializeSystems(world, out systems);
             SetupWorld();
@@ -40,7 +40,7 @@ namespace Match_3_v3._0.Scenes
 
         private void SetupWorld()
         {
-            _backgroundFactory.Create("background", Color.White);
+            _imageFactory.Create("background", Color.White);
             _buttonFactory.CreateAtCenter("playButton", Play);
         }
     }

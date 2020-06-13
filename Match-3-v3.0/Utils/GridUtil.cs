@@ -11,14 +11,14 @@ namespace Match_3_v3._0.Utils
 {
     internal static class GridUtil
     {
-        public static Dictionary<Point, Entity> CellsSetToDictionary(EntitySet cells, int width, int height)
+        public static Dictionary<Point, Entity> CellsSetToDictionary(EntitySet cellSet, int width, int height)
         {
-            var result = new Dictionary<Point, Entity>(width * height);
-            foreach (var cell in cells.GetEntities())
+            var cellDictionary = new Dictionary<Point, Entity>(width * height);
+            foreach (var cell in cellSet.GetEntities())
             {
-                result.Add(cell.Get<Cell>().PositionInGrid, cell);
+                cellDictionary.Add(cell.Get<Cell>().PositionInGrid, cell);
             }
-            return result;
+            return cellDictionary;
         }
 
         public static void Generate(World world, Point[][] positions, int verticalOffset)
@@ -36,16 +36,16 @@ namespace Match_3_v3._0.Utils
 
         public static Point[][] GetFullGridMatrix(int width, int height)
         {
-            var positions = new Point[width][];
+            var cellPositions = new Point[width][];
             for (int i = 0; i < width; ++i)
             {
-                positions[i] = new Point[height];
+                cellPositions[i] = new Point[height];
                 for (int j = 0; j < height; ++j)
                 {
-                    positions[i][j] = new Point(i, j);
+                    cellPositions[i][j] = new Point(i, j);
                 }
             }
-            return positions;
+            return cellPositions;
         }
 
         public static Neighbours GetNeighbours(Point positionInGrid, int width, int height)

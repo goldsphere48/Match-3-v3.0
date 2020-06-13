@@ -14,7 +14,7 @@ namespace Match_3_v3._0.Systems
     internal class BombSystem : AEntitySystem<float>
     {
         private readonly EntitySet _cellsSet;
-        private Dictionary<Point, Entity> _cells;
+        private Dictionary<Point, Entity> _cellDictionary;
 
         public BombSystem(World world)
             : base(world)
@@ -22,32 +22,32 @@ namespace Match_3_v3._0.Systems
             _cellsSet = world.GetEntities().With<Cell>().AsSet();
         }
 
-        protected override void Update(float state, in Entity entity)
+        protected override void Update(float state, in Entity cellEntity)
         {
             var width = PlayerPrefs.Get<int>("Width");
             var height = PlayerPrefs.Get<int>("Height");
-            _cells = GridUtil.CellsSetToDictionary(_cellsSet, width, height);
-            var cellPosition = entity.Get<Cell>().PositionInGrid;
+            _cellDictionary = GridUtil.CellsSetToDictionary(_cellsSet, width, height);
+            var cellPosition = cellEntity.Get<Cell>().PositionInGrid;
             BlowUp(cellPosition, width, height);
-            Clear(entity);
+            Clear(cellEntity);
         }
 
         private void BlowUp(Point bombPosition, int width, int height)
         {
             Thread.Sleep(250);
-            foreach (var position in GetExplosionZone(bombPosition, width, height))
+            foreach (var cellPosition in GetExplosionZone(bombPosition, width, height))
             {
-                if (_cells.TryGetValue(position, out var entity) && bombPosition != position)
+                if (_cellDictionary.TryGetValue(cellPosition, out var cellEntity) && bombPosition != cellPosition)
                 {
-                    CellUtil.Kill(entity);
+                    CellUtil.Kill(cellEntity);
                 }
             }
         }
 
-        private void Clear(Entity entity)
+        private void Clear(Entity cellEntity)
         {
-            entity.Remove<SpriteRenderer>();
-            entity.Remove<BombBonus>();
+            cellEntity.Remove<SpriteRenderer>();
+            cellEntity.Remove<BombBonus>();
         }
 
         private int End(int value, int width)

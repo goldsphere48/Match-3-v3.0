@@ -10,21 +10,21 @@ namespace Match_3_v3._0.Utils
     internal class DestroyersPool
     {
         private readonly DestroyerFactory _destroyerFactory;
-        private readonly List<Entity?> _destroyers;
+        private readonly List<Entity?> data;
 
         public DestroyersPool(DestroyerFactory factory)
         {
             _destroyerFactory = factory;
-            _destroyers = new List<Entity?>();
+            data = new List<Entity?>();
         }
 
         public Entity RequestDestroyer(Point spawnPositionInGrid, Direction direction, Transform parent)
         {
-            Entity? destroyerEntity = _destroyers.Find(e => !e.Value.IsEnabled());
+            Entity? destroyerEntity = data.Find(e => !e.Value.IsEnabled());
             if (!destroyerEntity.HasValue)
             {
                 destroyerEntity = _destroyerFactory.Create(spawnPositionInGrid, direction, parent);
-                _destroyers.Add(destroyerEntity.Value);
+                data.Add(destroyerEntity.Value);
             }
             else
             {
@@ -59,21 +59,21 @@ namespace Match_3_v3._0.Utils
             return targetPosition;
         }
 
-        private void PlaceDestroyer(Entity? destroyer, Point spawnPositionInGrid, Transform parent)
+        private void PlaceDestroyer(Entity? destroyerEntity, Point spawnPositionInGrid, Transform parent)
         {
             var destroyerTransform = new Transform();
             destroyerTransform.Parent = parent;
             destroyerTransform.LocalPosition = spawnPositionInGrid.ToVector2() * PlayerPrefs.Get<int>("CellSize");
             destroyerTransform.Origin = new Vector2(40, 40);
-            destroyer.Value.Set(destroyerTransform);
+            destroyerEntity.Value.Set(destroyerTransform);
         }
 
-        private void Reset(Entity? entity, Direction direction)
+        private void Reset(Entity? destroyerEntity, Direction direction)
         {
-            entity.Value.Enable();
-            var component = entity.Value.Get<Destroyer>();
-            component.Direction = direction;
-            entity.Value.Set(component);
+            destroyerEntity.Value.Enable();
+            var destroyer = destroyerEntity.Value.Get<Destroyer>();
+            destroyer.Direction = direction;
+            destroyerEntity.Value.Set(destroyer);
         }
     }
 }

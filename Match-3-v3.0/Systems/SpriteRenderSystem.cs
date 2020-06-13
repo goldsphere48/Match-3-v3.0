@@ -10,8 +10,8 @@ namespace Match_3_v3._0.Systems
     {
         private readonly SpriteBatch _batch;
 
-        public SpriteRenderSystem(SpriteBatch batch, EntitySet set)
-            : base(set)
+        public SpriteRenderSystem(SpriteBatch batch, EntitySet cellSet)
+            : base(cellSet)
         {
             _batch = batch;
         }
@@ -22,14 +22,14 @@ namespace Match_3_v3._0.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            var component = entity.Get<SpriteRenderer>();
+            var renderer = entity.Get<SpriteRenderer>();
             _batch.Draw(
-                component.Texture,
-                component.Destination,
-                new Rectangle(0, 0, component.Destination.Width, component.Destination.Height),
-                component.Color,
-                component.Angle,
-                component.Origin,
+                renderer.Texture,
+                renderer.Destination,
+                new Rectangle(0, 0, renderer.Destination.Width, renderer.Destination.Height),
+                renderer.Color,
+                renderer.Angle,
+                renderer.Origin,
                 SpriteEffects.None,
                 0
             );

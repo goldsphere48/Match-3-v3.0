@@ -22,9 +22,9 @@ namespace Match_3_v3._0.Systems
 
         private void OnUserClick(float state, in Entity entity)
         {
-            var position = _state.Position.ToVector2();
+            var mousePosition = _state.Position.ToVector2();
             var renderer = entity.Get<SpriteRenderer>();
-            if (renderer.Destination.Contains(position))
+            if (renderer.Destination.Contains(mousePosition))
             {
                 entity.Get<Button>().Click?.Invoke();
             }

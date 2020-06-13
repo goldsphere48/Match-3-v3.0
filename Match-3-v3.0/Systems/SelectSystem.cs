@@ -24,17 +24,17 @@ namespace Match_3_v3._0.Systems
             _gameState = initState;
         }
 
-        protected override void Update(float state, in Entity entity)
+        protected override void Update(float state, in Entity cellEntity)
         {
             if (_gameState == GameState.WaitForUserInput)
             {
                 if (_state.LeftButton == ButtonState.Released && _oldState.LeftButton == ButtonState.Pressed)
                 {
-                    var position = _state.Position.ToVector2();
-                    var currentAnimation = entity.Get<FrameAnimation>();
-                    if (currentAnimation.Destination.Contains(position))
+                    var mousePosition = _state.Position.ToVector2();
+                    var currentAnimation = cellEntity.Get<FrameAnimation>();
+                    if (currentAnimation.Destination.Contains(mousePosition))
                     {
-                        Select(entity);
+                        Select(cellEntity);
                     }
                 }
             }
@@ -63,15 +63,15 @@ namespace Match_3_v3._0.Systems
         [Subscribe]
         private void On(in NewStateMessage newState) => _gameState = newState.Value;
 
-        private void Select(Entity entity)
+        private void Select(Entity cellEntity)
         {
             if (_firstSelected == null)
             {
-                Select(entity, ref _firstSelected);
+                Select(cellEntity, ref _firstSelected);
             }
             else if (_secondSelected == null)
             {
-                Select(entity, ref _secondSelected);
+                Select(cellEntity, ref _secondSelected);
             }
             if (_secondSelected.HasValue && _firstSelected.HasValue)
             {
@@ -87,20 +87,20 @@ namespace Match_3_v3._0.Systems
             }
         }
 
-        private void Select(Entity entity, ref Entity? contanier)
+        private void Select(Entity cellEntity, ref Entity? contanier)
         {
-            contanier = entity;
-            entity.Get<FrameAnimation>().Play = true;
-            entity.Set<Selected>();
+            contanier = cellEntity;
+            cellEntity.Get<FrameAnimation>().Play = true;
+            cellEntity.Set<Selected>();
         }
 
-        private void Unselect(ref Entity? entity)
+        private void Unselect(ref Entity? cellEntity)
         {
-            if (entity.HasValue)
+            if (cellEntity.HasValue)
             {
-                entity.Value.Remove<Selected>();
-                entity.Value.Get<FrameAnimation>().Play = false;
-                entity = null;
+                cellEntity.Value.Remove<Selected>();
+                cellEntity.Value.Get<FrameAnimation>().Play = false;
+                cellEntity = null;
             }
         }
     }

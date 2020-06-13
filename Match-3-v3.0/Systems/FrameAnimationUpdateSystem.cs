@@ -14,24 +14,24 @@ namespace Match_3_v3._0.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            var component = entity.Get<FrameAnimation>();
-            if (component.Play)
+            var renderer = entity.Get<FrameAnimation>();
+            if (renderer.Play)
             {
-                component.CurrentState += state;
-                if (component.CurrentState >= component.AnimationSpeed)
+                renderer.CurrentState += state;
+                if (renderer.CurrentState >= renderer.AnimationSpeed)
                 {
-                    component.CurrentState = 0;
-                    if (component.CurrentFrame + 1 == component.FrameCount)
+                    renderer.CurrentState = 0;
+                    if (renderer.CurrentFrame + 1 == renderer.FrameCount)
                     {
-                        component.CurrentFrame = 0;
-                        if (!component.IsLooping)
+                        renderer.CurrentFrame = 0;
+                        if (!renderer.IsLooping)
                         {
-                            component.Play = false;
+                            renderer.Play = false;
                         }
                     }
                     else
                     {
-                        component.CurrentFrame++;
+                        renderer.CurrentFrame++;
                     }
                 }
             }

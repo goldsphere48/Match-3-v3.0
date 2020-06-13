@@ -16,7 +16,7 @@ namespace Match_3_v3._0.Scenes
 {
     internal class GameScene : BaseScene
     {
-        private BackgroundFactory _backgroundFactory;
+        private ImageFactory _imageFactory;
         private EntitySet _backgroundLayer;
         private EntitySet _borderLayer;
         private CellPool _cellPool;
@@ -29,7 +29,7 @@ namespace Match_3_v3._0.Scenes
 
         public override void Setup(World world, out ISystem<float> systems)
         {
-            _backgroundFactory = new BackgroundFactory(world);
+            _imageFactory = new ImageFactory(world);
             _gridFactory = new GridFactory(
                 world,
                 _game.GraphicsDevice,
@@ -46,7 +46,7 @@ namespace Match_3_v3._0.Scenes
 
         private void CreateBorders()
         {
-            var entity = _backgroundFactory.Create("borders");
+            var entity = _imageFactory.Create("borders");
             entity.Set<Borders>();
         }
 
@@ -141,7 +141,7 @@ namespace Match_3_v3._0.Scenes
 
         private void SetupWorld(World world)
         {
-            _backgroundFactory.Create("background", Color.White);
+            _imageFactory.Create("background", Color.White);
             _gridFactory.Create();
             CreateScoreBoard(world);
             CreateTimer(world);

@@ -77,11 +77,11 @@
     <Compile Include="Data\Combination.cs" />
     <Compile Include="Data\SwapResult.cs" />
     <Compile Include="Entities\Counter.cs" />
-    <Compile Include="EntityFactories\BackgroundFactory.cs" />
-    <Compile Include="EntityFactories\ButtonFactory.cs" />
-    <Compile Include="EntityFactories\CellFactory.cs" />
-    <Compile Include="EntityFactories\DestroyerFactory.cs" />
-    <Compile Include="EntityFactories\GridFactory.cs" />
+    <Compile Include="Entities\EntityFactories\ImageFactory.cs" />
+    <Compile Include="Entities\EntityFactories\ButtonFactory.cs" />
+    <Compile Include="Entities\EntityFactories\CellFactory.cs" />
+    <Compile Include="Entities\EntityFactories\DestroyerFactory.cs" />
+    <Compile Include="Entities\EntityFactories\GridFactory.cs" />
     <Compile Include="Messages\AddScoreMessage.cs" />
     <Compile Include="Systems\BombSystem.cs" />
     <Compile Include="Systems\DelayedDyingSystem.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Systems\DestroyersSystem.cs" />
     <Compile Include="Systems\LineBonusSystem.cs" />
     <Compile Include="Systems\RotationSystem.cs" />
-    <Compile Include="EntityFactories\TextFactory.cs" />
+    <Compile Include="Entities\EntityFactories\TextFactory.cs" />
     <Compile Include="Messages\NewStateMessage.cs" />
     <Compile Include="Messages\UnselectMessage.cs" />
     <Compile Include="PlayerPrefs.cs" />

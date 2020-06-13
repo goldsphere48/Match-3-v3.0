@@ -11,13 +11,13 @@ namespace Match_3_v3._0.Systems
         {
         }
 
-        protected override void Update(float state, ref Timer component)
+        protected override void Update(float state, ref Timer timer)
         {
-            component.CurrentTime += state;
-            if (component.CurrentTime >= component.Interval)
+            timer.CurrentTime += state;
+            if (timer.CurrentTime >= timer.Interval)
             {
-                component.CurrentTime = 0;
-                component.TimerTick?.Invoke();
+                timer.CurrentTime = 0;
+                timer.TimerTick?.Invoke();
             }
         }
     }
