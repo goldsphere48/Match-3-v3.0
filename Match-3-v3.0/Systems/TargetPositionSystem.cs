@@ -45,7 +45,7 @@ namespace Match_3_v3._0.Systems
             Vector2 newPosition = currentPosition;
             var offset = _speed * state;
             var step = GetStep(GetDirection(targetPosition, currentPosition), offset);
-            if (IsOnThePlace(newPosition, targetPosition, offset) == false)
+            if (!IsOnThePlace(newPosition, targetPosition, offset))
             {
                 newPosition += step;
             }
@@ -57,15 +57,10 @@ namespace Match_3_v3._0.Systems
             return newPosition;
         }
 
-        private Vector2 GetStep(Vector2 direction, float offset)
-        {
-            return direction * offset;
-        }
+        private Vector2 GetStep(Vector2 direction, float offset) => direction * offset;
 
-        private Vector2 GetDirection(Vector2 target, Vector2 transform)
-        {
-            return Vector2.Normalize(Vector2.Subtract(target, transform));
-        }
+        private Vector2 GetDirection(Vector2 target, Vector2 transform) 
+            => Vector2.Normalize(Vector2.Subtract(target, transform));
 
         private bool IsOnThePlace(Vector2 position, Vector2 target, float step)
         {

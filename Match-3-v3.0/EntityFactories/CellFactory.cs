@@ -14,8 +14,8 @@ namespace Match_3_v3._0.EntityFactories
 {
     class CellFactory
     {
-        private World _world;
-        private int _cellSize;
+        private readonly World _world;
+        private readonly int _cellSize;
 
         public CellFactory(World world, int cellSize)
         {

@@ -20,7 +20,7 @@ namespace Match_3_v3._0.Components
             set
             {
                 _play = value;
-                if (_play == false)
+                if (!_play)
                 {
                     CurrentFrame = 0;
                     CurrentState = 0;

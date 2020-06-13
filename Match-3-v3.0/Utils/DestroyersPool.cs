@@ -13,8 +13,8 @@ namespace Match_3_v3._0.Utils
 {
     class DestroyersPool
     {
-        private DestroyerFactory _destroyerFactory;
-        private List<Entity?> _destroyers;
+        private readonly DestroyerFactory _destroyerFactory;
+        private readonly List<Entity?> _destroyers;
 
         public DestroyersPool(DestroyerFactory factory)
         {
@@ -25,21 +25,26 @@ namespace Match_3_v3._0.Utils
         public Entity RequestDestroyer(Point spawnPositionInGrid, Direction direction, Transform parent)
         {
             Entity? destroyerEntity = _destroyers.Find(e => !e.Value.IsEnabled());
-            if (destroyerEntity.HasValue == false)
+            if (!destroyerEntity.HasValue)
             {
                 destroyerEntity = _destroyerFactory.Create(spawnPositionInGrid, direction, parent);
                 _destroyers.Add(destroyerEntity.Value);
             }
             else
             {
-                destroyerEntity.Value.Enable();
-                var component = destroyerEntity.Value.Get<Destroyer>();
-                component.Direction = direction;
-                destroyerEntity.Value.Set(component);
+                Reset(destroyerEntity, direction);
             }
             destroyerEntity.Value.Set(new TargetPosition { Position = GetTargetPosition(direction, spawnPositionInGrid), UseLocalPosition = true });
             PlaceDestroyer(destroyerEntity, spawnPositionInGrid, parent);
             return destroyerEntity.Value;
+        }
+
+        private void Reset(Entity? entity, Direction direction)
+        {
+            entity.Value.Enable();
+            var component = entity.Value.Get<Destroyer>();
+            component.Direction = direction;
+            entity.Value.Set(component);
         }
 
         private void PlaceDestroyer(Entity? destroyer, Point spawnPositionInGrid, Transform parent)

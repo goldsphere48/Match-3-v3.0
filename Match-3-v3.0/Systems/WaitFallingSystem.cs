@@ -15,8 +15,8 @@ namespace Match_3_v3._0.Systems
     class WaitFallingSystem : ISystem<float>
     {
         public bool IsEnabled { get; set; }
-        private EntitySet _fallingEntities;
-        private World _world;
+        private readonly EntitySet _fallingEntities;
+        private readonly World _world;
         private GameState _gameState;
 
         public WaitFallingSystem(World world, GameState _initState)
@@ -28,15 +28,9 @@ namespace Match_3_v3._0.Systems
         }
 
         [Subscribe]
-        private void On(in NewStateMessage newStateMessage)
-        {
-            _gameState = newStateMessage.Value;
-        }
+        private void On(in NewStateMessage newStateMessage) => _gameState = newStateMessage.Value;
 
-        public void Dispose()
-        {
-
-        }
+        public void Dispose() { }
 
         public void Update(float state)
         {

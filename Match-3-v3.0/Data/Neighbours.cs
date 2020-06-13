@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Match_3_v3._0.Utils
+namespace Match_3_v3._0.Data
 {
     [Flags]
     enum Neighbours

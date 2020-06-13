@@ -32,7 +32,7 @@ namespace Match_3_v3._0.Systems
                     if (component.CurrentFrame + 1 == component.FrameCount)
                     {
                         component.CurrentFrame = 0;
-                        if (component.IsLooping == false)
+                        if (!component.IsLooping)
                         {
                             component.Play = false;
                         }

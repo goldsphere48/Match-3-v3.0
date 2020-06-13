@@ -20,10 +20,9 @@ namespace Match_3_v3._0.Systems
     [With(typeof(CombinationsArray))]
     class CombinationSystem : AEntitySystem<float>
     {
-        private EntitySet _cells;
-        private World _world;
+        private readonly EntitySet _cells;
+        private readonly World _world;
         private GameState _gameState;
-        private List<Type> _bonusList;
 
         public CombinationSystem(World world, GameState initState)
             : base(world)
@@ -32,14 +31,10 @@ namespace Match_3_v3._0.Systems
             _world.Subscribe(this);
             _cells = _world.GetEntities().With<Cell>().AsSet();
             _gameState = initState;
-            _bonusList = new List<Type>() { typeof(LineBonus), typeof(BombBonus) };
         }
 
         [Subscribe]
-        private void On(in NewStateMessage newState)
-        {
-            _gameState = newState.Value;
-        }
+        private void On(in NewStateMessage newState) => _gameState = newState.Value;
 
         protected override void Update(float state, in Entity entity)
         {

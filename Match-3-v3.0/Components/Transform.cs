@@ -11,7 +11,7 @@ namespace Match_3_v3._0.Components
     {
         public float Angle { get; set; }
         public Vector2 Origin { get; set; }
-        public List<Transform> Childrens { get; } = new List<Transform>();
+        public List<Transform> Children { get; } = new List<Transform>();
         public Vector2 LocalPosition
         {
             get
@@ -29,14 +29,14 @@ namespace Match_3_v3._0.Components
             get => _parent;
             set
             {
-                if (value != null && value.Childrens.Contains(this) == false)
+                if (value != null && !value.Children.Contains(this))
                 {
-                    value.Childrens.Add(this);
+                    value.Children.Add(this);
 
                 }
                 else if (value == null && _parent == null)
                 {
-                    _parent.Childrens.Remove(this);
+                    _parent.Children.Remove(this);
                 }
                 _parent = value;
             }
@@ -59,7 +59,7 @@ namespace Match_3_v3._0.Components
             {
                 var dv = newAbsolutePosition - _position;
                 _position = newAbsolutePosition;
-                foreach (var child in Childrens)
+                foreach (var child in Children)
                 {
                     child.Position += dv;
                 }

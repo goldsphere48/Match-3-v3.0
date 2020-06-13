@@ -15,9 +15,9 @@ namespace Match_3_v3._0.Systems
     [With(typeof(Dying))]
     class DyingSystem : AEntitySystem<float>
     {
-        private World _world;
+        private readonly World _world;
         private GameState _gameState = GameState.Generating;
-        private EntitySet _destroyers;
+        private readonly EntitySet _destroyers;
 
         public DyingSystem(World world, GameState initState)
             : base(world)
@@ -29,10 +29,7 @@ namespace Match_3_v3._0.Systems
         }
 
         [Subscribe]
-        private void On(in NewStateMessage newState)
-        {
-            _gameState = newState.Value;
-        }
+        private void On(in NewStateMessage newState) => _gameState = newState.Value;
 
         protected override void Update(float state, ReadOnlySpan<Entity> entities)
         {

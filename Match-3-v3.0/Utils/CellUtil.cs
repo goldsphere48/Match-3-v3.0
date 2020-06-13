@@ -10,10 +10,7 @@ namespace Match_3_v3._0.Utils
 {
     static class CellUtil
     {
-        public static bool IsBonus(Entity entity)
-        {
-            return entity.Has<LineBonus>() || entity.Has<BombBonus>();
-        }
+        public static bool IsBonus(Entity entity) =>  entity.Has<LineBonus>() || entity.Has<BombBonus>();
 
         public static void Kill(Entity entity)
         {

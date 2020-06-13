@@ -30,7 +30,7 @@ namespace Match_3_v3._0
             PlayerPrefs.Set("Speed", 300);
             PlayerPrefs.Set("Width", 8);
             PlayerPrefs.Set("Height", 8);
-            PlayerPrefs.Set("RoundTime", 60000);
+            PlayerPrefs.Set("RoundTime", 60);
             SceneManager.Instance.Initialize(this);
             base.Initialize();
         }

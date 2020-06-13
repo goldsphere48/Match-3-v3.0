@@ -20,7 +20,7 @@ namespace Match_3_v3._0.Entities
 
     class Counter
     {
-        private Entity _entity;
+        private readonly Entity _entity;
         private int _value;
         private string _title;
 

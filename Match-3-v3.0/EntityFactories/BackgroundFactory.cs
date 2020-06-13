@@ -13,7 +13,7 @@ namespace Match_3_v3._0.EntityFactories
 {
     class BackgroundFactory
     {
-        private World _world;
+        private readonly World _world;
 
         public BackgroundFactory(World world)
         {

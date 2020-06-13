@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{311EFE95-6BCF-44F6-BAB3-8FB0D43E7D8D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Match_3_v3._0</RootNamespace>
     <AssemblyName>Match-3-v3.0</AssemblyName>
@@ -98,7 +98,6 @@
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Systems\CancelSwapSystem.cs" />
     <Compile Include="Systems\CombinationSystem.cs" />
-    <Compile Include="Systems\DebugSystem.cs" />
     <Compile Include="Systems\DyingSystem.cs" />
     <Compile Include="Systems\FallSystem.cs" />
     <Compile Include="Systems\FindMatchesSystem.cs" />
@@ -129,11 +128,9 @@
     <Compile Include="Utils\CellPool.cs" />
     <Compile Include="Utils\CellUtil.cs" />
     <Compile Include="Utils\DestroyersPool.cs" />
-    <Compile Include="Utils\EntityExtension.cs" />
     <Compile Include="Utils\GridUtil.cs" />
-    <Compile Include="Utils\Neighbours.cs" />
+    <Compile Include="Data\Neighbours.cs" />
     <Compile Include="Utils\SceneUtil.cs" />
-    <Compile Include="Utils\MouseButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DefaultEcs, Version=0.14.3.0, Culture=neutral, PublicKeyToken=0ab8f459261ccb3c, processorArchitecture=MSIL">

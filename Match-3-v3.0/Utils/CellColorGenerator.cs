@@ -10,7 +10,7 @@ namespace Match_3_v3._0.Utils
 {
     static class CellColorGenerator
     {
-        private static Random _random = new Random();
+        private static readonly Random _random = new Random();
         public static CellColor Get()
         {
             Array values = Enum.GetValues(typeof(CellColor));

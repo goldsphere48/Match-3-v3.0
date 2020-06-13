@@ -15,8 +15,8 @@ namespace Match_3_v3._0.EntityFactories
 {
     class ButtonFactory
     {
-        private World _world;
-        private GraphicsDevice _device;
+        private readonly World _world;
+        private readonly GraphicsDevice _device;
 
         public ButtonFactory(World world, GraphicsDevice device)
         {

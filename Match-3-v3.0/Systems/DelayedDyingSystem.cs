@@ -15,7 +15,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(DelayedDying))]
     class DelayedDyingSystem : AEntitySystem<float>
     {
-        private World _world;
+        private readonly World _world;
 
         public DelayedDyingSystem(World world)
             : base(world)

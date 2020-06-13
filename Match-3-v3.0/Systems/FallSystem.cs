@@ -16,8 +16,8 @@ namespace Match_3_v3._0.Systems
     [With(typeof(Grid))]
     class FallSystem : AEntitySystem<float>
     {
-        private World _world;
-        private EntitySet _cells;
+        private readonly World _world;
+        private readonly EntitySet _cells;
         private GameState _gameState;
 
         public FallSystem(World world, GameState initState)
@@ -30,10 +30,7 @@ namespace Match_3_v3._0.Systems
         }
 
         [Subscribe]
-        private void On(in NewStateMessage newState)
-        {
-            _gameState = newState.Value;
-        }
+        private void On(in NewStateMessage newState) => _gameState = newState.Value;
 
         protected override void Update(float state, in Entity entity)
         {
@@ -49,20 +46,25 @@ namespace Match_3_v3._0.Systems
                     for (int j = grid.Height - 1 ; j >= 0; --j)
                     {
                         var currentPosition = new Point(i, j);
-                        if (!cells.ContainsKey(currentPosition))
-                        {
-                            var notEmptyPosition = GetNextNotEmptyPosition(currentPosition, cells);
-                            if (cells.TryGetValue(notEmptyPosition, out var fallingCellEntity))
-                            {
-                                MoveDown(grid, fallingCellEntity, currentPosition);
-                                cells.Remove(notEmptyPosition);
-                            }
-                        }
+                        ComeUpEmptyCell(currentPosition, cells, grid);
                     }                    
                     maxColumnHeight = Math.Max(maxColumnHeight, emptyCellsCount);
                     newCells[i] = GenerateColumnNewCellPositions(emptyCellsCount, i);
                 }
                 GridUtil.Generate(_world, newCells, -maxColumnHeight * PlayerPrefs.Get<int>("CellSize"));
+            }
+        }
+
+        private void ComeUpEmptyCell(Point currentPosition, Dictionary<Point, Entity> cells, Grid grid)
+        {
+            if (!cells.ContainsKey(currentPosition))
+            {
+                var notEmptyPosition = GetNextNotEmptyPosition(currentPosition, cells);
+                if (cells.TryGetValue(notEmptyPosition, out var fallingCellEntity))
+                {
+                    MoveDown(grid, fallingCellEntity, currentPosition);
+                    cells.Remove(notEmptyPosition);
+                }
             }
         }
 

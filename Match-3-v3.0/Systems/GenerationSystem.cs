@@ -20,9 +20,9 @@ namespace Match_3_v3._0.Systems
     [With(typeof(Transform))]
     class GenerationSystem : AEntitySystem<float>
     {
-        private CellPool _cellPool;
+        private readonly CellPool _cellPool;
         private GameState _gameState;
-        private World _world;
+        private readonly World _world;
 
         public GenerationSystem(World world, CellPool cellPool, GameState initState)
             : base(world)
@@ -34,60 +34,36 @@ namespace Match_3_v3._0.Systems
         }
 
         [Subscribe]
-        private void On(in NewStateMessage newStateMessage)
-        {
-            _gameState = newStateMessage.Value;
-        }
+        private void On(in NewStateMessage newStateMessage) => _gameState = newStateMessage.Value;
 
         protected override void Update(float state, in Entity entity)
         {
             if (_gameState == GameState.Generating)
             {
-                var generationInfo = entity.Get<GenerationZone>();
+                var generationZone = entity.Get<GenerationZone>();
                 var grid = entity.Get<Grid>();
-                Cell[][] newCells = Generate(ref grid, generationInfo);
-
+                Cell[][] newCells = Generate(ref grid, generationZone);
                 while (!FindMatchesSystem.IsGridValid(grid))
                 {
-                    newCells = Generate(ref grid, generationInfo);
+                    newCells = Generate(ref grid, generationZone);
                 }
-
-                var lines = new Dictionary<Point, LineOrientation> 
-                {
-                    //{ new Point(2, 4), LineOrientation.Horizontal },
-                    //{ new Point(2, 5), LineOrientation.Vertical},
-                    //{ new Point(2, 3), LineOrientation.Horizontal },
-                    //{ new Point(0, 4), LineOrientation.Vertical},
-                };
-
-                var bomb = new List<Point>
-                {
-                    //new Point(0, 4)
-                };
-
-                var parentTransform = entity.Get<Transform>();
-                foreach (var column in newCells)
-                {
-                    foreach (var cellComponent in column)
-                    {
-                        Entity cell = _cellPool.RequestCell(cellComponent, generationInfo.VerticalOffset, parentTransform);
-                        entity.SetAsParentOf(cell);
-                        if (!generationInfo.IsSecondaryGeneration)
-                        {
-                            if (lines.TryGetValue(cellComponent.PositionInGrid, out var orientation))
-                            {
-                                CombinationSystem.ModifyWithLine(cell, orientation);
-                            }
-                            else if (bomb.Contains(cellComponent.PositionInGrid))
-                            {
-                                CombinationSystem.ModifyWithBomb(cell);
-                            }
-                        }
-                    }
-                }
+                InstatiateNewCells(newCells, entity, generationZone.VerticalOffset);
                 entity.Set(grid);
                 entity.Remove<GenerationZone>();
                 _world.Publish(new NewStateMessage { Value = GameState.WaitForFalling });
+            }
+        }
+
+        private void InstatiateNewCells(Cell[][] newCells, Entity grid, float verticalOffset)
+        {
+            var parentTransform = grid.Get<Transform>();
+            foreach (var column in newCells)
+            {
+                foreach (var cellComponent in column)
+                {
+                    Entity cell = _cellPool.RequestCell(cellComponent, verticalOffset, parentTransform);
+                    grid.SetAsParentOf(cell);
+                }
             }
         }
 

@@ -28,7 +28,7 @@ namespace Match_3_v3._0.ResourceManagers
         {
             if (entity.Has<SpriteRenderer>())
             {
-                entity.Get<SpriteRenderer>().Sprite = resource;
+                entity.Get<SpriteRenderer>().Texture = resource;
                 entity.Get<SpriteRenderer>().Destination = new Rectangle(0, 0, resource.Width, resource.Height);
             } else if (entity.Has<FrameAnimation>())
             {

@@ -14,7 +14,7 @@ namespace Match_3_v3._0.EntityFactories
 {
     class DestroyerFactory
     {
-        private World _world;
+        private readonly World _world;
 
         public DestroyerFactory(World world)
         {

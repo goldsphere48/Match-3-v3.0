@@ -17,8 +17,8 @@ namespace Match_3_v3._0.Systems
     [With(typeof(LineBonus))]
     class LineBonusSystem : AEntitySystem<float>
     {
-        private DestroyersPool _destroyersPool;
-        private World _world;
+        private readonly DestroyersPool _destroyersPool;
+        private readonly World _world;
 
         public LineBonusSystem(World world)
             : base(world)

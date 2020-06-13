@@ -24,14 +24,7 @@ namespace Match_3_v3._0.Systems
             _window = window;
         }
 
-        protected override void PreUpdate(float state)
-        {
-            _state = Mouse.GetState(_window);
-        }
-
-        protected override void PostUpdate(float state)
-        {
-            _oldState = _state;
-        }
+        protected override void PreUpdate(float state) => _state = Mouse.GetState(_window);
+        protected override void PostUpdate(float state) => _oldState = _state;
     }
 }

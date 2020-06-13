@@ -9,7 +9,7 @@ namespace Match_3_v3._0.Data
     enum GameState
     {
         WaitForUserInput,
-        Swaping,
+        Swapping,
         Falling,
         Matching,
         Generating,

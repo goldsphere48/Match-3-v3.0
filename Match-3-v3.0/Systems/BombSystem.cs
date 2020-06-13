@@ -18,7 +18,7 @@ namespace Match_3_v3._0.Systems
     class BombSystem : AEntitySystem<float>
     {
         private Dictionary<Point, Entity> _cells;
-        private EntitySet _cellsSet;
+        private readonly EntitySet _cellsSet;
 
         public BombSystem(World world)
             : base(world)

@@ -18,7 +18,7 @@ namespace Match_3_v3._0.Systems
     {
         private Entity? _firstSelected = null;
         private Entity? _secondSelected = null;
-        private World _world;
+        private readonly World _world;
         private GameState _gameState;
 
         public SelectSystem(World world, GameWindow window, GameState initState)
@@ -37,10 +37,7 @@ namespace Match_3_v3._0.Systems
         }
 
         [Subscribe]
-        private void On(in NewStateMessage newState)
-        {
-            _gameState = newState.Value;
-        }
+        private void On(in NewStateMessage newState) => _gameState = newState.Value;
 
         protected override void Update(float state, in Entity entity)
         {
@@ -91,7 +88,7 @@ namespace Match_3_v3._0.Systems
         {
             var grid = _world.First(e => e.Has<Grid>());
             grid.Set(new Swap(first, second));
-            _world.Publish(new NewStateMessage { Value = GameState.Swaping });
+            _world.Publish(new NewStateMessage { Value = GameState.Swapping });
         }
 
         private void Select(Entity entity, ref Entity? contanier)

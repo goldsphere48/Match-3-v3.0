@@ -15,7 +15,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(Destroyer))]
     class DestroyersDyingSystem : AEntitySystem<float>
     {
-        private World _world;
+        private readonly World _world;
 
         public DestroyersDyingSystem(World world)
             : base(world)

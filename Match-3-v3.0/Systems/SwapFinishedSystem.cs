@@ -16,7 +16,7 @@ namespace Match_3_v3._0.Systems
     [WhenRemoved(typeof(TargetPosition))]
     class SwapFinishedSystem : AEntitySystem<float>
     {
-        private World _world;
+        private readonly World _world;
 
         public SwapFinishedSystem(World world)
             : base(world)

@@ -16,7 +16,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(Destroyer))]
     class DestroyersSystem : AEntitySystem<float>
     {
-        private World _world;
+        private readonly World _world;
         private GameState _gameState;
         private Dictionary<Point, Entity> _cells;
 

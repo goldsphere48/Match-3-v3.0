@@ -21,7 +21,7 @@ namespace Match_3_v3._0.EntityFactories
 
     class TextFactory
     {
-        private World _world;
+        private readonly World _world;
 
         public TextFactory(World world)
         {

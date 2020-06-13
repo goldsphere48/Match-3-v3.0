@@ -10,17 +10,7 @@ namespace SceneSystem
 {
     public sealed class SceneManager : ISceneManager
     {
-        public static SceneManager Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new SceneManager();
-                }
-                return _instance;
-            }
-        }
+        public static SceneManager Instance => _instance ?? (_instance = new SceneManager());
 
         public void Initialize(Game game)
         {
@@ -35,7 +25,7 @@ namespace SceneSystem
 
         private Game _game;
         private SceneController _currentScene;
-        private List<SceneController> _scenes = new List<SceneController>();
+        private readonly List<SceneController> _scenes = new List<SceneController>();
 
         public IScene CurrentScene => _currentScene;
 
@@ -63,7 +53,7 @@ namespace SceneSystem
                     scene = new SceneController(sceneType, _game);
                     _scenes.Add(scene);
                 }
-                if (scene.IsInitialized == false)
+                if (!scene.IsInitialized)
                 {
                     scene.Setup();
                 }
@@ -89,7 +79,7 @@ namespace SceneSystem
             }
             _currentScene?.OnDisable();
             _currentScene = scene;
-            if (scene.IsInitialized == false)
+            if (!scene.IsInitialized)
             {
                 scene.Setup();
             }
@@ -112,11 +102,11 @@ namespace SceneSystem
                 }
                 _scenes.Remove(scene);
             }
-            else if (IsScene(sceneType) == false)
+            else if (!IsScene(sceneType))
             {
                 throw new ArgumentException($"{sceneType.Name} is not subclass of IScene");
             }
-            else if (Contains(sceneType) == false)
+            else if (!Contains(sceneType))
             {
                 throw new ArgumentException($"Scene {sceneType.Name} scene doesn't exist");
             }
@@ -137,10 +127,7 @@ namespace SceneSystem
             return GetSceneController(typeof(T));
         }
 
-        private static bool IsScene(Type type)
-        {
-            return typeof(IScene).IsAssignableFrom(type);
-        }
+        private static bool IsScene(Type type) => typeof(IScene).IsAssignableFrom(type);
 
         private bool Contains(Type sceneType)
         {

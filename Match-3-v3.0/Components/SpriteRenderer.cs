@@ -10,6 +10,6 @@ namespace Match_3_v3._0.Components
 {
     class SpriteRenderer : RendererComponent
     {
-        public Texture2D Sprite;
+        public Texture2D Texture;
     }
 }

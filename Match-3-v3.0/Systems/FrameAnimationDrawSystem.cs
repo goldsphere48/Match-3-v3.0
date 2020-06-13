@@ -14,7 +14,7 @@ namespace Match_3_v3._0.Systems
     [With(typeof(FrameAnimation))]
     class FrameAnimationDrawSystem : AEntitySystem<float>
     {
-        private SpriteBatch _batch;
+        private readonly SpriteBatch _batch;
 
         public FrameAnimationDrawSystem(SpriteBatch batch, World world)
             : base(world)
@@ -22,10 +22,7 @@ namespace Match_3_v3._0.Systems
             _batch = batch;
         }
 
-        protected override void PreUpdate(float state)
-        {
-            _batch.Begin();
-        }
+        protected override void PreUpdate(float state) => _batch.Begin();
 
         protected override void Update(float state, in Entity entity)
         {
@@ -43,9 +40,6 @@ namespace Match_3_v3._0.Systems
             );
         }
 
-        protected override void PostUpdate(float state)
-        {
-            _batch.End();
-        }
+        protected override void PostUpdate(float state) => _batch.End();
     }
 }

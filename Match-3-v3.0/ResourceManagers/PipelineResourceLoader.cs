@@ -10,16 +10,13 @@ namespace Match_3_v3._0.ResourceManagers
 {
     class PipelineResourceLoader<TResource> : IResourceLoader<string, TResource>
     {
-        private ContentManager _content;
+        private readonly ContentManager _content;
 
         public PipelineResourceLoader(ContentManager content)
         {
             _content = content;    
         }
 
-        public TResource Load(GraphicsDevice device, string info)
-        {
-            return _content.Load<TResource>(info);
-        }
+        public TResource Load(GraphicsDevice device, string info) => _content.Load<TResource>(info);
     }
 }

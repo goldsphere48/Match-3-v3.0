@@ -14,9 +14,9 @@ namespace Match_3_v3._0.EntityFactories
 {
     class GridFactory : IDisposable
     {
-        private World _world;
-        private GraphicsDevice _device;
-        private Texture2D _background;
+        private readonly World _world;
+        private readonly GraphicsDevice _device;
+        private readonly Texture2D _background;
         private readonly int _width;
         private readonly int _height;
         private readonly int _cellSize;
@@ -37,7 +37,7 @@ namespace Match_3_v3._0.EntityFactories
             entity.Set(
                 new SpriteRenderer
                 {
-                    Sprite = _background, 
+                    Texture = _background, 
                     Destination = new Rectangle(0, 0, _background.Width * _cellSize, _background.Height * _cellSize) 
                 }
             );

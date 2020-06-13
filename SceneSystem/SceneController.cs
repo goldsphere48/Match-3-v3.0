@@ -17,7 +17,7 @@ namespace SceneSystem
     {
         public Type SceneType => _scene.GetType();
 
-        private Scene _scene;
+        private readonly Scene _scene;
         private bool _enabled = true;
         private bool _disposed = false;
 
@@ -58,7 +58,7 @@ namespace SceneSystem
 
         public void Dispose()
         {
-            if (_disposed == false)
+            if (!_disposed)
             {
                 _disposed = true;
                 if (_enabled)

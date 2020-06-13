@@ -13,7 +13,7 @@ namespace Match_3_v3._0.Systems
 {
     class SpriteRenderSystem : AEntitySystem<float>
     {
-        private SpriteBatch _batch;
+        private readonly SpriteBatch _batch;
 
         public SpriteRenderSystem(SpriteBatch batch, EntitySet set)
             : base(set)
@@ -21,16 +21,13 @@ namespace Match_3_v3._0.Systems
             _batch = batch;
         }
 
-        protected override void PreUpdate(float state)
-        {
-            _batch.Begin();
-        }
+        protected override void PreUpdate(float state) => _batch.Begin();
 
         protected override void Update(float state, in Entity entity)
         {
             var component = entity.Get<SpriteRenderer>();
             _batch.Draw(
-                component.Sprite, 
+                component.Texture, 
                 component.Destination, 
                 new Rectangle(0, 0, component.Destination.Width, component.Destination.Height), 
                 component.Color, 
@@ -41,9 +38,6 @@ namespace Match_3_v3._0.Systems
             );
         }
 
-        protected override void PostUpdate(float state)
-        {
-            _batch.End();
-        }
+        protected override void PostUpdate(float state) => _batch.End();
     }
 }

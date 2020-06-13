@@ -34,19 +34,17 @@ namespace Match_3_v3._0.Systems
             swap.Deconstruct(out var first, out var second);
             var firstCell = first.Get<Cell>();
             var secondCell = second.Get<Cell>();
-            grid = GridBeforeSwap(grid, firstCell, secondCell);
+            Swap(grid, firstCell, secondCell);
             SetNewPostions(first, second);
             var matches = FindMatchesSystem.FindMatches(grid).Count();
             if (matches == 0)
             {
-                grid = GridBeforeSwap(grid, secondCell, firstCell);
+                Swap(grid, secondCell, firstCell);
                 first.Set(new SwapSuccess { Value = SwapResult.Fail });
                 SetOriginPositions(first, second);
             } else
             {
-                var tmp = firstCell.PositionInGrid;
-                firstCell.PositionInGrid = secondCell.PositionInGrid;
-                secondCell.PositionInGrid = tmp;
+                SwapPostions(ref firstCell, ref secondCell);
                 first.Set(firstCell);
                 second.Set(secondCell);
                 first.Set(new SwapSuccess { Value = SwapResult.Success});
@@ -55,15 +53,21 @@ namespace Match_3_v3._0.Systems
             }
         }
 
-        private Grid GridBeforeSwap(Grid grid, Cell first, Cell second)
+        private void SwapPostions(ref Cell first, ref Cell second)
+        {
+            var tmp = first.PositionInGrid;
+            first.PositionInGrid = second.PositionInGrid;
+            second.PositionInGrid = tmp;
+        }
+
+        private void Swap(Grid grid, Cell first, Cell second)
         {
             first.PositionInGrid.Deconstruct(out var x1, out var y1);
             second.PositionInGrid.Deconstruct(out var x2, out var y2);
-            SwapCells(ref grid.Cells[x1, y1], ref grid.Cells[x2, y2]);
-            return grid;
+            SwapColor(ref grid.Cells[x1, y1], ref grid.Cells[x2, y2]);
         }
 
-        private void SwapCells(ref Cell first, ref Cell second)
+        private void SwapColor(ref Cell first, ref Cell second)
         {
             var tmp = first.Color;
             first.Color = second.Color;
