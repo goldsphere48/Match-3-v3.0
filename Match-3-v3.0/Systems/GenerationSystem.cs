@@ -8,6 +8,7 @@ using Match_3_v3._0.Messages;
 using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Linq;
 
 namespace Match_3_v3._0.Systems
@@ -87,8 +88,28 @@ namespace Match_3_v3._0.Systems
                     };
                 }
             }
+            if (!generationInfo.IsSecondaryGeneration)
+            {
+                //DebugGeneration(newCells);
+            }
             return newCells;
         }
+
+        private void DebugGeneration(Cell[][] newCells)
+        {
+            newCells[0][0].Color = CellColor.Green;
+            newCells[0][1].Color = CellColor.Green;
+            newCells[0][2].Color = CellColor.Blue;
+            newCells[0][3].Color = CellColor.Green;
+            newCells[0][4].Color = CellColor.Gold;
+
+            newCells[0][0].Color = CellColor.Brown;
+            newCells[0][1].Color = CellColor.Green;
+            newCells[0][2].Color = CellColor.Green;
+            newCells[0][3].Color = CellColor.Purple;
+            newCells[0][4].Color = CellColor.Brown;
+        }
+
         private void ApplyNewCells(Grid grid, Cell[][] newCells)
         {
             foreach (var column in newCells)

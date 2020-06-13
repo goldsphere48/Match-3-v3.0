@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Systems
 {
-    [WhenAdded(typeof(DelayedDying))]
     [With(typeof(DelayedDying))]
     class DelayedDyingSystem : AEntitySystem<float>
     {
@@ -25,13 +24,10 @@ namespace Match_3_v3._0.Systems
             _world.Subscribe(this);
         }
 
-        protected override void Update(float state, ReadOnlySpan<Entity> entities)
+        protected override void Update(float state, in Entity entity)
         {
-            foreach (var entity in entities)
-            {
-                entity.Remove<DelayedDying>();
-                entity.Set<Dying>();
-            }
+            entity.Remove<DelayedDying>();
+            entity.Set<Dying>();
         }
     }
 }
