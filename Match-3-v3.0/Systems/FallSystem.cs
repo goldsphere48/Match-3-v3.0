@@ -113,7 +113,7 @@ namespace Match_3_v3._0.Systems
             {
                 position.Y--;
             }
-            while (position.Y > 0 && !cells.TryGetValue(position, out var cell));
+            while (position.Y > 0 && !cells.TryGetValue(position, out var _));
             return position;
         }
     }

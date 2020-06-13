@@ -87,23 +87,20 @@ namespace Match_3_v3._0.Systems
 
         public static void ModifyWithLine(Entity cellEntity, LineOrientation orientation)
         {
-            var textureName = "";
-            var cell = cellEntity.Get<Cell>();
-            Direction firstDirection;
-            Direction secondDirection;
             if (orientation == LineOrientation.Horizontal)
             {
-                firstDirection = Direction.Left;
-                secondDirection = Direction.Right;
-                textureName = "LineHorizontal";
-            } else
-            {
-                firstDirection = Direction.Up;
-                secondDirection = Direction.Down;
-                textureName = "LineVertical";
+                ModifyWithLine(cellEntity, Direction.Left, Direction.Right, "LineHorizontal");
             }
-            SetModificationSprite(cellEntity, textureName);
-            cellEntity.Set(new LineBonus(firstDirection, secondDirection, cellEntity));
+            else
+            {
+                ModifyWithLine(cellEntity, Direction.Up, Direction.Down, "LineVertical");
+            }
+        }
+
+        private static void ModifyWithLine(Entity cell, Direction firstDirection, Direction secondDirection, string textureName)
+        {
+            cell.Set(new LineBonus(firstDirection, secondDirection, cell));
+            SetModificationSprite(cell, textureName);
         }
 
         private static void SetModificationSprite(Entity cell, string textureName)
