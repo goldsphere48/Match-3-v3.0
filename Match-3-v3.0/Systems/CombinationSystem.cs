@@ -70,17 +70,12 @@ namespace Match_3_v3._0.Systems
 
         private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
         {
-            if (combination.Count == 3)
-            {
-                ProceedSimple(combination, cells);
-            } else
+            if (combination.Count > 3)
             {
                 var modifiable = GetModifiable(combination, cells);
                 if (!CellUtil.IsBonus(modifiable))
                 {
                     modifiable.Set<DontDestroy>();
-                    Destroy(combination, cells);
-                    modifiable.Remove<DontDestroy>();
                     if (combination.Count == 4)
                     {
                         ModifyWithLine(modifiable, combination.Orientation);
@@ -91,6 +86,7 @@ namespace Match_3_v3._0.Systems
                     }
                 }
             }
+            Destroy(combination, cells);
         }
 
         private void ModifyWithBomb(Entity cellEntity)
@@ -153,14 +149,12 @@ namespace Match_3_v3._0.Systems
                     if (!entity.Has<DontDestroy>())
                     {
                         entity.Set<Dying>();
+                    } else
+                    {
+                        entity.Remove<DontDestroy>();
                     }
                 }
             }
-        }
-
-        private void ProceedSimple(Combination combination, Dictionary<Point, Entity> cells)
-        {
-            Destroy(combination, cells);
         }
     }
 }
