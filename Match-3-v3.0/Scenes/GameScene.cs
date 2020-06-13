@@ -28,7 +28,13 @@ namespace Match_3_v3._0.Scenes
         private Counter _scoreCounter;
         private Counter _timerCounter;
         private CellPool _cellPool;
+        private EntitySet _cellsLayer;
+        private EntitySet _borderLayer;
+        private EntitySet _destroyersLayer;
+        private EntitySet _backgroundLayer;
+
         private GameState _gameState = GameState.Generating;
+
 
         public override void Setup(World world, out ISystem<float> systems)
         {
@@ -41,9 +47,18 @@ namespace Match_3_v3._0.Scenes
                 PlayerPrefs.Get<int>("CellSize")
             );
             _cellPool = new CellPool(new CellFactory(world, PlayerPrefs.Get<int>("CellSize")));
+            InitLayers(world);
             InitializeSystems(world, out systems);
             SetupWorld(world);
             world.Subscribe(this);
+        }
+
+        private void InitLayers(World world)
+        {
+            _cellsLayer = world.GetEntities().With<SpriteRenderer>().With<Cell>().AsSet();
+            _backgroundLayer = world.GetEntities().With<SpriteRenderer>().Without<Cell>().AsSet();
+            _destroyersLayer = world.GetEntities().With<SpriteRenderer>().With<Destroyer>().AsSet();
+            _borderLayer = world.GetEntities().With<SpriteRenderer>().With<Borders>().AsSet();
         }
 
         [Subscribe]
@@ -75,10 +90,11 @@ namespace Match_3_v3._0.Scenes
                 new RotationSystem(world),
                 new TransformSystem(world, _runner),
                 new FrameAnimationUpdateSystem(world),
-                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().Without<Cell>().AsSet()),
+                new SpriteRenderSystem(_batch, _backgroundLayer),
                 new FrameAnimationDrawSystem(_batch, world),
-                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().With<Cell>().AsSet()),
-                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().With<Destroyer>().AsSet()),
+                new SpriteRenderSystem(_batch, _cellsLayer),
+                new SpriteRenderSystem(_batch, _destroyersLayer),
+                new SpriteRenderSystem(_batch, _borderLayer),
                 new TextRenderSystem(_batch, world),
                 new DestroyersDyingSystem(world),
                 new DyingSystem(world, _gameState),
@@ -92,6 +108,13 @@ namespace Match_3_v3._0.Scenes
             _gridFactory.Create();
             CreateScoreBoard(world);
             CreateTimer(world);
+            CreateBorders();
+        }
+
+        private void CreateBorders()
+        {
+            var entity = _backgroundFactory.Create("borders");
+            entity.Set<Borders>();
         }
 
         private void CreateScoreBoard(World world)
