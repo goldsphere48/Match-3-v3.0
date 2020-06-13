@@ -55,6 +55,15 @@ namespace Match_3_v3._0.Systems
                         Console.WriteLine(death.Get<Cell>().PositionInGrid);
                     }
                 }
+                var selected = _world.GetEntities().With<Selected>().AsSet();
+                Console.WriteLine("Selected: " + selected.Count);
+                foreach (var select in selected.GetEntities())
+                {
+                    if (select.Has<Cell>())
+                    {
+                        Console.WriteLine(select.Get<Cell>().PositionInGrid);
+                    }
+                }
                 Thread.Sleep(1000);
             }
         }

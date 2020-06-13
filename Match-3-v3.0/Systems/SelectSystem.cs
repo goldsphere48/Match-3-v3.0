@@ -30,7 +30,7 @@ namespace Match_3_v3._0.Systems
         }
 
         [Subscribe]
-        private void On(in SwapFinishedMessage _)
+        private void On(in UnselectMessage _)
         {
             Unselect(ref _firstSelected);
             Unselect(ref _secondSelected);
@@ -40,13 +40,6 @@ namespace Match_3_v3._0.Systems
         private void On(in NewStateMessage newState)
         {
             _gameState = newState.Value;
-        }
-
-        [Subscribe]
-        private void On(in RemoveSelectionMessage newState)
-        {
-            RemoveSelected(_firstSelected);
-            RemoveSelected(_secondSelected);
         }
 
         protected override void Update(float state, in Entity entity)
@@ -112,16 +105,9 @@ namespace Match_3_v3._0.Systems
         {
             if (entity.HasValue)
             {
+                entity.Value.Remove<Selected>();
                 entity.Value.Get<FrameAnimation>().Play = false;
                 entity = null;
-            }
-        }
-
-        private void RemoveSelected(Entity? entity)
-        {
-            if (entity.HasValue && entity.Value.Has<Selected>())
-            {
-                entity.Value.Remove<Selected>();
             }
         }
     }

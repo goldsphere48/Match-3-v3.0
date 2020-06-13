@@ -90,8 +90,7 @@
     <Compile Include="Systems\RotationSystem.cs" />
     <Compile Include="EntityFactories\TextFactory.cs" />
     <Compile Include="Messages\NewStateMessage.cs" />
-    <Compile Include="Messages\RemoveSelectionMessage.cs" />
-    <Compile Include="Messages\SwapFinishedMessage.cs" />
+    <Compile Include="Messages\UnselectMessage.cs" />
     <Compile Include="PlayerPrefs.cs" />
     <Compile Include="ResourceManagers\SpriteFontResourceManager.cs" />
     <Compile Include="Scenes\BaseScene.cs" />

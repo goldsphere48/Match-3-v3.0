@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Match_3_v3._0.Messages
 {
-    struct RemoveSelectionMessage
+    struct UnselectMessage
     {
     }
 }

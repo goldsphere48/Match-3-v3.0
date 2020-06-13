@@ -53,6 +53,7 @@ namespace Match_3_v3._0.Systems
                     ProceedCombination(combination, GetCells(width, height));
                 }
                 entity.Remove<CombinationsArray>();
+                _world.Publish(new UnselectMessage());
                 _world.Publish(new NewStateMessage { Value = GameState.CellDestroying });
             }
         }
@@ -136,7 +137,6 @@ namespace Match_3_v3._0.Systems
                     modifiable = modifiable ?? entity;
                     if (entity.Has<Selected>())
                     {
-                        _world.Publish(new RemoveSelectionMessage());
                         return entity;
                     }
                 }

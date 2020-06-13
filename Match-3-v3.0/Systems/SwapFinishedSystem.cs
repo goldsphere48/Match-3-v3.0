@@ -33,10 +33,10 @@ namespace Match_3_v3._0.Systems
                 newState = GameState.Matching;
             } else
             {
+                _world.Publish(new UnselectMessage());
                 newState = GameState.WaitForUserInput;
             }
             entity.Remove<SwapSuccess>();
-            _world.Publish(new SwapFinishedMessage());
             _world.Publish(new NewStateMessage { Value = newState });
         }
     }
