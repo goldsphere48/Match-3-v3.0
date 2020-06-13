@@ -28,6 +28,10 @@ namespace Match_3_v3._0.Systems
         protected override void Update(float state, in Entity entity)
         {
             entity.Disable();
+            if (_destroyers.Count == 0)
+            {
+                _world.Publish(new NewStateMessage { Value = GameState.Falling });
+            }
         }
     }
 }
