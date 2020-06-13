@@ -46,6 +46,15 @@ namespace Match_3_v3._0.Systems
                 Console.WriteLine("Line bonuses: " + lineBonuses.Length);
                 var bombBonuses = _world.Get<BombBonus>();
                 Console.WriteLine("Bomb bonuses: " + bombBonuses.Length);
+                var dies = _world.GetEntities().With<Dying>().AsSet();
+                Console.WriteLine("Dyings: " + dies.Count);
+                foreach (var death in dies.GetEntities())
+                {
+                    if (death.Has<Cell>())
+                    {
+                        Console.WriteLine(death.Get<Cell>().PositionInGrid);
+                    }
+                }
                 Thread.Sleep(1000);
             }
         }
