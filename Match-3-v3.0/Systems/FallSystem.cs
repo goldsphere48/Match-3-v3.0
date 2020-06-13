@@ -62,7 +62,7 @@ namespace Match_3_v3._0.Systems
                     maxColumnHeight = Math.Max(maxColumnHeight, emptyCellsCount);
                     newCells[i] = GenerateColumnNewCellPositions(emptyCellsCount, i);
                 }
-                CreateNewGenerationZone(newCells, maxColumnHeight);
+                GridUtil.Generate(_world, newCells, -maxColumnHeight * PlayerPrefs.Get<int>("CellSize"));
             }
         }
 
@@ -78,19 +78,6 @@ namespace Match_3_v3._0.Systems
                 }
             }
             return emptyCellsCount;
-        }
-
-        private void CreateNewGenerationZone(Point[][] positions, int maxColumnHeight)
-        {
-            _world.First(e => e.Has<Grid>()).Set(
-                new GenerationZone 
-                {
-                    NewCellPositionsInGrid = positions, 
-                    VerticalOffset = -maxColumnHeight * PlayerPrefs.Get<int>("CellSize"),
-                    IsSecondaryGeneration = true
-                }
-            );
-            _world.Publish(new NewStateMessage { Value = GameState.Generating });
         }
 
         private Point[] GenerateColumnNewCellPositions(int count, int column)

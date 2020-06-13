@@ -147,13 +147,13 @@ namespace Match_3_v3._0.Utils
             return mask;
         }
 
-        public static void CreateNewGenerationZone(Point[][] positions, World world, int maxColumnHeight)
+        public static void Generate(World world, Point[][] positions, int verticalOffset)
         {
             world.First(e => e.Has<Grid>()).Set(
                 new GenerationZone
                 {
                     NewCellPositionsInGrid = positions,
-                    VerticalOffset = -maxColumnHeight * PlayerPrefs.Get<int>("CellSize"),
+                    VerticalOffset = verticalOffset,
                     IsSecondaryGeneration = true
                 }
             );

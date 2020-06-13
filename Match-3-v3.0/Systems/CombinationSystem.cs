@@ -50,22 +50,12 @@ namespace Match_3_v3._0.Systems
                 var height = PlayerPrefs.Get<int>("Height");
                 foreach (var combination in combinations.Value)
                 {
-                    ProceedCombination(combination, GetCells(width, height));
+                    ProceedCombination(combination, GridUtil.CellsSetToDictionary(_cells, width, height));
                 }
                 entity.Remove<CombinationsArray>();
                 _world.Publish(new UnselectMessage());
                 _world.Publish(new NewStateMessage { Value = GameState.CellDestroying });
             }
-        }
-
-        private Dictionary<Point, Entity> GetCells(int width, int height)
-        {
-            var result = new Dictionary<Point, Entity>(width * height);
-            foreach (var cell in _cells.GetEntities())
-            {
-                result.Add(cell.Get<Cell>().PositionInGrid, cell);
-            }
-            return result;
         }
 
         private void ProceedCombination(Combination combination, Dictionary<Point, Entity> cells)
@@ -89,15 +79,14 @@ namespace Match_3_v3._0.Systems
             Destroy(combination, cells);
         }
 
-        private void ModifyWithBomb(Entity cellEntity)
+        public static void ModifyWithBomb(Entity cellEntity)
         {
             SetModificationSprite(cellEntity, "Bomb");
             cellEntity.Set(new BombBonus());
         }
 
-        public void ModifyWithLine(Entity cellEntity, LineOrientation orientation)
+        public static void ModifyWithLine(Entity cellEntity, LineOrientation orientation)
         {
-            var grid = _world.First(e => e.Has<Grid>());
             var textureName = "";
             var cell = cellEntity.Get<Cell>();
             Direction firstDirection;
@@ -117,7 +106,7 @@ namespace Match_3_v3._0.Systems
             cellEntity.Set(new LineBonus(firstDirection, secondDirection, cellEntity));
         }
 
-        private void SetModificationSprite(Entity cell, string textureName)
+        private static void SetModificationSprite(Entity cell, string textureName)
         {
             cell.Set(new SpriteRenderer());
             cell.Set(new ManagedResource<string, Texture2D>(textureName));
