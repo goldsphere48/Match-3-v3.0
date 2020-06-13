@@ -19,7 +19,7 @@ namespace Match_3_v3._0.EntityFactories
         {
             var entity = _world.CreateEntity();
             entity.Set(new Transform());
-            entity.Set(new SpriteRenderer { Color = color.HasValue ? color.Value : Color.White });
+            entity.Set(new SpriteRenderer { Color = color ?? Color.White });
             entity.Set(new ManagedResource<string, Texture2D>(spriteName));
             return entity;
         }
