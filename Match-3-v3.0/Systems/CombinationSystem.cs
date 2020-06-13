@@ -5,6 +5,7 @@ using Match_3_v3._0.Components;
 using Match_3_v3._0.Data;
 using Match_3_v3._0.EntityFactories;
 using Match_3_v3._0.Messages;
+using Match_3_v3._0.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -74,15 +75,19 @@ namespace Match_3_v3._0.Systems
             } else
             {
                 var modifiable = GetModifiable(combination, cells);
-                modifiable.Set<DontDestroy>();
-                Destroy(combination, cells);
-                modifiable.Remove<DontDestroy>();
-                if (combination.Count == 4)
+                if (!CellUtil.IsBonus(modifiable))
                 {
-                    ModifyWithLine(modifiable, combination.Orientation);
-                } else
-                {
-                    ModifyWithBomb(modifiable);
+                    modifiable.Set<DontDestroy>();
+                    Destroy(combination, cells);
+                    modifiable.Remove<DontDestroy>();
+                    if (combination.Count == 4)
+                    {
+                        ModifyWithLine(modifiable, combination.Orientation);
+                    }
+                    else
+                    {
+                        ModifyWithBomb(modifiable);
+                    }
                 }
             }
         }
