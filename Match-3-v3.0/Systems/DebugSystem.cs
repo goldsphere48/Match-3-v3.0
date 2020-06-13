@@ -28,7 +28,7 @@ namespace Match_3_v3._0.Systems
             _world = world;
             _world.Subscribe(this);
             _cells = _world.GetEntities().With<Cell>().AsSet();
-            new Thread(PrintDestroyersCount).Start();
+            //new Thread(PrintDestroyersCount).Start();
         }
 
         [Subscribe]
@@ -77,7 +77,10 @@ namespace Match_3_v3._0.Systems
                 {
                     foreach (var cell in _cells.GetEntities())
                     {
-                        cell.Set<Dying>();
+                        if (entity.Has<Dying>())
+                        {
+                            cell.Set<Dying>();
+                        }
                     }
                     _world.Publish(new NewStateMessage { Value = GameState.CellDestroying });
                 }

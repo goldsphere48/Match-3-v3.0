@@ -16,21 +16,18 @@ namespace Match_3_v3._0.Systems
     class DestroyersDyingSystem : AEntitySystem<float>
     {
         private World _world;
-        private EntitySet _destroyers;
 
         public DestroyersDyingSystem(World world)
             : base(world)
         {
             _world = world;
-            _destroyers = _world.GetEntities().With<Destroyer>().AsSet();
         }
 
         protected override void Update(float state, in Entity entity)
         {
-            entity.Disable();
-            if (_destroyers.Count == 0)
+            if (!entity.Has<Dying>())
             {
-                _world.Publish(new NewStateMessage { Value = GameState.Falling });
+                entity.Set<Dying>();
             }
         }
     }

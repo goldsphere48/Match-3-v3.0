@@ -14,13 +14,11 @@ namespace Match_3_v3._0.Systems
     class SpriteRenderSystem : AEntitySystem<float>
     {
         private SpriteBatch _batch;
-        private int _id;
 
-        public SpriteRenderSystem(SpriteBatch batch, EntitySet set, int id = 0)
+        public SpriteRenderSystem(SpriteBatch batch, EntitySet set)
             : base(set)
         {
             _batch = batch;
-            _id = id;
         }
 
         protected override void PreUpdate(float state)
@@ -30,10 +28,6 @@ namespace Match_3_v3._0.Systems
 
         protected override void Update(float state, in Entity entity)
         {
-            if (_id == 228)
-            {
-                Console.WriteLine("Render destroyer");
-            }
             var component = entity.Get<SpriteRenderer>();
             _batch.Draw(
                 component.Sprite, 

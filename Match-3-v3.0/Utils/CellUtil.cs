@@ -23,7 +23,10 @@ namespace Match_3_v3._0.Utils
             }
             else
             {
-                entity.Set<Dying>();
+                if (!entity.Has<Dying>() && entity.IsEnabled())
+                {
+                    entity.Set<Dying>();
+                }
             }
         }
     }

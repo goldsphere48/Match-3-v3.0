@@ -27,7 +27,10 @@ namespace Match_3_v3._0.Systems
         protected override void Update(float state, in Entity entity)
         {
             entity.Remove<DelayedDying>();
-            entity.Set<Dying>();
+            if (!entity.Has<Dying>())
+            {
+                entity.Set<Dying>();
+            }
         }
     }
 }

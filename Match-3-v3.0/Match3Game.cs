@@ -28,8 +28,8 @@ namespace Match_3_v3._0
         {
             PlayerPrefs.Set("CellSize", 81);
             PlayerPrefs.Set("Speed", 300);
-            PlayerPrefs.Set("Width", 3);
-            PlayerPrefs.Set("Height", 7);
+            PlayerPrefs.Set("Width", 8);
+            PlayerPrefs.Set("Height", 8);
             PlayerPrefs.Set("RoundTime", 60000);
             SceneManager.Instance.Initialize(this);
             base.Initialize();

@@ -72,7 +72,6 @@ namespace Match_3_v3._0.Scenes
                 new BombSystem(world),
                 new FallSystem(world, _gameState),
                 new TargetPositionSystem(world),
-                new DestroyersDyingSystem(world),
                 new WaitFallingSystem(world, _gameState),
                 new RotationSystem(world),
                 new TransformSystem(world, _runner),
@@ -80,8 +79,9 @@ namespace Match_3_v3._0.Scenes
                 new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().Without<Cell>().AsSet()),
                 new FrameAnimationDrawSystem(_batch, world),
                 new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().With<Cell>().AsSet()),
-                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().With<Destroyer>().AsSet(), 228),
+                new SpriteRenderSystem(_batch, world.GetEntities().With<SpriteRenderer>().With<Destroyer>().AsSet()),
                 new TextRenderSystem(_batch, world),
+                new DestroyersDyingSystem(world),
                 new DyingSystem(world, _gameState),
                 new DelayedDyingSystem(world)
             );

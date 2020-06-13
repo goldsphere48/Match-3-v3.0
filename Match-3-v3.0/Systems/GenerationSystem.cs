@@ -113,36 +113,7 @@ namespace Match_3_v3._0.Systems
                     };
                 }
             }
-            if (!generationInfo.IsSecondaryGeneration)
-            {
-                DebugGeneration(newCells);
-            }
             return newCells;
-        }
-
-        private void DebugGeneration(Cell[][] newCells)
-        {
-            newCells[0][0].Color = CellColor.Brown;
-            newCells[0][1].Color = CellColor.Purple;
-            newCells[0][2].Color = CellColor.Blue;
-            newCells[0][3].Color = CellColor.Brown;
-            newCells[0][4].Color = CellColor.Green;
-            newCells[0][6].Color = CellColor.Green;
-
-            newCells[1][0].Color = CellColor.Gold;
-            newCells[1][1].Color = CellColor.Brown;
-            newCells[1][2].Color = CellColor.Green;
-            newCells[1][3].Color = CellColor.Green;
-            newCells[1][4].Color = CellColor.Blue;
-            newCells[1][5].Color = CellColor.Green;
-
-            newCells[2][0].Color = CellColor.Purple;
-            newCells[2][1].Color = CellColor.Gold;
-            newCells[2][2].Color = CellColor.Blue;
-            newCells[2][3].Color = CellColor.Gold;
-            newCells[2][4].Color = CellColor.Brown;
-            newCells[2][5].Color = CellColor.Gold;
-            newCells[2][6].Color = CellColor.Green;
         }
 
         private void ApplyNewCells(Grid grid, Cell[][] newCells)

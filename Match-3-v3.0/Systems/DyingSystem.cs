@@ -39,9 +39,12 @@ namespace Match_3_v3._0.Systems
             var score = 0;
             foreach (var entity in entities)
             {
+                if (entity.Has<Cell>())
+                {
+                    score++;
+                }
                 entity.Remove<Dying>();
                 entity.Disable();
-                score++;
             }
             if (score > 0)
             {

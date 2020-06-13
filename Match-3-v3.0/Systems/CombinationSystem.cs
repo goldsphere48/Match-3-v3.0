@@ -132,7 +132,7 @@ namespace Match_3_v3._0.Systems
             {
                 if (cells.TryGetValue(position, out Entity entity))
                 {
-                    if (!entity.Has<DontDestroy>())
+                    if (!(entity.Has<DontDestroy>() || entity.Has<Dying>()))
                     {
                         entity.Set<Dying>();
                     } else
