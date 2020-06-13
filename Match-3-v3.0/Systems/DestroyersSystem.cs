@@ -100,9 +100,9 @@ namespace Match_3_v3._0.Systems
             return partialPosition;
         }
 
-        private void DestroyCellUnderDestroyerWithCondition(Entity entity, Cell cell, Func<bool> predicate)
+        private void DestroyCellUnderDestroyerWithCondition(Entity entity, Cell cell, Func<bool> canDestroy)
         {
-            if (predicate() && !entity.Has<Dying>())
+            if (canDestroy() && !entity.Has<Dying>())
             {
                 CellUtil.Kill(entity);
                 _cells.Remove(cell.PositionInGrid);

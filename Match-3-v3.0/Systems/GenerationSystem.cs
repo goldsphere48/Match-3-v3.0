@@ -54,15 +54,15 @@ namespace Match_3_v3._0.Systems
 
                 var lines = new Dictionary<Point, LineOrientation> 
                 {
-                    //{ new Point(0, 0), LineOrientation.Horizontal },
-                    //{ new Point(2, 0), LineOrientation.Vertical},
+                    //{ new Point(2, 4), LineOrientation.Horizontal },
+                    //{ new Point(2, 5), LineOrientation.Vertical},
                     //{ new Point(2, 3), LineOrientation.Horizontal },
                     //{ new Point(0, 4), LineOrientation.Vertical},
                 };
 
                 var bomb = new List<Point>
                 {
-                    //new Point(1, 1)
+                    //new Point(0, 4)
                 };
 
                 var parentTransform = entity.Get<Transform>();
